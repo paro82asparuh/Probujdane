@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Probujdane</string>
+    <string name="besedi_string">Беседи</string>
+    <string name="molitvi_string">Молитви</string>
+    <string name="formuli_string">Формули</string>
+    <string name="music_string">Музика</string>
+    <string name="notifications_string">Нотификации</string>
+    <string name="options_string">Настройки</string>
+    <string name="nedelni_besedi_string">Неделни Беседи</string>
+    <string name="syborni_besedi_string">Съборни Беседи</string>
+    <string name="ook_besedi_string">Общ окултен клас</string>
+    <string name="mok_besedi_string">Младежки окултен клас</string>
+    <string name="drugi_besedi_string">Други Беседи</string>
+    <string name="utrinni_slova_string">Утринни Слова</string>
+    <string name="search_string">Търсене в Словото</string>
+    <string name="izvynredni_besedi_string">Извънредни Беседи</string>
+    <string name="klas_na_dobrodetelite_string">Клас на добродетелите</string>
+    <string name="mladevki_sybori_string">Младежки събори</string>
+    <string name="rilski_besedi_string">Рилски Беседи</string>
+    <string name="besedi_pred_sestrite_string">Беседи пред сестрите</string>
+    <string name="besedi_pred_rekyvoditelite_string">Беседи пред ръководителите</string>
+    <string name="poslednoto_slovo_string">Последното слово</string>
+    <string name="not_ready_string">Тази функционалност \nе в процес на разработка</string>
+</resources>

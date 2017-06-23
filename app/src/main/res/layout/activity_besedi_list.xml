@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.grigorov.asparuh.probujdane.BesediListActivity">
+
+    <TextView
+        android:id="@+id/textBesediNotReady"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:textColor="@color/colorNotReadyText"
+        android:textSize="@dimen/text_size_not_ready"
+        android:text="To be overwritten from java code" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/buttonListOrder"
+        android:layout_weight="5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:gravity="center"
+        android:text="To be overwritten from java code"
+        android:textSize="@dimen/text_size_list_ordering"
+        android:textColor="@color/colorNotReadyText"
+        android:background="#FFFFFF"
+        android:onClick="invertListOrder" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ListView
+        android:id="@+id/listViewBesedi"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="200"
+        android:divider="@color/colorListBesedaDivider"
+        android:dividerHeight="@dimen/list_beseda_divider_hight"
+        />
+
+</LinearLayout>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.grigorov.asparuh.probujdane.BesediMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="4">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/beinsadouno" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@drawable/sunrise3_top"
+        android:layout_weight="14">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/nedelni_besedi_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorNedelniBesediText"
+                    android:background="@color/colorNedelniBesediBackground"
+                    android:onClick="startNedelniBesediTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/ook_besedi_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorOOKBesediText"
+                    android:background="@color/colorOOKBesediBackground"
+                    android:onClick="startOOKBesediTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/mok_besedi_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorMOKBesediText"
+                    android:background="@color/colorMOKBesediBackground"
+                    android:onClick="startMOKBesediTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/utrinni_slova_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorUtrinniSlovaText"
+                    android:background="@color/colorUtrinniSlovaBackground"
+                    android:onClick="startUtrinniSlovaBesediTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/syborni_besedi_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorSyborniBesediText"
+                    android:background="@color/colorSyborniBesediBackground"
+                    android:onClick="startSyborniBesediTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/drugi_besedi_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorDrugiBesediText"
+                    android:background="@color/colorDrugiBesediBackground"
+                    android:onClick="startDrugiBesediMenuTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="7">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/search_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorSearchButtonText"
+                    android:background="@color/colorSearchButtonBackground"
+                    android:onClick="startSearchMenuTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/sunrise3_bottom"
+        android:layout_weight="1" />
+
+</LinearLayout>

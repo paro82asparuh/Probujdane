@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="text_size_main_buttons">26sp</dimen>
+    <dimen name="text_size_besedi_menu_buttons">22sp</dimen>
+    <dimen name="text_size_drugi_besedi_menu_buttons">18sp</dimen>
+    <dimen name="text_size_drugi_besedi_menu_buttons_xlarge">22sp</dimen>
+    <dimen name="text_size_not_ready">16sp</dimen>
+    <dimen name="text_size_list_beseda_name">16sp</dimen>
+    <dimen name="text_size_list_beseda_date">16sp</dimen>
+    <dimen name="text_size_beseda_name">16sp</dimen>
+    <dimen name="text_size_beseda_date">14sp</dimen>
+    <dimen name="text_size_beseda_text">12sp</dimen>
+    <dimen name="list_beseda_divider_hight">10dp</dimen>
+    <dimen name="text_size_list_ordering">14sp</dimen>
+</resources>
