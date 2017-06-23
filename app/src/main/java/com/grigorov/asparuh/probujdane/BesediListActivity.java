@@ -171,8 +171,7 @@ public class BesediListActivity extends AppCompatActivity {
     }
 
     public void invertListOrder(View view) {
-        if (listedByDate==true) { listedByDate=false; }
-        else { listedByDate=true; }
+        listedByDate = listedByDate != true;
         setListOrder();
     }
 
