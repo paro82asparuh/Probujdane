@@ -130,7 +130,7 @@ public class BesediListActivity extends AppCompatActivity {
             case PoslednotoSlovo_Besedi: BesediTypeCyrillic="Последното Слово"; break;
             case PredSestrite_Besedi: BesediTypeCyrillic="Беседи пред сестрите"; break;
             case PredRykovoditelite_Besedi: BesediTypeCyrillic="Беседи пред ръководителите"; break;
-            case Izvynredni_Besedi: BesediTypeCyrillic="Изжънредни беседи"; break;
+            case Izvynredni_Besedi: BesediTypeCyrillic="Извънредни беседи"; break;
             case KlasNaDobrodetelite_Besedi: BesediTypeCyrillic="Клас на добродетелите"; break;
             default: BesediTypeCyrillic="Грешка"; break;
         }

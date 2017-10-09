@@ -28,4 +28,10 @@
     <string name="no">Не</string>
     <string name="download_progress_message">Сваляне на базата данни с беседи</string>
     <string name="not_enough_memeory">Няма достатъчно памет </string>
+    <string name="download_title">Беседи</string>
+    <string name="download_description">База данни Беседи</string>
+    <string name="dont_download">Базата данни с беседи няма да бъде свалена</string>
+    <string name="download_ongoing">Базата данни с беседи се сваля</string>
+    <string name="download_done">Базата данни с беседи е свалена</string>
+    <string name="database_ready">Базата данни с беседи е готова за ползване</string>
 </resources>
