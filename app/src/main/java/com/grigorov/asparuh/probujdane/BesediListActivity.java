@@ -157,7 +157,7 @@ public class BesediListActivity extends AppCompatActivity {
 
     private void setTextBesediNotReady() {
         String setTextBesediNotReady;
-        setTextBesediNotReady = " Страницата " + BesediTypeCyrillic + " е в процес на разработка ";
+        setTextBesediNotReady = " Страницата  " + BesediTypeCyrillic + " е в процес на разработка ";
         TextView textview1 = (TextView) findViewById(R.id.textBesediNotReady);
         textview1.setText(setTextBesediNotReady);
     }
