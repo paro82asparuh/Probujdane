@@ -14,5 +14,5 @@
     <dimen name="text_size_beseda_date">14sp</dimen>
     <dimen name="text_size_beseda_text">12sp</dimen>
     <dimen name="list_beseda_divider_hight">10dp</dimen>
-    <dimen name="text_size_list_ordering">14sp</dimen>
+    <dimen name="text_size_list_filtering">16sp</dimen>
 </resources>

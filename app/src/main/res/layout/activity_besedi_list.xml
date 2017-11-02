@@ -8,9 +8,9 @@
     tools:context="com.grigorov.asparuh.probujdane.BesediListActivity">
 
     <TextView
-        android:id="@+id/textBesediNotReady"
+        android:id="@+id/textBesediListTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:minHeight="0dp"
         android:layout_weight="5"
         android:gravity="center"
@@ -23,18 +23,78 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/buttonListOrder"
-        android:layout_weight="5"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="0dp"
-        android:gravity="center"
-        android:text="To be overwritten from java code"
-        android:textSize="@dimen/text_size_list_ordering"
-        android:textColor="@color/colorNotReadyText"
-        android:background="#FFFFFF"
-        android:onClick="invertListOrder" />
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="5">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerFromYear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerToYear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="5">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/buttonFilterYears"
+            android:layout_weight="24"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:minHeight="0dp"
+            android:gravity="center"
+            android:text="@string/filter_years_string"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:textColor="@color/colorNotReadyText"
+            android:background="@color/colorListBesediFilter"
+            android:onClick="updateListBesedi" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"
@@ -46,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:minHeight="0dp"
-        android:layout_weight="200"
+        android:layout_weight="50"
         android:divider="@color/colorListBesedaDivider"
         android:dividerHeight="@dimen/list_beseda_divider_hight"
         />

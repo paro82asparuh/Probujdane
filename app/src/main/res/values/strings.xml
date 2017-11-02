@@ -34,4 +34,10 @@
     <string name="download_ongoing">Базата данни с беседи се сваля</string>
     <string name="download_done">Базата данни с беседи е свалена</string>
     <string name="database_ready">Базата данни с беседи е готова за ползване</string>
+    <string name="besedi_list_alphabet_order">Подреди по азбучен ред</string>
+    <string name="besedi_list_date_order">Подреди по дата</string>
+    <string name="filter_years_string">Филтрирай по години</string>
+    <string name="list_besedi_from_years_string">От</string>
+    <string name="list_besedi_to_years_string">До</string>
+    <string name="not_valid_filter_years_string">Зададени са грешни години за филтриране</string>
 </resources>

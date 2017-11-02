@@ -61,7 +61,15 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     private boolean BesediDatabaseOk;
     //private static String BesediDatbaseURL = "https://drive.google.com/file/d/0B7wdOuW-OvnhY2VVQktRM1hZcEE/view?usp=sharing";
     //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
-    private static String BesediDatbaseURL = "https://1fichier.com/?sfl4mtzwbi";
+    //private static String BesediDatbaseURL = "https://1fichier.com/?sfl4mtzwbi";
+    //private static String BesediDatbaseURL = "https://1fichier.com/?6bvwzc10hj";
+    //private static String BesediDatbaseURL = "http://www.filetolink.com/09f8b5b6ef";
+    //private static String BesediDatbaseURL = "https://lookaside.fbsbx.com/file/besedi_sqlite.zip?token=AWzhWu9-f9d0j9miEHt8qyc-n_aZyj6TT_8zTXEjTUCAcz4IYtUVR3-lR7b3WgNXYo-lsRMbCipq0lyoaMslLudYUjDY1U8uH8U4b_DgRYSeFpV2HeP6lag99Pya-RqBMjnl55wNSA_u_-Egd52LxeJ3yRF7VZ7zEaaDDpmz0l1Ow-0X64sMbnJNIquHnLxc0mbq4y398E3NvTeKuExplXpA";
+    //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&confirm=vucr&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
+    //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
+    //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&amp;confirm=rL69&amp;id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
+    //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&confirm=rL69&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
+    private static String BesediDatbaseURL = "https://dl.dropboxusercontent.com/s/qfaxecicfvf1y34/besedi_sqlite.zip?dl=0";
     ProgressDialog mProgressDialog;
     private DownloadManager downloadManager;
     private DownloadManager downloadManagerChecker;
@@ -280,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (downloadReference == referenceId) {
-                showErrorMessage("Download done");
                 showErrorMessage(getString(R.string.download_done));
 
                 // Unzip

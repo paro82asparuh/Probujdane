@@ -59,5 +59,8 @@
     <color name="colorBesedaTextText">#FF0000C0</color>
     <color name="colorListBesedaItemBackground">#80B0E2FF</color>
     <color name="colorListBesedaDivider">#FFFFFFFF</color>
+    <color name="colorListBesediSpinnerText">#FF0000C0</color>
+    <color name="colorListBesediSpinnerBackground">#80B0E2FF</color>
+    <color name="colorListBesediFilter">#80B0E2FF</color>
 
 </resources>
