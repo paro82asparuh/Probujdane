@@ -64,4 +64,21 @@ public class besediDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getbeseda (String besedaName, String besedaDateYear, String besedaDateMonth, String besedaDateDay) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT * " +
+                        "FROM table1 WHERE " +
+                        "Name='"+besedaName+"' " +
+                        "And " +
+                        "Year_='"+besedaDateYear+"' " +
+                        "And " +
+                        "Month_='"+besedaDateMonth+"' " +
+                        "And " +
+                        "Day_of_Month='"+besedaDateDay+"' " +
+                        "ORDER BY CAST(Variant AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
 }

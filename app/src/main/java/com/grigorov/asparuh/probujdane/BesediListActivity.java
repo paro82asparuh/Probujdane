@@ -41,8 +41,6 @@ public class BesediListActivity extends AppCompatActivity {
 
     private ArrayList<besedaInfo> listBesediInfo= new ArrayList<besedaInfo>();
 
-    private boolean listedByDate; // true-yes, false-by Name
-
     private besediDBHelper mydb;
 
     private Integer[] besediUniqueYears;
@@ -97,7 +95,9 @@ public class BesediListActivity extends AppCompatActivity {
                 public void onClick(final View v) {
                     Intent intent = new Intent(BesediListActivity.this, BesedaActivity.class);
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaNameVar", currentBesedaInfo.getbesedaName());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateVar", currentBesedaInfo.getBesedaDateString());
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar", currentBesedaInfo.getBesedaDateYear());
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar", currentBesedaInfo.getBesedaDateMonth());
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar", currentBesedaInfo.getBesedaDateDay());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaTextVar", "Try1");
                     startActivity(intent);
                 }
@@ -122,8 +122,6 @@ public class BesediListActivity extends AppCompatActivity {
         setBesediTypeCyrillic();
         setTextBesediListTittle();
 
-        listedByDate=true;
-
         // Read from the database
         mydb = new besediDBHelper(this);
         setListBesedi();
@@ -143,6 +141,16 @@ public class BesediListActivity extends AppCompatActivity {
         besediInfoAdapter = new BesediInfoAdapter(this, listBesediInfo);
         ListView listView1 = (ListView) findViewById(R.id.listViewBesedi);
         listView1.setAdapter(besediInfoAdapter);
+    }
+
+    public void onResume () {
+        super.onResume();
+        mydb = new besediDBHelper(this);
+    }
+
+    public void onPause () {
+        super.onPause();
+        mydb.close();
     }
 
     private void setBesediTypeCyrillic() {

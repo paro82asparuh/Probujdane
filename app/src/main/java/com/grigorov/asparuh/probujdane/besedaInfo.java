@@ -30,6 +30,18 @@ public class besedaInfo {
         return this.besedaID;
     }
 
+    public String getBesedaDateYear () {
+        return this.besedaDateYear;
+    }
+
+    public String getBesedaDateMonth () {
+        return this.besedaDateMonth;
+    }
+
+    public String getBesedaDateDay () {
+        return this.besedaDateDay;
+    }
+
     public String getBesedaDateString () {
         return new String(this.besedaDateDay+"."+this.besedaDateMonth+"."+this.besedaDateYear);
     }
