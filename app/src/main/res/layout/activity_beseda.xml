@@ -22,21 +22,6 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/textBesedaDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:gravity="center"
-        android:textColor="@color/colorBesedaDateText"
-        android:textSize="@dimen/text_size_beseda_date"
-        android:text="To be overwritten from java code" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -55,25 +40,42 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3" />
 
-            <!-- <TextView -->
-            <com.grigorov.asparuh.probujdane.besedaTextView
-                android:id="@+id/textBesedaText"
+            <LinearLayout
+                android:id="@+id/textBesedaLinearLayout"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="42"
-                android:textColor="@color/colorBesedaTextText"
-                android:textSize="@dimen/text_size_beseda_text"
-                android:text="To be overwritten from java code" >
-            </com.grigorov.asparuh.probujdane.besedaTextView>
-        <!-- /> -->
+                android:orientation="vertical"
+                android:layout_weight="42">
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3" />
+                <TextView
+                    android:id="@+id/textBesedaDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorBesedaDateText"
+                    android:textSize="@dimen/text_size_beseda_date"
+                    android:text="To be overwritten from java code" />
+
+                <!-- <TextView -->
+                <com.grigorov.asparuh.probujdane.besedaTextView
+                    android:id="@+id/textBesedaText1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorBesedaTextText"
+                    android:textSize="@dimen/text_size_beseda_text"
+                    android:text="To be overwritten from java code" >
+                </com.grigorov.asparuh.probujdane.besedaTextView>
+                <!-- /> -->
 
             </LinearLayout>
 
-        </ScrollView>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3" />
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

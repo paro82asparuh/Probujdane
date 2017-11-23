@@ -44,7 +44,10 @@ public class besedaTextView extends android.support.v7.widget.AppCompatTextView 
             String line = text.substring(lineStart, lineEnd);
 
             float width = StaticLayout.getDesiredWidth(text, lineStart, lineEnd, getPaint());
-            if (needScale(line)) {
+            if (
+                    needScale(line) &&
+                    (i!=layout.getLineCount()-1)
+                ) {
                 drawScaledText(canvas, lineStart, line, width);
             } else {
                 if (firstLineOfParagraph==true) {
@@ -66,11 +69,11 @@ public class besedaTextView extends android.support.v7.widget.AppCompatTextView 
 
     private void drawScaledText(Canvas canvas, int lineStart, String line, float lineWidth) {
         float x = 0;
-        float d = (mViewWidth - lineWidth) / line.length() - 1;
+        float d = (mViewWidth - lineWidth) / (line.length()-1);
 
         if (isFirstLineOfParagraph()) {
             x += 100;
-            d = ( (mViewWidth - 100 ) - lineWidth) / line.length() - 1;
+            d = ( (mViewWidth - 100 ) - lineWidth) / (line.length()-1);
         }
 
         for (int i = 0; i < line.length(); i++) {
