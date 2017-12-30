@@ -1,47 +1,84 @@
 package com.grigorov.asparuh.probujdane;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.text.style.LeadingMarginSpan;
+import android.text.util.Linkify;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 public class BesedaActivity extends AppCompatActivity {
 
     private besediDBHelper mydb;
     private ViewGroup mLinearLayout;
+    private ViewGroup variantsLinearLayout;
+
+    private Boolean variant1Selected;
+    private String besedaName;
+    private String besedaDateYear;
+    private String besedaDateMonth;
+    private String besedaDateDay;
+    private String besedaLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_beseda);
 
         Intent intent = getIntent();
 
-        String besedaName = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaNameVar");
-        String besedaDateYear = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar");
-        String besedaDateMonth = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar");
-        String besedaDateDay = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar");
-        //String besedaText = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaTextVar");
+        besedaName = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaNameVar");
+        besedaDateYear = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar");
+        besedaDateMonth = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar");
+        besedaDateDay = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar");
+
+        variant1Selected = true;
 
         mydb = new besediDBHelper(this);
+
+        updateVariant ();
+
+    }
+
+    private void updateVariant () {
+
+        setContentView(R.layout.activity_beseda);
+
         Cursor rs = mydb.getbeseda(besedaName, besedaDateYear, besedaDateMonth, besedaDateDay);
         rs.moveToFirst();
+        if (variant1Selected==false) {
+            rs.moveToNext();
+        }
+        if (rs.getCount()<=1) {
+            variantsLinearLayout = (ViewGroup) findViewById(R.id.buttonsVariantsBesedaLinearLaoyt);
+            variantsLinearLayout.removeAllViews();
+        }
 
         String besedaText1 = rs.getString(rs.getColumnIndex("Text1"));
 
-        TextView textview1 = (TextView) findViewById(R.id.textBesedaName);
-        textview1.setText(besedaName);
+        TextView textViewName = (TextView) findViewById(R.id.textBesedaName);
+        textViewName.setText(besedaName);
 
-        TextView textview2 = (TextView) findViewById(R.id.textBesedaDetails);
-        String besedaDetails = rs.getString(rs.getColumnIndex("Type_1"))+", ";
+        TextView textViewDetailes = (TextView) findViewById(R.id.textBesedaDetails);
+        String besedaDetails = "\n" + rs.getString(rs.getColumnIndex("Type_1"))+", ";
         for (int i=2; i<=4; i++) {
             String typeX = rs.getString(rs.getColumnIndex("Type_"+i));
             if (typeX.equals("")==false) {
@@ -57,12 +94,17 @@ public class BesedaActivity extends AppCompatActivity {
         if (besedaHour.equals("")==false) {
             besedaDetails = besedaDetails + ", " + besedaHour;
         }
-        besedaDetails = besedaDetails + "\n";
-        textview2.setText(besedaDetails);
+        //besedaDetails = besedaDetails + "\n";
+        textViewDetailes.setText(besedaDetails);
 
-        TextView textview3 = (TextView) findViewById(R.id.textBesedaText1);
+        Button buttonLink = (Button) findViewById(R.id.textBesedaLink);
+        besedaLink = rs.getString(rs.getColumnIndex("Link"));
+        String linkToBeinsaBg = getResources().getString(R.string.link_beinsa_bg);
+        buttonLink.setText(linkToBeinsaBg);
+
+        TextView textViewText1 = (TextView) findViewById(R.id.textBesedaText1);
         //textview3.setText(besedaText);
-        textview3.setText(createIndentedText(besedaText1, 100, 0));
+        textViewText1.setText(createIndentedText(besedaText1, 100, 0));
 
         mLinearLayout = (ViewGroup) findViewById(R.id.textBesedaLinearLayout);
 
@@ -94,12 +136,59 @@ public class BesedaActivity extends AppCompatActivity {
             mLinearLayout.addView(layout2);
         }
 
+    }
+
+    public void openLinkBeinsaBg (View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(besedaLink));
+        startActivity(browserIntent);
+    }
+
+    public void startSearchMenuTask (View view) {
+        Intent intent = new Intent(this, SearchMenuActivity.class);
+        startActivity(intent);
+    }
+
+    public void startOptionsMenuTask (View view) {
+        Intent intent = new Intent(this, OptionsMenuActivity.class);
+        startActivity(intent);
+    }
+
+    private void showMessage(String errorMesaage) {
+        Context context = getApplicationContext();
+        Toast toast = Toast.makeText(context, errorMesaage, LENGTH_LONG);
+        toast.show();
+    }
+
+    public void setVariant1 (View view) {
+        if (variant1Selected==true) {
+            String errorMessage = getString(R.string.variant1_already_selected);
+            showMessage(errorMessage);
+        } else {
+            variant1Selected = true;
+            updateVariant ();
+            String variantUpdatedMessage = getString(R.string.variant1_updated);
+            showMessage(variantUpdatedMessage);
+        }
+
+    }
+
+    public void setVariant2 (View view) {
+        if (variant1Selected==false) {
+            String errorMessage = getString(R.string.variant2_already_selected);
+            showMessage(errorMessage);
+        } else {
+            variant1Selected = false;
+            updateVariant ();
+            String variantUpdatedMessage = getString(R.string.variant2_updated);
+            showMessage(variantUpdatedMessage);
+        }
 
     }
 
     public void onResume () {
         super.onResume();
         mydb = new besediDBHelper(this);
+        updateTextSize ();
     }
 
     public void onPause () {
@@ -111,6 +200,32 @@ public class BesedaActivity extends AppCompatActivity {
         SpannableString result=new SpannableString(text);
         result.setSpan(new LeadingMarginSpan.Standard(marginFirstLine, marginNextLines),0,text.length(),0);
         return result;
+    }
+
+    private void updateTextSize () {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
+        int besedaTextSize = Integer.parseInt(besedaTextSizeString);
+        int besedaDetailsSize = besedaTextSize + 2;
+        int besedaLinkSize = besedaTextSize + 2;
+        int besedaNameSize = besedaTextSize + 4;
+
+        TextView textViewBesedaDetails = (TextView) findViewById(R.id.textBesedaDetails);
+        textViewBesedaDetails.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaDetailsSize);
+
+        Button buttonBesedaLink = (Button) findViewById(R.id.textBesedaLink);
+        buttonBesedaLink.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaLinkSize);
+
+        TextView textViewBesedaName = (TextView) findViewById(R.id.textBesedaName);
+        textViewBesedaName.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaNameSize);
+
+        for (int i=0; i < mLinearLayout.getChildCount(); i++) {
+            View view = mLinearLayout.getChildAt(i);
+            if (view instanceof com.grigorov.asparuh.probujdane.besedaTextView) {
+                ((com.grigorov.asparuh.probujdane.besedaTextView)view).setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaTextSize);
+            }
+        }
+
     }
 
 }

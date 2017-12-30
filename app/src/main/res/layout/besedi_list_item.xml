@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="10"
         android:gravity="left|center_vertical"
-        android:textColor="@color/colorListBesedaNameText"
+        android:textColor="@color/colorBesedaTextText"
         android:textSize="@dimen/text_size_list_beseda_name"
         android:text="To be overwritten from java code" />
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="5"
         android:gravity="center"
-        android:textColor="@color/colorListBesedaDateText"
+        android:textColor="@color/colorBesedaTextText"
         android:textSize="@dimen/text_size_list_beseda_date"
         android:text="To be overwritten from java code" />
 

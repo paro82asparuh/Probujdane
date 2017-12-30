@@ -1,4 +1,5 @@
 <resources>
+    <string name="probujdane">Пробуждане</string>
     <string name="app_name">Probujdane</string>
     <string name="besedi_string">Беседи</string>
     <string name="molitvi_string">Молитви</string>
@@ -6,6 +7,7 @@
     <string name="music_string">Музика</string>
     <string name="notifications_string">Нотификации</string>
     <string name="options_string">Настройки</string>
+    <string name="options2_string">Настройки</string>
     <string name="nedelni_besedi_string">Неделни Беседи</string>
     <string name="syborni_besedi_string">Съборни Беседи</string>
     <string name="ook_besedi_string">Общ окултен клас</string>
@@ -40,4 +42,12 @@
     <string name="list_besedi_from_years_string">От</string>
     <string name="list_besedi_to_years_string">До</string>
     <string name="not_valid_filter_years_string">Зададени са грешни години за филтриране</string>
+    <string name="variant1_string">Вариант 1</string>
+    <string name="variant2_string">Вариант 2</string>
+    <string name="variant1_already_selected">Вариант 1 вече е избран</string>
+    <string name="variant2_already_selected">Вариант 2 вече е избран</string>
+    <string name="variant1_updated">Вариант 1 е избран</string>
+    <string name="variant2_updated">Вариант 2 е избран</string>
+    <string name="link_beinsa_bg">Линк към сайта beinsa.bg</string>
+    <string name="text_size_beseda">Размер на текст</string>
 </resources>

@@ -36,6 +36,11 @@ public class DrugiBesediMenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startOptionsMenuTask (View view) {
+        Intent intent = new Intent(this, OptionsMenuActivity.class);
+        startActivity(intent);
+    }
+
     public void startSyborniBesediTask(View view) {
         SelectedBesediType = Syborni_Besedi;
         startBesediListTask(view);

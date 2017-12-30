@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="4">
+        android:layout_weight="8">
 
         <View
             android:layout_width="0dp"
@@ -25,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:background="@drawable/sunrise3_top"
-        android:layout_weight="14">
+        android:background="@color/colorMainBackground"
+        android:layout_weight="24">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -56,8 +56,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/nedelni_besedi_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorNedelniBesediText"
-                    android:background="@color/colorNedelniBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startNedelniBesediTask" />
 
                 <View
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -90,8 +90,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/ook_besedi_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorOOKBesediText"
-                    android:background="@color/colorOOKBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startOOKBesediTask" />
 
                 <View
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -124,8 +124,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/mok_besedi_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorMOKBesediText"
-                    android:background="@color/colorMOKBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startMOKBesediTask" />
 
                 <View
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -158,8 +158,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/utrinni_slova_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorUtrinniSlovaText"
-                    android:background="@color/colorUtrinniSlovaBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startUtrinniSlovaBesediTask" />
 
                 <View
@@ -178,7 +178,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -191,8 +191,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/syborni_besedi_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorSyborniBesediText"
-                    android:background="@color/colorSyborniBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startSyborniBesediTask" />
 
                 <View
@@ -212,7 +212,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -225,8 +225,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/drugi_besedi_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorDrugiBesediText"
-                    android:background="@color/colorDrugiBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startDrugiBesediMenuTask" />
 
                 <View
@@ -245,7 +245,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -253,13 +253,20 @@
                     android:layout_weight="2" />
 
                 <Button
-                    android:layout_weight="10"
+                    android:layout_weight="8"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/search_string"
                     android:textSize="@dimen/text_size_besedi_menu_buttons"
-                    android:textColor="@color/colorSearchButtonText"
-                    android:background="@color/colorSearchButtonBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startSearchMenuTask" />
+
+                <Button
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/len_2"
                     android:onClick="startSearchMenuTask" />
 
                 <View
@@ -280,10 +287,5 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/sunrise3_bottom"
-        android:layout_weight="1" />
 
 </LinearLayout>

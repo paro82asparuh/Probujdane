@@ -140,6 +140,11 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
         startActivity(intent);
     }
 
+    public void startOptionsMenuTask (View view) {
+        Intent intent = new Intent(this, OptionsMenuActivity.class);
+        startActivity(intent);
+    }
+
     public void startNedelniBesediTask(View view) {
         SelectedBesediType = Nedelni_Besedi;
         startBesediListTask(view);
@@ -157,6 +162,11 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
     public void startUtrinniSlovaBesediTask(View view) {
         SelectedBesediType = Utrinni_Slova_Besedi;
+        startBesediListTask(view);
+    }
+
+    public void startSyborniBesediTask(View view) {
+        SelectedBesediType = Syborni_Besedi;
         startBesediListTask(view);
     }
 

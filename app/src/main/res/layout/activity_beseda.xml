@@ -7,6 +7,48 @@
     android:orientation="vertical"
     tools:context="com.grigorov.asparuh.probujdane.BesedaActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorTopLineBackground"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:background="@color/colorTopLineBackground"
+            android:textColor="@color/colorTopLineText"
+            android:textSize="@dimen/text_size_beseda_name"
+            android:text="@string/probujdane" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/len_1"
+            android:onClick="startSearchMenuTask" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/options_1"
+            android:onClick="startOptionsMenuTask" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <TextView
         android:id="@+id/textBesedaName"
         android:layout_width="match_parent"
@@ -31,48 +73,109 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="5">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3" />
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
             <LinearLayout
-                android:id="@+id/textBesedaLinearLayout"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_weight="42">
+                android:id="@+id/buttonsVariantsBesedaLinearLaoyt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
-                <TextView
-                    android:id="@+id/textBesedaDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/colorBesedaDateText"
-                    android:textSize="@dimen/text_size_beseda_date"
-                    android:text="To be overwritten from java code" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
-                <!-- <TextView -->
-                <com.grigorov.asparuh.probujdane.besedaTextView
-                    android:id="@+id/textBesedaText1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorBesedaTextText"
-                    android:textSize="@dimen/text_size_beseda_text"
-                    android:text="To be overwritten from java code" >
-                </com.grigorov.asparuh.probujdane.besedaTextView>
-                <!-- /> -->
+                <Button
+                    android:id="@+id/buttonBesedaVariant1"
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:text="@string/variant1_string"
+                    android:textSize="@dimen/text_size_beseda_variants"
+                    android:textColor="@color/colorTopLineText"
+                    android:background="@color/colorTopLineBackground"
+                    android:onClick="setVariant1" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/buttonBesedaVariant2"
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    android:text="@string/variant2_string"
+                    android:textSize="@dimen/text_size_beseda_variants"
+                    android:textColor="@color/colorTopLineText"
+                    android:background="@color/colorTopLineBackground"
+                    android:onClick="setVariant2" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3" />
+
+                <LinearLayout
+                    android:id="@+id/textBesedaLinearLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"
+                    android:layout_weight="42">
+
+                    <TextView
+                        android:id="@+id/textBesedaDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorBesedaDateText"
+                        android:textSize="@dimen/text_size_beseda_date"
+                        android:text="To be overwritten from java code" />
+
+                    <Button
+                        android:id="@+id/textBesedaLink"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:textColor="@color/colorBesedaLinkText"
+                        android:background="@color/colorBesedaLinkBackground"
+                        android:textSize="@dimen/text_size_beseda_link"
+                        android:text="To be overwritten from java code"
+                        android:onClick="openLinkBeinsaBg" />
+
+                    <com.grigorov.asparuh.probujdane.besedaTextView
+                        android:id="@+id/textBesedaText1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorBesedaTextText"
+                        android:textSize="@dimen/text_size_beseda_text"
+                        android:text="To be overwritten from java code" >
+                    </com.grigorov.asparuh.probujdane.besedaTextView>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3" />
+
+        </LinearLayout>
 
         </LinearLayout>
 

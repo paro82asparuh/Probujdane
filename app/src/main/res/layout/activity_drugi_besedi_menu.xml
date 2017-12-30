@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="4">
+        android:layout_weight="8">
 
         <View
             android:layout_width="0dp"
@@ -25,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:background="@drawable/sunrise3_top"
-        android:layout_weight="14">
+        android:background="@color/colorMainBackground"
+        android:layout_weight="24">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -56,8 +56,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/izvynredni_besedi_string"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons"
-                    android:textColor="@color/colorIzvynredniBesediText"
-                    android:background="@color/colorIzvynredniBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startIzvynredniBesediTask" />
 
                 <View
@@ -77,7 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -90,8 +90,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/klas_na_dobrodetelite_string"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons"
-                    android:textColor="@color/colorKlasNaDobroteteliteText"
-                    android:background="@color/colorKlasNaDobroteteliteBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startKlasNaDobroteteliteBesediTask" />
 
                 <View
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -124,8 +124,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/mladevki_sybori_string"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons"
-                    android:textColor="@color/colorMladejkiSyboriText"
-                    android:background="@color/colorMladejkiSyboriBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startMladejkiSyboriBesediTask" />
 
                 <View
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -158,8 +158,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/rilski_besedi_string"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons"
-                    android:textColor="@color/colorRilskiBesediText"
-                    android:background="@color/colorRilskiBesediBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startRilskiBesediTask" />
 
                 <View
@@ -179,7 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -191,10 +191,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="10"
-                    android:background="@color/colorBesediPredSestriteBackground"
+                    android:background="@color/colorMain"
                     android:onClick="startPredSestriteBesediTask"
                     android:text="@string/besedi_pred_sestrite_string"
-                    android:textColor="@color/colorBesediPredSestriteText"
+                    android:textColor="@color/colorMainText"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons" />
 
                 <View
@@ -214,7 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -227,8 +227,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/besedi_pred_rekyvoditelite_string"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons"
-                    android:textColor="@color/colorBesediPredRykovoditeliteText"
-                    android:background="@color/colorBesediPredRykovoditeliteBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startPredRykovoditeliteBesediTask" />
 
                 <View
@@ -247,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:orientation="horizontal"
-                android:layout_weight="7">
+                android:layout_weight="5">
 
                 <View
                     android:layout_width="0dp"
@@ -260,8 +260,8 @@
                     android:layout_height="match_parent"
                     android:text="@string/poslednoto_slovo_string"
                     android:textSize="@dimen/text_size_drugi_besedi_menu_buttons"
-                    android:textColor="@color/colorPoslednotoSlovoText"
-                    android:background="@color/colorPoslednotoSlovoBackground"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
                     android:onClick="startPoslednotoSlovoBesediTask" />
 
                 <View
@@ -274,17 +274,10 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_weight="3" />
 
         </LinearLayout>
 
-
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/sunrise3_bottom"
-        android:layout_weight="1" />
 
 </LinearLayout>

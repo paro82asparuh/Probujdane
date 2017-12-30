@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="4">
+        android:layout_weight="8">
 
         <View
             android:layout_width="0dp"
@@ -25,24 +25,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:background="@drawable/sunrise3_top"
-        android:layout_weight="14">
+        android:background="@color/colorMainBackground"
+        android:layout_weight="28">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/colorNotReadyText"
+            android:textColor="@color/colorMainText"
             android:textSize="@dimen/text_size_not_ready"
             android:text="@string/not_ready_string" />
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/sunrise3_bottom"
-        android:layout_weight="1" />
 
 </LinearLayout>

@@ -62,5 +62,22 @@
     <color name="colorListBesediSpinnerText">#FF0000C0</color>
     <color name="colorListBesediSpinnerBackground">#80B0E2FF</color>
     <color name="colorListBesediFilter">#80B0E2FF</color>
+    <color name="colorListBesediTypeBackground">#FFFFFFFF</color>
+    <color name="colorListBesediTypeText">#FF0000C0</color>
+    <color name="colorBesedaVariantText">#FF0000C0</color>
+    <color name="colorBesedaLinkText">#FF0000C0</color>
+    <color name="colorBesedaLinkBackground">#00FFFFFF</color>
+    <color name="colorMainBackground">#FFCDE4FF</color>
+    <color name="colorMain">#FFCEF8FE</color>
+    <color name="colorMainText">#FF0000FF</color>
+    <color name="colorBottomRed">#FFFF4040</color>
+    <color name="colorBottomOrange">#FFFFA500</color>
+    <color name="colorBottomYellow">#FFFFFF00</color>
+    <color name="colorBottomGreen">#FF92D050</color>
+    <color name="colorBottomLightBlue">#FF00B0F0</color>
+    <color name="colorBottomDarkBlue">#FF0070C0</color>
+    <color name="colorBottomViolet">#FF8C3CC8</color>
+    <color name="colorTopLineBackground">#FF4040FF</color>
+    <color name="colorTopLineText">#FFFFFFFF</color>
 
 </resources>

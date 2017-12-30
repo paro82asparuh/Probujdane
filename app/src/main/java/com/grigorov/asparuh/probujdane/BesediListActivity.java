@@ -153,6 +153,16 @@ public class BesediListActivity extends AppCompatActivity {
         mydb.close();
     }
 
+    public void startSearchMenuTask (View view) {
+        Intent intent = new Intent(this, SearchMenuActivity.class);
+        startActivity(intent);
+    }
+
+    public void startOptionsMenuTask (View view) {
+        Intent intent = new Intent(this, OptionsMenuActivity.class);
+        startActivity(intent);
+    }
+
     private void setBesediTypeCyrillic() {
         switch (SelectedBesediType) {
             case Nedelni_Besedi: BesediTypeCyrillic="Неделни беседи"; break;
