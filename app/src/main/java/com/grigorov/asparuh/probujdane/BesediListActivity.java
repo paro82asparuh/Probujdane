@@ -1,5 +1,6 @@
 package com.grigorov.asparuh.probujdane;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -52,6 +53,8 @@ public class BesediListActivity extends AppCompatActivity {
 
     BesediInfoAdapter besediInfoAdapter;
 
+    private String screenWidthInPixels;
+
 
     public class BesediInfoAdapter extends ArrayAdapter<besedaInfo> {
 
@@ -67,6 +70,7 @@ public class BesediListActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             // Get the data item for this position
             final besedaInfo currentBesedaInfo = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
@@ -93,12 +97,14 @@ public class BesediListActivity extends AppCompatActivity {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
+                    screenWidthInPixels = ((Integer) (findViewById(R.id.listViewBesedi).getWidth())).toString();
                     Intent intent = new Intent(BesediListActivity.this, BesedaActivity.class);
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaNameVar", currentBesedaInfo.getbesedaName());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar", currentBesedaInfo.getBesedaDateYear());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar", currentBesedaInfo.getBesedaDateMonth());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar", currentBesedaInfo.getBesedaDateDay());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaTextVar", "Try1");
+                    intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
                     startActivity(intent);
                 }
             });
@@ -129,8 +135,8 @@ public class BesediListActivity extends AppCompatActivity {
         // Spinners
         spinerFromYears = (Spinner)findViewById(R.id.spinnerFromYear);
         spinerToYears = (Spinner)findViewById(R.id.spinnerToYear);
-        ArrayAdapter<String> adapterFromYears = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, besediFromYears);
-        ArrayAdapter<String> adapterToYears = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, besediToYears);
+        SpinnerBesediListAdapter adapterFromYears = new SpinnerBesediListAdapter(this, R.layout.spinner_besedi_list_item, besediFromYears);
+        SpinnerBesediListAdapter adapterToYears = new SpinnerBesediListAdapter(this, R.layout.spinner_besedi_list_item, besediToYears);
         spinerFromYears.setAdapter(adapterFromYears);
         adapterFromYears.notifyDataSetChanged();
         spinerToYears.setAdapter(adapterToYears);
@@ -298,6 +304,52 @@ public class BesediListActivity extends AppCompatActivity {
 
         besediInfoAdapter.notifyDataSetChanged();
 
+    }
+
+
+    /***** Adapter class extends with ArrayAdapter ******/
+    public class SpinnerBesediListAdapter extends ArrayAdapter<String>{
+
+        private Activity activity;
+        private String[] data;
+        LayoutInflater inflater;
+
+        /*************  CustomAdapter Constructor *****************/
+        public SpinnerBesediListAdapter(
+                BesediListActivity activitySpinner,
+                int textViewResourceId,
+                String[] objects) {
+            super(activitySpinner, textViewResourceId, objects);
+            /********** Take passed values **********/
+            activity = activitySpinner;
+            data     = objects;
+            /***********  Layout inflator to call external xml layout () **********************/
+            inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getCustomView(position, convertView, parent);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            //return getCustomView(position, convertView, parent);
+            View row = inflater.inflate(R.layout.spinner_besedi_list_top, parent, false);
+            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerBesediListTop);
+            textView1.setText(data[position]);
+            return row;
+        }
+
+        // This funtion called for each row ( Called data.size() times )
+        public View getCustomView(int position, View convertView, ViewGroup parent) {
+
+            /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
+            View row = inflater.inflate(R.layout.spinner_besedi_list_item, parent, false);
+            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerBesediList);
+            textView1.setText(data[position]);
+            return row;
+        }
     }
 
 

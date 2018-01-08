@@ -79,5 +79,8 @@
     <color name="colorBottomViolet">#FF8C3CC8</color>
     <color name="colorTopLineBackground">#FF4040FF</color>
     <color name="colorTopLineText">#FFFFFFFF</color>
+    <color name="colorListBesediListBackground">#FFFFFFFF</color>
+    <color name="colorListBesediListMain">#FFB0E2FF</color>
+    <color name="colorListBesediListText">#FF0000C0</color>
 
 </resources>

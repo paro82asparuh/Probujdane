@@ -51,7 +51,7 @@
         android:minHeight="0dp"
         android:layout_weight="5"
         android:gravity="center"
-        android:background="@color/colorListBesediTypeBackground"
+        android:background="@color/colorListBesediListBackground"
         android:textColor="@color/colorListBesediTypeText"
         android:textSize="@dimen/text_size_not_ready"
         android:text="To be overwritten from java code" />
@@ -59,12 +59,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
         android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
+        android:background="@color/colorListBesediListBackground"
         android:layout_weight="5">
 
         <View
@@ -76,7 +78,8 @@
             android:id="@+id/spinnerFromYear"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@android:drawable/btn_dropdown"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
             android:spinnerMode="dropdown"
             android:layout_weight="12" />
 
@@ -89,7 +92,8 @@
             android:id="@+id/spinnerToYear"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@android:drawable/btn_dropdown"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
             android:spinnerMode="dropdown"
             android:layout_weight="12" />
 
@@ -101,10 +105,17 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="1" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
+        android:background="@color/colorListBesediListBackground"
         android:layout_weight="5">
 
         <View
@@ -112,7 +123,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
-        <Button
+        <TextView
             android:id="@+id/buttonFilterYears"
             android:layout_weight="24"
             android:layout_width="0dp"
@@ -121,8 +132,8 @@
             android:gravity="center"
             android:text="@string/filter_years_string"
             android:textSize="@dimen/text_size_list_filtering"
-            android:textColor="@color/colorListBesediSpinnerText"
-            android:background="@color/colorListBesediSpinnerBackground"
+            android:textColor="@color/colorListBesediListText"
+            android:background="@color/colorListBesediListMain"
             android:onClick="updateListBesedi" />
 
         <View
@@ -137,6 +148,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
         android:layout_weight="1" />
 
     <ListView
@@ -145,8 +157,8 @@
         android:layout_height="0dp"
         android:minHeight="0dp"
         android:layout_weight="50"
-        android:divider="@color/colorListBesedaDivider"
-        android:background="@color/colorMainBackground"
+        android:divider="@color/colorListBesediListBackground"
+        android:background="@color/colorListBesediListBackground"
         android:dividerHeight="@dimen/list_beseda_divider_hight"
         />
 

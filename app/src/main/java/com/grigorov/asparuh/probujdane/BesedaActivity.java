@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -24,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.InputStream;
+
 import static android.widget.Toast.LENGTH_LONG;
 
 public class BesedaActivity extends AppCompatActivity {
@@ -38,6 +44,7 @@ public class BesedaActivity extends AppCompatActivity {
     private String besedaDateMonth;
     private String besedaDateDay;
     private String besedaLink;
+    private String screenWidthInPixels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class BesedaActivity extends AppCompatActivity {
         besedaDateYear = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar");
         besedaDateMonth = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar");
         besedaDateDay = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar");
+        screenWidthInPixels = intent.getStringExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels");
 
         variant1Selected = true;
 
@@ -126,8 +134,21 @@ public class BesedaActivity extends AppCompatActivity {
             imageNameMain = imageNameMain.replace(",", "_comma_");
             imageNameMain = "img_probuj_"+imageNameMain;
             imageName = imageNameMain + "." + imageNameExtention;
-            int res = getResources().getIdentifier(imageNameMain.toLowerCase(), "drawable", this.getPackageName());
-            imageViewExtention.setImageResource(res);
+            // If the image is taken from the resources
+            //int res = getResources().getIdentifier(imageNameMain.toLowerCase(), "drawable", this.getPackageName());
+            //imageViewExtention.setImageResource(res);
+
+            // If the image is taken from the external files dir
+            String imageFullPath = getApplicationContext().getExternalFilesDir(null).getPath().toString()
+                    + "/besedi_pictures/" + imageName;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bmRawImg = BitmapFactory.decodeFile(imageFullPath, options);
+            int targetWidth = Integer.parseInt(screenWidthInPixels);
+            targetWidth = (int) (((double) targetWidth) * 0.875);
+            int targetHeight = bmRawImg.getHeight() * (targetWidth / bmRawImg.getWidth());
+            Bitmap bmScaledImg = Bitmap.createScaledBitmap(bmRawImg, targetWidth, targetHeight, true);
+            imageViewExtention.setImageBitmap(bmScaledImg);
 
             besedaTextView besedaTextExtention = (besedaTextView) layout2.findViewById(R.id.textBesedaExtention);
             String besedaTextX = rs.getString(rs.getColumnIndex("Text"+(i+2)));
