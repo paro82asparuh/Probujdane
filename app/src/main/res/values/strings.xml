@@ -1,5 +1,6 @@
 <resources>
     <string name="probujdane">Пробуждане</string>
+    <string name="app_name_label">Пробуждане</string>
     <string name="app_name">Probujdane</string>
     <string name="besedi_string">Беседи</string>
     <string name="molitvi_string">Молитви</string>

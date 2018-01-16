@@ -15,6 +15,7 @@
         android:layout_weight="2" />
 
     <View
+        android:id="@+id/dummy_id4"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

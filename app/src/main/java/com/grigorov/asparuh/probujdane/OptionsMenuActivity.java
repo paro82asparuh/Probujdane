@@ -40,14 +40,6 @@ public class OptionsMenuActivity extends AppCompatActivity {
 
         spinnerBesedaTextSize.setAdapter(adapterBesedaTextSize);
 
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
-        int currentSelection = Integer.parseInt(besedaTextSizeString);
-        currentSelection = (currentSelection-8)/2;
-
-        spinnerBesedaTextSize.setSelection(currentSelection,true);
-
         spinnerBesedaTextSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -60,6 +52,12 @@ public class OptionsMenuActivity extends AppCompatActivity {
             }
         });
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
+        int currentSelection = Integer.parseInt(besedaTextSizeString);
+        currentSelection = (currentSelection-8)/2;
+
+        spinnerBesedaTextSize.setSelection(currentSelection,true);
 
     }
 
