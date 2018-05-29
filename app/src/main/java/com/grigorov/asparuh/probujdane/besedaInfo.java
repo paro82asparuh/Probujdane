@@ -13,16 +13,18 @@ public class besedaInfo {
     private String besedaDateYear;
     private String besedaDateMonth;
     private String besedaDateDay;
+    private String besedaLink;
 
-    public besedaInfo (Integer inputID, String inputName, String inputDateYear, String inputDateMonth, String inputDateDay) {
+    public besedaInfo (Integer inputID, String inputName, String inputDateYear, String inputDateMonth, String inputDateDay, String inputLink) {
         besedaID = inputID;
         besedaName = inputName;
         besedaDateYear = inputDateYear;
         besedaDateMonth = inputDateMonth;
         besedaDateDay = inputDateDay;
+        besedaLink = inputLink;
     }
 
-    public String getbesedaName () {
+    public String getBesedaName () {
         return this.besedaName;
     }
 
@@ -40,6 +42,10 @@ public class besedaInfo {
 
     public String getBesedaDateDay () {
         return this.besedaDateDay;
+    }
+
+    public String getBesedaLink () {
+        return this.besedaLink;
     }
 
     public String getBesedaDateString () {

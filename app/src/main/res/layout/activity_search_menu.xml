@@ -7,36 +7,226 @@
     android:orientation="vertical"
     tools:context="com.grigorov.asparuh.probujdane.SearchMenuActivity">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMainBackground" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="8">
+        android:layout_weight="4">
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/beinsadouno" />
+            android:background="@color/colorMainBackground" />
+
+        <EditText
+            android:id="@+id/search_text_input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:background="@color/colorMainEditTextBackground"
+            android:textCursorDrawable="@null"
+            android:cursorVisible="true"
+            android:textColor="@color/colorMainText"
+            android:inputType="text" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorMainBackground" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMainBackground" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/colorMainBackground"
-        android:layout_weight="24">
+        android:layout_weight="5">
 
-        <TextView
-            android:layout_width="match_parent"
+        <View
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_weight="10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/search_button_string"
+            android:textSize="@dimen/text_size_main_buttons"
             android:textColor="@color/colorMainText"
-            android:textSize="@dimen/text_size_not_ready"
-            android:text="@string/not_ready_string" />
+            android:background="@color/colorMain"
+            android:onClick="startSearch" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMainBackground" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground"
+        android:layout_weight="5">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerSearchWhat"
+            android:layout_weight="10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_main_buttons"
+            android:background="@drawable/spinner_search"
+            android:popupBackground="@drawable/spinner_search"
+            android:spinnerMode="dropdown" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMainBackground" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground"
+        android:layout_weight="5">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerSearchWhere"
+            android:layout_weight="10"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_main_buttons"
+            android:background="@drawable/spinner_search"
+            android:popupBackground="@drawable/spinner_search"
+            android:spinnerMode="dropdown" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/search_beseda_input_linear"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="4">
+
+        <View
+            android:id="@+id/search_beseda_input_v1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorMainBackground" />
+
+        <EditText
+            android:id="@+id/search_beseda_input_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:background="@color/colorMainEditTextBackground"
+            android:textCursorDrawable="@null"
+            android:cursorVisible="true"
+            android:textColor="@color/colorMainText"
+            android:inputType="text" />
+
+        <View
+            android:id="@+id/search_beseda_input_v2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorMainBackground" />
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMainBackground" />
+
+    <LinearLayout
+        android:id="@+id/search_lenear_layout_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground"
+        android:layout_weight="40">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorMainBackground"
+            android:layout_weight="1" />
+
+        <ListView
+            android:id="@+id/search_list_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:minHeight="0dp"
+            android:divider="@color/colorMainBackground"
+            android:dividerHeight="@dimen/list_search_divider_hight"
+            android:background="@color/colorMainBackground" >
+
+        </ListView>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorMainBackground"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

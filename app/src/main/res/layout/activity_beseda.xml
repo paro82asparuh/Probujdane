@@ -65,6 +65,7 @@
         android:layout_weight="1" />
 
     <ScrollView
+        android:id="@+id/scrollViewBeseda"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="400"
@@ -165,6 +166,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorBesedaTextText"
                         android:textSize="@dimen/text_size_beseda_text"
+                        android:letterSpacing="0.02"
                         android:text="To be overwritten from java code" >
                     </com.grigorov.asparuh.probujdane.besedaTextView>
 

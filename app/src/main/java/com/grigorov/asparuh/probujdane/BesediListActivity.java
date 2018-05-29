@@ -92,19 +92,22 @@ public class BesediListActivity extends AppCompatActivity {
             //TextView tvBesedaName = (TextView) convertView.findViewById(R.id.textBesediName);
             //TextView tvBesedaDate = (TextView) convertView.findViewById(R.id.textBesediDate);
             // Populate the data into the template view using the data object
-            viewHolder.besedaName.setText(currentBesedaInfo.getbesedaName());
+            viewHolder.besedaName.setText(currentBesedaInfo.getBesedaName());
             viewHolder.besadaDate.setText(currentBesedaInfo.getBesedaDateString());
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
                     screenWidthInPixels = ((Integer) (findViewById(R.id.listViewBesedi).getWidth())).toString();
                     Intent intent = new Intent(BesediListActivity.this, BesedaActivity.class);
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaNameVar", currentBesedaInfo.getbesedaName());
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaNameVar", currentBesedaInfo.getBesedaName());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar", currentBesedaInfo.getBesedaDateYear());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar", currentBesedaInfo.getBesedaDateMonth());
                     intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar", currentBesedaInfo.getBesedaDateDay());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaTextVar", "Try1");
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaLinkVar", currentBesedaInfo.getBesedaLink());
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaVarinatVar", "1");
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaMarkersVar", "");
                     intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaScrollIndecesVar", "1 0");
                     startActivity(intent);
                 }
             });
@@ -213,7 +216,8 @@ public class BesediListActivity extends AppCompatActivity {
             String besedaDateYear = rs.getString(rs.getColumnIndex("Year_"));
             String besedaDateMonth = rs.getString(rs.getColumnIndex("Month_"));
             String besedaDateDay = rs.getString(rs.getColumnIndex("Day_of_Month"));
-            listBesediInfo.add(new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay));
+            String besedaLink = rs.getString(rs.getColumnIndex("Link"));
+            listBesediInfo.add(new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink));
 
             if (    (checkIntegerArrayContains(besediUniqueYears, rs.getInt(rs.getColumnIndex("Year_")) ) == false ) &&
                     (besedaDateYear!="")
@@ -293,7 +297,8 @@ public class BesediListActivity extends AppCompatActivity {
             String besedaDateYear = rs.getString(rs.getColumnIndex("Year_"));
             String besedaDateMonth = rs.getString(rs.getColumnIndex("Month_"));
             String besedaDateDay = rs.getString(rs.getColumnIndex("Day_of_Month"));
-            listBesediInfo.add(new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay));
+            String besedaLink = rs.getString(rs.getColumnIndex("Link"));
+            listBesediInfo.add(new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink));
 
             rs.moveToNext();
         }

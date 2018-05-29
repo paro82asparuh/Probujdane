@@ -17,4 +17,10 @@
     <dimen name="text_size_list_filtering">18sp</dimen>
     <dimen name="text_size_beseda_variants">14sp</dimen>
     <dimen name="text_size_beseda_link">14sp</dimen>
+    <dimen name="text_size_search_buttons">24sp</dimen>
+    <dimen name="text_size_search_spinner">18sp</dimen>
+    <dimen name="list_search_divider_hight">10dp</dimen>
+    <dimen name="text_size_search_result_up_left">18sp</dimen>
+    <dimen name="text_size_search_result_up_right">18sp</dimen>
+    <dimen name="text_size_search_result_main">18sp</dimen>
 </resources>

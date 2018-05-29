@@ -50,6 +50,7 @@
         <activity
             android:name=".SearchMenuActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="stateVisible|adjustPan"
             android:screenOrientation="portrait" />
         <activity
             android:name=".BesediListActivity"

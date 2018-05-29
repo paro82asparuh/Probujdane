@@ -82,5 +82,8 @@
     <color name="colorListBesediListBackground">#FFFFFFFF</color>
     <color name="colorListBesediListMain">#FFB0E2FF</color>
     <color name="colorListBesediListText">#FF0000C0</color>
+    <color name="colorMainEditTextBackground">#FFFFFFFF</color>
+    <color name="colorSearchiListBackground">#FFFFFFFF</color>
+    <color name="colorSearchResultMarker">#FFC02020</color>
 
 </resources>

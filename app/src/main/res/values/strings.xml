@@ -51,4 +51,16 @@
     <string name="variant2_updated">Вариант 2 е избран</string>
     <string name="link_beinsa_bg">Линк към сайта beinsa.bg</string>
     <string name="text_size_beseda">Размер на текст</string>
+    <string name="search_button_string">Търсене</string>
+    <string name="search_what">Какво да се търси</string>
+    <string name="search_option_every_word">Търси всяка дума</string>
+    <string name="search_option_exact_phrase">Търси точна фраза</string>
+    <string name="search_option_every_word_near">Търси всички думи в близост</string>
+    <string name="search_option_fts">FTS търсене, както в google.com</string>
+    <string name="search_option_whole_slovo">Търси в цялото слово</string>
+    <string name="search_option_all_besedi">Търси във всички беседи</string>
+    <string name="search_option_one_beseda">Търси в определена беседа</string>
+    <string name="search_option_molitvi">Търси в молитвите</string>
+    <string name="search_option_formuli">Търси във формулите</string>
+    <string name="search_no_results">Не е намерен нито един резултат от търсенето!</string>
 </resources>

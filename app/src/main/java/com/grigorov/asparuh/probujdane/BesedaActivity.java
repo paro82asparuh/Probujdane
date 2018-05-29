@@ -6,29 +6,39 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Layout;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
+import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -43,8 +53,17 @@ public class BesedaActivity extends AppCompatActivity {
     private String besedaDateYear;
     private String besedaDateMonth;
     private String besedaDateDay;
+    private String besedaInitialVariant;
     private String besedaLink;
     private String screenWidthInPixels;
+    private int numberOfImages;
+    private int srollTextX;
+    private int srollTextIndex;
+    private int scrollTextViewCounter;
+    private ScrollView scrollViewBeseda;
+    private besedaTextView scrollTextView;
+
+    private ArrayList<besedaMarker> listBesedaMarkers= new ArrayList<besedaMarker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +72,31 @@ public class BesedaActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         besedaName = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaNameVar");
+        besedaLink = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaLinkVar");
         besedaDateYear = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar");
         besedaDateMonth = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar");
         besedaDateDay = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar");
         screenWidthInPixels = intent.getStringExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels");
-
-        variant1Selected = true;
+        besedaInitialVariant = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaVarinatVar");
+        String besedaScrollIndeces  = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaScrollIndecesVar");
+        String[] bScrollIndeces = besedaScrollIndeces.split(" "); // Split to " " to read integers
+        srollTextX = Integer.parseInt(bScrollIndeces[0]);
+        srollTextIndex = Integer.parseInt(bScrollIndeces[1]);
+        variant1Selected = besedaInitialVariant.compareTo("1") == 0;
+        listBesedaMarkers.clear();
+        String besedaMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaMarkersVar");
+        if (besedaMarkers.equals("")==false) {
+            String[] inputBesedaMarkers = besedaMarkers.split(" "); // Split to " " to read integers
+            for (int marker_loop=0; marker_loop<inputBesedaMarkers.length;marker_loop=marker_loop+3) {
+                listBesedaMarkers.add(
+                        new besedaMarker(
+                                Integer.parseInt(inputBesedaMarkers[marker_loop]),
+                                Integer.parseInt(inputBesedaMarkers[marker_loop+1]),
+                                Integer.parseInt(inputBesedaMarkers[marker_loop+2])
+                        )
+                );
+            }
+        }
 
         mydb = new besediDBHelper(this);
 
@@ -70,7 +108,10 @@ public class BesedaActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_beseda);
 
-        Cursor rs = mydb.getbeseda(besedaName, besedaDateYear, besedaDateMonth, besedaDateDay);
+        scrollViewBeseda = (ScrollView) findViewById(R.id.scrollViewBeseda);
+        scrollTextViewCounter = 0;
+
+        Cursor rs = mydb.getbeseda(besedaLink, besedaDateYear, besedaDateMonth, besedaDateDay);
         rs.moveToFirst();
         if (variant1Selected==false) {
             rs.moveToNext();
@@ -106,17 +147,29 @@ public class BesedaActivity extends AppCompatActivity {
         textViewDetailes.setText(besedaDetails);
 
         Button buttonLink = (Button) findViewById(R.id.textBesedaLink);
-        besedaLink = rs.getString(rs.getColumnIndex("Link"));
+        //besedaLink = rs.getString(rs.getColumnIndex("Link"));
         String linkToBeinsaBg = getResources().getString(R.string.link_beinsa_bg);
         buttonLink.setText(linkToBeinsaBg);
 
-        TextView textViewText1 = (TextView) findViewById(R.id.textBesedaText1);
-        //textview3.setText(besedaText);
-        textViewText1.setText(createIndentedText(besedaText1, 100, 0));
+        besedaTextView textViewText1 = (besedaTextView) findViewById(R.id.textBesedaText1);
+        //TextView textViewText1 = (TextView) findViewById(R.id.textBesedaText1);
+        if (variant1Selected==(besedaInitialVariant.equals("1"))) {
+            textViewText1.setMarkersString(createMarkersString(1));
+            textViewText1.setScrollToChar(srollTextIndex);
+        } else {
+            textViewText1.setMarkersString("");
+            textViewText1.setScrollToChar(0);
+        }
+        textViewText1.setText(createSpannedBesedaText(besedaText1, 100, 0));
+        textViewText1.onPreDraw();
+
+        if (srollTextX==1) {
+            scrollTextView = (besedaTextView) findViewById(R.id.textBesedaText1);
+        }
 
         mLinearLayout = (ViewGroup) findViewById(R.id.textBesedaLinearLayout);
 
-        Integer numberOfImages = rs.getInt(rs.getColumnIndex("Number_of_Images"));
+        numberOfImages = rs.getInt(rs.getColumnIndex("Number_of_Images"));
 
         for (int i=0; i<numberOfImages; i++) {
             View layout2 = LayoutInflater.from(this).inflate(R.layout.beseda_extention_item, mLinearLayout, false);
@@ -152,10 +205,25 @@ public class BesedaActivity extends AppCompatActivity {
 
             besedaTextView besedaTextExtention = (besedaTextView) layout2.findViewById(R.id.textBesedaExtention);
             String besedaTextX = rs.getString(rs.getColumnIndex("Text"+(i+2)));
-            besedaTextExtention.setText(createIndentedText(besedaTextX, 100, 0));
+            if (variant1Selected==(besedaInitialVariant.equals("1"))) {
+                besedaTextExtention.setMarkersString(createMarkersString(i + 2));
+                besedaTextExtention.setScrollToChar(srollTextIndex);
+            } else {
+                besedaTextExtention.setMarkersString("");
+                besedaTextExtention.setScrollToChar(0);
+            }
+            besedaTextExtention.setText(createSpannedBesedaText(besedaTextX, 100, 0));
+            besedaTextExtention.onPreDraw();
 
             mLinearLayout.addView(layout2);
+
+            if (srollTextX==i+2) {
+                scrollTextView = (besedaTextView) layout2.findViewById(R.id.textBesedaExtention);
+            }
+
         }
+
+        updateTextSize ();
 
     }
 
@@ -210,6 +278,7 @@ public class BesedaActivity extends AppCompatActivity {
         super.onResume();
         mydb = new besediDBHelper(this);
         updateTextSize ();
+        //scrollDirectToTarget();
     }
 
     public void onPause () {
@@ -217,13 +286,32 @@ public class BesedaActivity extends AppCompatActivity {
         mydb.close();
     }
 
-    public static SpannableString createIndentedText(String text, int marginFirstLine, int marginNextLines) {
-        SpannableString result=new SpannableString(text);
+    // was static
+    public Spannable createSpannedBesedaText(String text, int marginFirstLine, int marginNextLines) {
+        //SpannableString result=new SpannableString(text);
+        Spannable result=new SpannableString(text);
         result.setSpan(new LeadingMarginSpan.Standard(marginFirstLine, marginNextLines),0,text.length(),0);
         return result;
     }
 
+    private String createMarkersString (int inputTextIndex) {
+        String markersString = "";
+        for (int m_loop=0;m_loop<listBesedaMarkers.size();m_loop=m_loop+1) {
+            if (listBesedaMarkers.get(m_loop).getTextIndex() == inputTextIndex) {
+                markersString = markersString +
+                        Integer.toString(listBesedaMarkers.get(m_loop).getStartIndex()) +
+                        " " +
+                        Integer.toString(listBesedaMarkers.get(m_loop).getEndIndex()) +
+                        " ";
+            }
+        }
+        return markersString;
+    }
+
     private void updateTextSize () {
+
+        //scrollTextViewCounter=0;
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
         int besedaTextSize = Integer.parseInt(besedaTextSizeString);
@@ -244,9 +332,61 @@ public class BesedaActivity extends AppCompatActivity {
             View view = mLinearLayout.getChildAt(i);
             if (view instanceof com.grigorov.asparuh.probujdane.besedaTextView) {
                 ((com.grigorov.asparuh.probujdane.besedaTextView)view).setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaTextSize);
+            } else if (view instanceof LinearLayout) {
+                TextView textViewInExtention = (TextView) ((LinearLayout)view).getChildAt(1);
+                textViewInExtention.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaTextSize);
             }
         }
 
     }
 
+    private class besedaMarker {
+        private int textIndex;
+        private int startIndex;
+        private int endIndex;
+
+        public besedaMarker (int inputTextIndex, int inputStartIndex, int inputEndIndex) {
+            textIndex = inputTextIndex;
+            startIndex = inputStartIndex;
+            endIndex = inputEndIndex;
+        }
+
+        public int getTextIndex() {
+            return textIndex;
+        }
+
+        public int getStartIndex() {
+            return startIndex;
+        }
+
+        public int getEndIndex() {
+            return endIndex;
+        }
+    }
+
+    public void scrollToTarget () {
+        // Run only after the last besedaTextView is drawn
+        scrollTextViewCounter++;
+        if (scrollTextViewCounter > numberOfImages ) {
+            scrollDirectToTarget();
+        }
+    }
+
+    private void scrollDirectToTarget () {
+        int scrollY = 0;
+        scrollY = scrollTextView.getScrollToY();
+        if ((srollTextX != 1) || (srollTextIndex != 0)) {
+            //scrollViewBeseda.scrollTo(0, scrollTextView.getTop() + scrollY);
+            int [] scrollViewBesedaCoor = {0,0};
+            int [] scrollTextViewCoor = {0,0};
+            scrollViewBeseda.getLocationInWindow(scrollViewBesedaCoor);
+            scrollTextView.getLocationInWindow(scrollTextViewCoor);
+            scrollViewBeseda.scrollTo(0, (scrollTextViewCoor[1] - scrollViewBesedaCoor[1])+scrollY );
+        }
+    }
+
+
 }
+
+
+

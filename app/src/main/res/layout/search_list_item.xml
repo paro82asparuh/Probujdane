@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/searchTextUpLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:text="To be overwritten from java code"
+            android:textSize="@dimen/text_size_search_result_up_left"
+            android:textColor="@color/colorMainText"
+            android:background="@color/colorMain" />
+
+        <TextView
+            android:id="@+id/searchTextUpRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Right"
+            android:textSize="@dimen/text_size_search_result_up_right"
+            android:textColor="@color/colorMainText"
+            android:background="@color/colorMain" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/searchTexMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="To be overwritten from java code"
+        android:textSize="@dimen/text_size_search_result_main"
+        android:textColor="@color/colorBesedaTextText"
+        android:background="@color/colorSearchiListBackground" />
+
+</LinearLayout>

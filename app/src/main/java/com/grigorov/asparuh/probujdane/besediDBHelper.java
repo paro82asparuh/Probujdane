@@ -32,7 +32,7 @@ public class besediDBHelper extends SQLiteOpenHelper {
 
     public Cursor getbesediInfo (String besediType) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery(  "SELECT Name, Day_of_Month, Month_, Year_ " +
+        Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                                     "FROM table1 WHERE Variant='1' " +
                                     "And " +
                                         "(Type_1='"+besediType+"' OR" +
@@ -47,7 +47,7 @@ public class besediDBHelper extends SQLiteOpenHelper {
 
     public Cursor getbesediInfoFiltered (String besediType, Integer selectedFromYears, Integer selectedToYears) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery(  "SELECT Name, Day_of_Month, Month_, Year_ " +
+        Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                         "FROM table1 WHERE Variant='1' " +
                         "And " +
                         "CAST(Year_ AS int)>="+selectedFromYears.toString() +" " +
@@ -64,11 +64,11 @@ public class besediDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getbeseda (String besedaName, String besedaDateYear, String besedaDateMonth, String besedaDateDay) {
+    public Cursor getbeseda (String besedaLink, String besedaDateYear, String besedaDateMonth, String besedaDateDay) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT * " +
                         "FROM table1 WHERE " +
-                        "Name='"+besedaName+"' " +
+                        "Link='"+besedaLink+"' " +
                         "And " +
                         "Year_='"+besedaDateYear+"' " +
                         "And " +
@@ -79,6 +79,32 @@ public class besediDBHelper extends SQLiteOpenHelper {
                         ";"
                 , null );
         return res;
+    }
+
+    public Cursor searchInBesedi (String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT " +
+                        "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
+                        getAllTextColumnIDs() +
+                        "FROM table1 WHERE table1 MATCH " +
+                        "'" + query + "' " +
+                        "ORDER BY CAST(length(offs) AS int) DESC " +
+                        "LIMIT 50" +
+                        ";"
+                , null );
+        return res;
+    }
+
+    private String getAllTextColumnIDs() {
+        String result = new String("");
+        result="Text1, Text2, Text3, Text4, Text5, Text6, Text7, Text8, Text9, Text10 " +
+                "Text11, Text12, Text13, Text14, Text15, Text16, Text17, Text18, Text19, Text20 " +
+                "Text21, Text22, Text23, Text24, Text25, Text26, Text27, Text28, Text29, Text30 " +
+                "Text31, Text32, Text33, Text34, Text35, Text36, Text37, Text38, Text39, Text40 " +
+                "Text41, Text42, Text43, Text44, Text45, Text46, Text47, Text48, Text49, Text50 " +
+                "Text51, Text52, Text53, Text54, Text55, Text56, Text57, Text58, Text59, Text60 " +
+                "Text61, Text62, Text63, Text64, Text65, Text66, Text67, Text68 ";
+        return result;
     }
 
 }
