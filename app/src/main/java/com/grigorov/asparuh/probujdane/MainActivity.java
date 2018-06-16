@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -360,7 +361,10 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
 
-    private class DownloadTask extends AsyncTask<String, Integer, String> {
+
+
+
+private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
         private PowerManager.WakeLock mWakeLock;
@@ -494,4 +498,6 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
         }
 
     }
+
+
 }

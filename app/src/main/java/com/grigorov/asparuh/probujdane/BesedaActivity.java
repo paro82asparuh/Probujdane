@@ -367,7 +367,8 @@ public class BesedaActivity extends AppCompatActivity {
     public void scrollToTarget () {
         // Run only after the last besedaTextView is drawn
         scrollTextViewCounter++;
-        if (scrollTextViewCounter > numberOfImages ) {
+        //if (scrollTextViewCounter > numberOfImages ) {
+        if (scrollTextViewCounter == (numberOfImages+1) ) {
             scrollDirectToTarget();
         }
     }
