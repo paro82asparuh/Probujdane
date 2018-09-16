@@ -29,7 +29,7 @@ public class OptionsMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options_menu);
 
-        besedaTextSizes = new String[]{"8", "10", "12", "14", "16", "18", "20", "22", "24"};
+        besedaTextSizes = new String[]{"8", "10", "12", "14", "16", "18", "20", "22", "24", "26", "28", "30"};
 
         spinnerBesedaTextSize = (Spinner)findViewById(R.id.spinnerBesedaTextSize);
 

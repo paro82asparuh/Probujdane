@@ -85,5 +85,7 @@
     <color name="colorMainEditTextBackground">#FFFFFFFF</color>
     <color name="colorSearchiListBackground">#FFFFFFFF</color>
     <color name="colorSearchResultMarker">#FFC02020</color>
+    <color name="colorFormuliUpperField">#FFB0E2FF</color>
+    <color name="colorFormuliTextBackground">#FFFFFFFF</color>
 
 </resources>

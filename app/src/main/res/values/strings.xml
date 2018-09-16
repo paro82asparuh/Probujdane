@@ -63,4 +63,5 @@
     <string name="search_option_molitvi">Търси в молитвите</string>
     <string name="search_option_formuli">Търси във формулите</string>
     <string name="search_no_results">Не е намерен нито един резултат от търсенето!</string>
+    <string name="title_formuli">Формули</string>
 </resources>

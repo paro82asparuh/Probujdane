@@ -23,4 +23,5 @@
     <dimen name="text_size_search_result_up_left">18sp</dimen>
     <dimen name="text_size_search_result_up_right">18sp</dimen>
     <dimen name="text_size_search_result_main">18sp</dimen>
+    <dimen name="text_size_default">14sp</dimen>
 </resources>

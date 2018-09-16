@@ -195,7 +195,7 @@
                     android:onClick="startSyborniBesediTask"
                     android:text="@string/syborni_besedi_string"
                     android:textColor="@color/colorMainText"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge" />
+                    android:textSize="@dimen/text_size_main_buttons" />
 
                 <View
                     android:layout_width="0dp"

@@ -55,7 +55,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/rilski_besedi_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startRilskiBesediTask" />
@@ -89,7 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/mladevki_sybori_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startMladejkiSyboriBesediTask" />
@@ -127,7 +127,7 @@
                     android:onClick="startPredSestriteBesediTask"
                     android:text="@string/besedi_pred_sestrite_string"
                     android:textColor="@color/colorMainText"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge" />
+                    android:textSize="@dimen/text_size_main_buttons" />
 
                 <View
                     android:layout_width="0dp"
@@ -158,7 +158,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/besedi_pred_rekyvoditelite_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startPredRykovoditeliteBesediTask" />
@@ -192,7 +192,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/notifications_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startNotificationsTask" />
@@ -245,7 +245,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/poslednoto_slovo_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startPoslednotoSlovoBesediTask" />
@@ -279,7 +279,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/izvynredni_besedi_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startIzvynredniBesediTask" />
@@ -313,7 +313,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/klas_na_dobrodetelite_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startKlasNaDobroteteliteBesediTask" />
@@ -381,7 +381,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:text="@string/search_string"
-                    android:textSize="@dimen/text_size_drugi_besedi_menu_buttons_xlarge"
+                    android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startSearchMenuTask" />
