@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.grigorov.asparuh.probujdane.MusicEntireActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorTopLineBackground"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:background="@color/colorTopLineBackground"
+            android:textColor="@color/colorTopLineText"
+            android:textSize="@dimen/text_size_top_app_name"
+            android:text="@string/probujdane" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/len_1"
+            android:onClick="startSearchMenuTask" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/options_1"
+            android:onClick="startOptionsMenuTask" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/topMusicLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="3"
+        android:background="@color/colorMainBackground">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomMusicLinearLaoyt"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:background="@color/colorMainBackground">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/bottomMidMusicLinearLaoyt"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/musicInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:text="To be removed"
+                android:textColor="@color/colorBesedaNameText"
+                android:textSize="@dimen/text_size_music_info" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:id="@+id/buttonsMusicLinearLaoyt"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:background="@color/colorMain"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/buttonMusicPrev"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:background="@drawable/music_prev"
+                    android:onClick="onButtonMusicPrevPressed" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <TextView
+                    android:id="@+id/buttonMusicPlayPause"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:background="@drawable/music_play"
+                    android:onClick="onButtonMusicPlayPausePressed" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <TextView
+                    android:id="@+id/buttonMusicNext"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:background="@drawable/music_next"
+                    android:onClick="onButtonMusicNextPressed" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <TextView
+                    android:id="@+id/buttonMusicStop"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="11"
+                    android:background="@drawable/music_stop"
+                    android:onClick="onButtonMusicStopPressed" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!--progressDrawable-->
+            <SeekBar
+                android:id="@+id/seekbarMusic"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:indeterminate="false"
+                android:max="200"
+                android:padding="0dp"
+                android:paddingEnd="0dp"
+                android:paddingStart="0dp"
+                android:progress="100"
+                android:progressDrawable="@layout/music_seek_progress"
+                android:thumb="@layout/music_seek_thumb" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</LinearLayout>

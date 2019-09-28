@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorMainBackground"
+    android:layout_weight="24">
+
+    <ListView
+        android:id="@+id/listViewMusicSongs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="1"
+        android:divider="@color/colorMainBackground"
+        android:background="@color/colorMusicSongsListMain"
+        android:dividerHeight="@dimen/list_music_songs_divider_hight"
+        />
+
+</LinearLayout>

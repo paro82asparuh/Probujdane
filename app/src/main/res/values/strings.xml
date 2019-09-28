@@ -64,4 +64,11 @@
     <string name="search_option_formuli">Търси във формулите</string>
     <string name="search_no_results">Не е намерен нито един резултат от търсенето!</string>
     <string name="title_formuli">Формули</string>
+    <string name="title_molitvi">Молитви</string>
+    <string name="songs_string">Песни</string>
+    <string name="panevritmia_string">Паневритмия</string>
+    <string name="instrumental_string">Инструментал</string>
+    <string name="playlists_string">Плейлисти</string>
+    <string name="music_listen_string">Слушай!</string>
+    <string name="no_music_selected_string">Избери песен или плейлист!</string>
 </resources>

@@ -597,6 +597,10 @@ public class SearchMenuActivity extends AppCompatActivity {
             searchCounter++;
 
         }
+
+        if (!rs.isClosed())  {
+            rs.close();
+        }
     }
 
     private class offsetRes {

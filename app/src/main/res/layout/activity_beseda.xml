@@ -25,7 +25,7 @@
             android:gravity="center"
             android:background="@color/colorTopLineBackground"
             android:textColor="@color/colorTopLineText"
-            android:textSize="@dimen/text_size_beseda_name"
+            android:textSize="@dimen/text_size_top_app_name"
             android:text="@string/probujdane" />
 
         <TextView
@@ -59,29 +59,24 @@
         android:textSize="@dimen/text_size_beseda_name"
         android:text="To be overwritten from java code" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
     <ScrollView
         android:id="@+id/scrollViewBeseda"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="400"
-        android:scrollbars="vertical"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/buttonsVariantsBesedaLinearLaoyt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <View
                     android:layout_width="0dp"
@@ -90,14 +85,14 @@
 
                 <Button
                     android:id="@+id/buttonBesedaVariant1"
-                    android:layout_weight="10"
                     android:layout_width="0dp"
                     android:layout_height="20dp"
-                    android:text="@string/variant1_string"
-                    android:textSize="@dimen/text_size_beseda_variants"
-                    android:textColor="@color/colorTopLineText"
+                    android:layout_weight="10"
                     android:background="@color/colorTopLineBackground"
-                    android:onClick="setVariant1" />
+                    android:onClick="setVariant1"
+                    android:text="@string/variant1_string"
+                    android:textColor="@color/colorTopLineText"
+                    android:textSize="@dimen/text_size_beseda_variants" />
 
                 <View
                     android:layout_width="0dp"
@@ -106,14 +101,14 @@
 
                 <Button
                     android:id="@+id/buttonBesedaVariant2"
-                    android:layout_weight="10"
                     android:layout_width="0dp"
                     android:layout_height="20dp"
-                    android:text="@string/variant2_string"
-                    android:textSize="@dimen/text_size_beseda_variants"
-                    android:textColor="@color/colorTopLineText"
+                    android:layout_weight="10"
                     android:background="@color/colorTopLineBackground"
-                    android:onClick="setVariant2" />
+                    android:onClick="setVariant2"
+                    android:text="@string/variant2_string"
+                    android:textColor="@color/colorTopLineText"
+                    android:textSize="@dimen/text_size_beseda_variants" />
 
                 <View
                     android:layout_width="0dp"
@@ -125,8 +120,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="5">
+                android:layout_weight="5"
+                android:orientation="horizontal">
 
                 <View
                     android:layout_width="0dp"
@@ -137,38 +132,37 @@
                     android:id="@+id/textBesedaLinearLayout"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="42">
+                    android:layout_weight="42"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textBesedaDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:text="To be overwritten from java code"
                         android:textColor="@color/colorBesedaDateText"
-                        android:textSize="@dimen/text_size_beseda_date"
-                        android:text="To be overwritten from java code" />
+                        android:textSize="@dimen/text_size_beseda_date" />
 
                     <Button
                         android:id="@+id/textBesedaLink"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
-                        android:gravity="center"
-                        android:textColor="@color/colorBesedaLinkText"
                         android:background="@color/colorBesedaLinkBackground"
-                        android:textSize="@dimen/text_size_beseda_link"
+                        android:gravity="center"
+                        android:onClick="openLinkBeinsaBg"
                         android:text="To be overwritten from java code"
-                        android:onClick="openLinkBeinsaBg" />
+                        android:textColor="@color/colorBesedaLinkText"
+                        android:textSize="@dimen/text_size_beseda_link" />
 
                     <com.grigorov.asparuh.probujdane.besedaTextView
                         android:id="@+id/textBesedaText1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorBesedaTextText"
-                        android:textSize="@dimen/text_size_beseda_text"
                         android:letterSpacing="0.02"
-                        android:text="To be overwritten from java code" >
-                    </com.grigorov.asparuh.probujdane.besedaTextView>
+                        android:text="To be overwritten from java code"
+                        android:textColor="@color/colorBesedaTextText"
+                        android:textSize="@dimen/text_size_beseda_text"></com.grigorov.asparuh.probujdane.besedaTextView>
 
                 </LinearLayout>
 
@@ -177,10 +171,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="3" />
 
-        </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>

@@ -3,11 +3,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="text_size_main_buttons">22sp</dimen>
+    <dimen name="text_size_main_buttons">30sp</dimen>
     <dimen name="text_size_besedi_menu_buttons">22sp</dimen>
     <dimen name="text_size_drugi_besedi_menu_buttons">18sp</dimen>
     <dimen name="text_size_drugi_besedi_menu_buttons_xlarge">22sp</dimen>
-    <dimen name="text_size_not_ready">20sp</dimen>
+    <dimen name="text_size_not_ready">40sp</dimen>
     <dimen name="text_size_list_beseda_name">16sp</dimen>
     <dimen name="text_size_list_beseda_date">16sp</dimen>
     <dimen name="text_size_beseda_name">16sp</dimen>
@@ -23,11 +23,10 @@
     <dimen name="text_size_search_result_up_left">18sp</dimen>
     <dimen name="text_size_search_result_up_right">18sp</dimen>
     <dimen name="text_size_search_result_main">18sp</dimen>
-    <dimen name="text_size_default">14sp</dimen>
+    <dimen name="text_size_default">24sp</dimen>
     <dimen name="text_size_molitva_title">16sp</dimen>
     <dimen name="text_size_molitva_text">12sp</dimen>
     <dimen name="text_size_top_app_name">16sp</dimen>
-    <dimen name="text_size_list_molitva_title">16sp</dimen>
     <dimen name="text_size_music_info">16sp</dimen>
     <dimen name="list_music_songs_divider_hight">10dp</dimen>
     <dimen name="text_size_list_song_name">16sp</dimen>

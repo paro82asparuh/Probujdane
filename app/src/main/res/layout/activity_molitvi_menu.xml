@@ -9,34 +9,61 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="8">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/beinsadouno" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:background="@color/colorMainBackground"
-        android:layout_weight="28">
+            android:background="@color/colorTopLineBackground"
+            android:layout_weight="2" />
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:background="@color/colorTopLineBackground"
+            android:textColor="@color/colorTopLineText"
+            android:textSize="@dimen/text_size_top_app_name"
+            android:text="@string/probujdane" />
+
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/colorMainText"
-            android:textSize="@dimen/text_size_not_ready"
-            android:text="@string/not_ready_string" />
+            android:background="@drawable/len_1"
+            android:onClick="startSearchMenuTask" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/options_1"
+            android:onClick="startOptionsMenuTask" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:background="@color/colorListFormuliBackground"
+        android:textColor="@color/colorListFormuliTitleText"
+        android:textSize="@dimen/text_size_not_ready"
+        android:text="@string/title_molitvi" />
+
+    <ListView
+        android:id="@+id/listViewMolitvi"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="50"
+        android:divider="@color/colorListFormuliBackground"
+        android:background="@color/colorListFormuliBackground"
+        android:dividerHeight="@dimen/list_beseda_divider_hight"
+        />
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.grigorov.asparuh.probujdane;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
@@ -9,13 +10,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.os.StatFs;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -42,6 +46,14 @@ import java.util.zip.ZipInputStream;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class MainActivity extends AppCompatActivity implements BesediUpdateDialogFragment.BesediUpdateDialogListener {
+
+    public final static int MY_PERMISSIONS_REQUEST_INTERNET=0;
+    public final static int MY_PERMISSIONS_REQUEST_ACCESS_NETWORK_STATE=1;
+    public final static int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE=2;
+    public final static int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE=3;
+    public final static int MY_PERMISSIONS_REQUEST_WAKE_LOCK=4;
+    public final static int MY_PERMISSIONS_REQUEST_STORAGE=5;
+
 
     private int SelectedBesediType;
     public final static int Nedelni_Besedi =1;
@@ -87,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        handlePermissions();
+
         context = getApplicationContext();
         downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         BesediDatabaseOk = checkUpdateBesediDatabase();
@@ -127,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startMusicTask (View view) {
-        Intent intent = new Intent(this, MusicMenuActivity.class);
+        Intent intent = new Intent(this, MusicEntireActivity.class);
         startActivity(intent);
     }
 
@@ -248,8 +262,14 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
                     ( iDescription.equals( getString(R.string.download_description)))
                     )
             {
+                if (!cursor.isClosed())  {
+                    cursor.close();
+                }
                 return true;
             }
+        }
+        if (!cursor.isClosed())  {
+            cursor.close();
         }
         return false;
     }
@@ -497,6 +517,94 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         }
 
+    }
+
+
+
+    private void handlePermissions () {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.INTERNET)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.INTERNET)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed; request the permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.INTERNET},
+                        MY_PERMISSIONS_REQUEST_INTERNET);
+
+                // MY_PERMISSIONS_REQUEST_INTERNET is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_NETWORK_STATE)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE},
+                        MY_PERMISSIONS_REQUEST_ACCESS_NETWORK_STATE);
+            }
+        } else {
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        } else {
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        } else {
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WAKE_LOCK)) {
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WAKE_LOCK},
+                        MY_PERMISSIONS_REQUEST_WAKE_LOCK);
+            }
+        } else {
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_INTERNET: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
     }
 
 

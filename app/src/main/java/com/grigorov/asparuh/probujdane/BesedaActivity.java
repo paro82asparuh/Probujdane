@@ -225,6 +225,10 @@ public class BesedaActivity extends AppCompatActivity {
 
         updateTextSize ();
 
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+
     }
 
     public void openLinkBeinsaBg (View view) {

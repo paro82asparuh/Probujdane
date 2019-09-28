@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.grigorov.asparuh.probujdane.MusicMenuActivity">
+    tools:context="com.grigorov.asparuh.probujdane.BesediMenuActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,21 +22,204 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayoutMusic"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/colorMainBackground"
         android:layout_weight="24">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textColor="@color/colorMainText"
-            android:textSize="@dimen/text_size_not_ready"
-            android:text="@string/not_ready_string" />
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/songs_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startSongsTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/panevritmia_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startPanevritmiaTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/instrumental_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startPanevritmiaInstrumentalTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/playlists_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startPlaylistsTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/search_string"
+                    android:textSize="@dimen/text_size_besedi_menu_buttons"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startSearchMenuTask" />
+
+                <Button
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/len_2"
+                    android:onClick="startSearchMenuTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
+
 
 </LinearLayout>
