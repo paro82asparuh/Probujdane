@@ -1,5 +1,6 @@
 package com.grigorov.asparuh.probujdane;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -34,8 +37,10 @@ public class MusicEntireActivity extends AppCompatActivity {
     public final static int STATE_INSTRUMENTAl_LIST = 4;
     public final static int STATE_SONG_SINGLE = 5;
 
-    TextView buttonMusicPlayPause;
-    TextView musicInfoText;
+    private TextView buttonMusicPlayPause;
+    private TextView musicInfoText;
+    private SeekBar seekbarMusic;
+    private int seekBarMaxUnits = 1000;
 
     private LinearLayout topMusicLinearLayout;
 
@@ -59,7 +64,22 @@ public class MusicEntireActivity extends AppCompatActivity {
     private int positionPlayedSong;
     private boolean songIsPaused;
 
+    private boolean serviceInitOnlyBinding;
+
     private BroadcastReceiver broadcastReceiver;
+
+    private Handler handlerUpdateSeekbar = new Handler();
+    private Runnable runnableUpdateSeekbar = new Runnable() {
+        @Override
+        public void run() {
+            if (musicBound==true) {
+                if (musicSrv.isPlaying() == true) {
+                    seekbarMusic.setProgress(seekBarMaxUnits * musicSrv.getCurrentPosition() / musicSrv.getDuration());
+                }
+            }
+            handlerUpdateSeekbar.postDelayed(this, 500);
+        }
+    };
 
     public class SongsInfoAdapter extends ArrayAdapter<songInfo> {
 
@@ -155,6 +175,30 @@ public class MusicEntireActivity extends AppCompatActivity {
         musicInfoText  = (TextView) findViewById(R.id.musicInfoText);
         musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
 
+        //Seekbar
+        seekbarMusic = (SeekBar) findViewById(R.id.seekbarMusic);
+        seekbarMusic.setMax(seekBarMaxUnits);
+        seekbarMusic.setProgress(0);
+        seekbarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if( (musicBound==true) && (musicSrv.isPlaying()==true) && (fromUser==true) ){
+                    musicSrv.seekTo(musicSrv.getDuration() * progress / seekBarMaxUnits);
+                }
+            }
+        });
+        
+        // Check if service is running
+        serviceInitOnlyBinding = true;
+        playIntent = new Intent(this, MusicService.class);
+        bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     private void registerBroadcastReceiver() {
@@ -162,8 +206,11 @@ public class MusicEntireActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (musicBound==true) {
+                    musicBound = false;
                     unbindService(musicConnection);
                     musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
+                    seekbarMusic.setProgress(0);
+                    handlerUpdateSeekbar.removeCallbacks(runnableUpdateSeekbar);
                 }
             }
         };
@@ -177,12 +224,24 @@ public class MusicEntireActivity extends AppCompatActivity {
             MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
             //get service
             musicSrv = binder.getService();
-            //pass list
-            musicSrv.setList(songList);
             musicBound = true;
-            musicSrv.setSong(0);
-            musicSrv.playSong();
-
+            if (serviceInitOnlyBinding==true) {
+                if (musicSrv.isPlaying() == true) {
+                    songSinlgePlayed = musicSrv.getPlayedSong();
+                    musicInfoText.setText(songSinlgePlayed.getSongName());
+                    buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
+                    handlerUpdateSeekbar.postDelayed(runnableUpdateSeekbar, 0);
+                } else {
+                    musicBound = false;
+                    unbindService(musicConnection);
+                    stopService(playIntent);
+                }
+            } else {
+                //pass list 
+                musicSrv.setList(songList);
+                musicSrv.setSong(0);
+                musicSrv.playSong();
+            }
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -346,15 +405,11 @@ public class MusicEntireActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // was initService content in the example, move to the actual music starts !!!
     }
 
     public void initService () {
-        //if(playIntent==null){
-            playIntent = new Intent(this, MusicService.class);
-            bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            //startService(playIntent); // may not be needed!
-        //}
+        bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        startService(playIntent);
     }
 
     public void onButtonSongPlayPressed (View view) {
@@ -382,23 +437,44 @@ public class MusicEntireActivity extends AppCompatActivity {
         songList.clear();
         songList.add(songSinlgePlayed);
 
-        initService();
+        buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
+
+        handlerUpdateSeekbar.postDelayed(runnableUpdateSeekbar, 0);
+
+        serviceInitOnlyBinding = false;
+
+        if (musicBound == false) {
+            initService();
+        } else {
+            if (musicSrv.isPlaying() == true) {
+                musicSrv.stopPlayer();
+            }
+            musicSrv.setList(songList);
+            musicSrv.setSong(0);
+            musicSrv.playSong();
+        }
     }
 
     public void onButtonMusicStopPressed (View view) {
         if (musicBound==true) {
             unbindService(musicConnection);
+            stopService(playIntent);
         }
         buttonMusicPlayPause.setBackgroundResource(R.drawable.music_play);
         musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
         songIsPaused = true;
+        seekbarMusic.setProgress(0);
+        handlerUpdateSeekbar.removeCallbacks(runnableUpdateSeekbar);
     }
 
     @Override
     protected void onDestroy() {
         if (musicBound==true) {
+            musicBound=false;
             unbindService(musicConnection);
         }
+        handlerUpdateSeekbar.removeCallbacks(runnableUpdateSeekbar);
+        unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }
 
@@ -411,26 +487,26 @@ public class MusicEntireActivity extends AppCompatActivity {
     }
 
     public void onButtonMusicPlayPausePressed (View view) {
-        if ( (musicBound==true) && (musicSrv.isPlaying()==true) ) {
-            buttonMusicPlayPause.setBackgroundResource(R.drawable.music_play);
-            musicSrv.pausePlayer();
-            positionPlayedSong = musicSrv.getCurrentPosition();
-            songIsPaused = true;
-        } else {
-            if ( (musicBound==true) && (songIsPaused==true) ) {
+        if (musicBound==true) {
+            if (musicSrv.isPlaying()==true) {
+                buttonMusicPlayPause.setBackgroundResource(R.drawable.music_play);
+                musicSrv.pausePlayer();
+                positionPlayedSong = musicSrv.getCurrentPosition();
+                songIsPaused = true;
+            } else if (songIsPaused==true) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 musicSrv.seekTo(positionPlayedSong);
                 musicSrv.go();
                 songIsPaused = false;
-            } else {
-                if ( musicState == STATE_SONG_SINGLE) {
-                    buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
-                    if (musicBound==true) {
-                        unbindService(musicConnection);
-                    }
-                    startPlayingSingleSong(songOnScreen.getSongID());
-                }
+            } else if ( musicState == STATE_SONG_SINGLE) {
+                buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
+                unbindService(musicConnection);
+                stopService(playIntent);
+                startPlayingSingleSong(songOnScreen.getSongID());
             }
+        } else if ( musicState == STATE_SONG_SINGLE) {
+                    buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
+                    startPlayingSingleSong(songOnScreen.getSongID());
         }
     }
 

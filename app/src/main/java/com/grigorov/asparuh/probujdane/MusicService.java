@@ -36,15 +36,22 @@ public class MusicService extends Service implements
     private String songTitle="";
     private static final int NOTIFY_ID=1;
 
+    private Song playedSong;
+
+    private boolean playerIsReleased;
+
     @Override
     public IBinder onBind(Intent arg0) {
         return musicBind;
     }
 
     @Override
+    public int onStartCommand(Intent intent,int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
     public boolean onUnbind(Intent intent){
-        player.stop();
-        player.release();
         return false;
     }
 
@@ -57,6 +64,7 @@ public class MusicService extends Service implements
             //stopSelf();
             Intent intentToUnbindMusicService = new Intent("com.grigorov.asparuh.probujdane.IntentToUnbindMusicService");
             getApplicationContext().sendBroadcast(intentToUnbindMusicService);
+            stopSelf();
         }
     }
 
@@ -84,8 +92,10 @@ public class MusicService extends Service implements
                 .setOngoing(true)
                 .setContentTitle("Playing")
                 .setContentText(songTitle);
-        Notification not = builder.build();
-        startForeground(NOTIFY_ID, not);
+        Notification notification = builder.build();
+                    // NO_CLEAR makes the notification stay when the user performs a "delete all" command
+        notification.flags = notification.flags | Notification.FLAG_NO_CLEAR;
+        startForeground(NOTIFY_ID, notification);
     }
 
     public void onCreate(){
@@ -97,6 +107,8 @@ public class MusicService extends Service implements
         songPosn=0;
         //create player
         player = new MediaPlayer();
+        playerIsReleased = true;
+
         initMusicPlayer();
     }
 
@@ -122,12 +134,15 @@ public class MusicService extends Service implements
 
     public void playSong(){
 
+        playerIsReleased = false;
+
         player.reset();
-        Song playSong = songs.get(songPosn);
-        songTitle = playSong.getSongName();
+
+        playedSong = songs.get(songPosn);
+        songTitle = playedSong.getSongName();
         // get the file
-        File songFile = new File(getApplicationContext().getExternalFilesDir(null)+playSong.getSongSubPath(),
-                playSong.getSongFileName());
+        File songFile = new File(getApplicationContext().getExternalFilesDir(null)+playedSong.getSongSubPath(),
+                playedSong.getSongFileName());
         //set uri
         Uri trackUri = Uri.fromFile(songFile);
         //Uri trackUri = Uri.parse(songFile.toString());
@@ -143,6 +158,10 @@ public class MusicService extends Service implements
 
     }
 
+    public Song getPlayedSong () {
+        return playedSong;
+    }
+
     public void setSong(int songIndex){
         songPosn=songIndex;
     }
@@ -151,12 +170,16 @@ public class MusicService extends Service implements
         return player.getCurrentPosition();
     }
 
-    public int getDur(){
+    public int getDuration(){
         return player.getDuration();
     }
 
     public boolean isPlaying(){
-        return player.isPlaying();
+        if (playerIsReleased == true) {
+            return false;
+        } else {
+            return player.isPlaying();
+        }
     }
 
     public void pausePlayer(){
@@ -183,9 +206,18 @@ public class MusicService extends Service implements
         playSong();
     }
 
+    public void stopPlayer() {
+        stopForeground(true);
+        player.stop();
+    }
+
     @Override
     public void onDestroy() {
         stopForeground(true);
+        player.stop();
+        player.reset();
+        player.release();
+        playerIsReleased = true;
     }
 
 
