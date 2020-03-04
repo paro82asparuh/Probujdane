@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorMainBackground"
+    android:layout_weight="24">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMain" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@color/colorMain"
+        android:clickable="true">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textPlaylistName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/viewPlaylistPlay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/music_speaker"
+            android:layout_weight="2" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMain" />
+
+    <LinearLayout
+        android:id="@+id/linearPlaylistOptions"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:clickable="true">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textPlaylistAddSong"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_add_song_to_playlist_string" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/viewPlusPlaylistAddSong"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/add2_playlist"
+            android:layout_weight="4" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textDeletePlaylist"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_delete_playlist_string" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/viewDeletePlaylist"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/delete"
+            android:layout_weight="4" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textPlaylistRemoveSong"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_remove_song_from_playlist_string" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/viewMinusPlaylistRemoveSong"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/minus"
+            android:layout_weight="4" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewBelowPlaylistOptions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/colorMain" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_weight="0"
+        android:background="@color/colorMainBackground" />
+
+    <ListView
+        android:id="@+id/listViewMusicPlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="50"
+        android:divider="@color/colorMainBackground"
+        android:background="@color/colorMainBackground"
+        android:dividerHeight="@dimen/list_music_playlists_divider_hight"
+        />
+
+</LinearLayout>

@@ -16,6 +16,7 @@
         android:label="@string/app_name_label"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".FormulaActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -67,16 +68,17 @@
             android:name=".OptionsMenuActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".MolitvaActivity"
+        <activity
+            android:name=".MolitvaActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity android:name=".MusicEntireActivity"
-            android:launchMode="singleTop"
+        <activity
+            android:name=".MusicEntireActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait">
-        </activity>
-        <service android:name="com.grigorov.asparuh.probujdane.MusicService" />
-    </application>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
 
+        <service android:name=".MusicService" />
+    </application>
 
 </manifest>

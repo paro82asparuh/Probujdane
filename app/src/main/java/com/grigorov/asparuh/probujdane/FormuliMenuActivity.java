@@ -43,7 +43,7 @@ public class FormuliMenuActivity extends AppCompatActivity {
                 viewHolder = new FormulaAdapter.ViewHolder();
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(R.layout.formuli_list_item, parent, false);
-                viewHolder.formulaShownText = (TextView) convertView.findViewById(R.id.formulaShownText);
+                viewHolder.formulaShownText = convertView.findViewById(R.id.formulaShownText);
                 // Cache the viewHolder object inside the fresh view
                 convertView.setTag(viewHolder);
             } else {
@@ -54,7 +54,7 @@ public class FormuliMenuActivity extends AppCompatActivity {
             //TextView tvBesedaName = (TextView) convertView.findViewById(R.id.textBesediName);
             //TextView tvBesedaDate = (TextView) convertView.findViewById(R.id.textBesediDate);
             // Populate the data into the template view using the data object
-            String formulihownText = new String("");
+            String formulihownText = "";
             formulihownText = currentFormula.getTitle();
             if (formulihownText.equals("")==false) {
                 formulihownText += "\n";

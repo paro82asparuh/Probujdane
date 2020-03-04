@@ -101,4 +101,6 @@
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorSongTitleText">#FF0000C0</color>
     <color name="colorSongText">#FF0000C0</color>
+    <color name="colorFormulaTitleText">#FF0000C0</color>
+    <color name="colorFormulaText">#FF0000C0</color>
 </resources>

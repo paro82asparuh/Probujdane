@@ -80,8 +80,8 @@ public class BesediListActivity extends AppCompatActivity {
                 viewHolder = new ViewHolder();
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(R.layout.besedi_list_item, parent, false);
-                viewHolder.besedaName = (TextView) convertView.findViewById(R.id.textBesediName);
-                viewHolder.besadaDate = (TextView) convertView.findViewById(R.id.textBesediDate);
+                viewHolder.besedaName = convertView.findViewById(R.id.textBesediName);
+                viewHolder.besadaDate = convertView.findViewById(R.id.textBesediDate);
                 // Cache the viewHolder object inside the fresh view
                 convertView.setTag(viewHolder);
             } else {
@@ -341,7 +341,7 @@ public class BesediListActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             //return getCustomView(position, convertView, parent);
             View row = inflater.inflate(R.layout.spinner_besedi_list_top, parent, false);
-            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerBesediListTop);
+            TextView textView1        = row.findViewById(R.id.textViewSpinnerBesediListTop);
             textView1.setText(data[position]);
             return row;
         }
@@ -351,7 +351,7 @@ public class BesediListActivity extends AppCompatActivity {
 
             /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
             View row = inflater.inflate(R.layout.spinner_besedi_list_item, parent, false);
-            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerBesediList);
+            TextView textView1        = row.findViewById(R.id.textViewSpinnerBesediList);
             textView1.setText(data[position]);
             return row;
         }

@@ -13,6 +13,7 @@ public class Song {
     private String songFileName;
     private String songSubPath;
     private boolean songPlayable;
+    private Integer songPositionInPlaylist;
 
     public Song (String inputSongID, String inputSongName, String inputSongText,
                  String inputSongType, String inputSongFileName) {
@@ -21,8 +22,7 @@ public class Song {
         songText = inputSongText;
         songType = inputSongType;
         songFileName = inputSongFileName;
-        songPlayable = true;
-        if (inputSongFileName.equals("")==true) songPlayable=false;
+        songPlayable= inputSongFileName.equals("") != true;
         if (songType.equals("Songs")) {
             songSubPath = "/Pesni" ;
         } else if (songType.equals("Panevrtimia")) {
@@ -30,6 +30,15 @@ public class Song {
         } else {
             songSubPath = "/Panevritmia_Instrumental";
         }
+        songPositionInPlaylist = -1;
+    }
+
+    public Song (String inputSongID, String inputSongName, String inputSongText,
+                 String inputSongType, String inputSongFileName,
+                 Integer inputSongPositionInPlaylist) {
+        this(inputSongID, inputSongName, inputSongText,
+                inputSongType, inputSongFileName);
+        songPositionInPlaylist = inputSongPositionInPlaylist;
     }
 
     public String getSongID () { return this.songID; }
@@ -45,4 +54,10 @@ public class Song {
     public String getSongSubPath () { return this.songSubPath; }
 
     public boolean isSongPlayble () { return this.songPlayable; }
+
+    public Integer getSongPositionInPlaylist() { return songPositionInPlaylist; }
+
+    public void setSongPositionInPlaylist (Integer inputSongPositionInPlaylist) {
+        songPositionInPlaylist = inputSongPositionInPlaylist;
+    }
 }

@@ -174,10 +174,10 @@ public class BesedaActivity extends AppCompatActivity {
         for (int i=0; i<numberOfImages; i++) {
             View layout2 = LayoutInflater.from(this).inflate(R.layout.beseda_extention_item, mLinearLayout, false);
 
-            ImageView imageViewExtention = (ImageView) layout2.findViewById(R.id.imageBesedaExtention);
+            ImageView imageViewExtention = layout2.findViewById(R.id.imageBesedaExtention);
             String imageName = rs.getString(rs.getColumnIndex("Image"+(i+1)));
             String imageNameMain = imageName.substring(0,imageName.length()-4);
-            String imageNameExtention = imageName.substring(imageName.length()-3,imageName.length());
+            String imageNameExtention = imageName.substring(imageName.length()-3);
             imageNameMain = imageNameMain.replace("-", "_dash_");
             imageNameMain = imageNameMain.replace(".", "_dot_");
             imageNameMain = imageNameMain.replace(" ", "_s0p_");
@@ -192,7 +192,7 @@ public class BesedaActivity extends AppCompatActivity {
             //imageViewExtention.setImageResource(res);
 
             // If the image is taken from the external files dir
-            String imageFullPath = getApplicationContext().getExternalFilesDir(null).getPath().toString()
+            String imageFullPath = getApplicationContext().getExternalFilesDir(null).getPath()
                     + "/besedi_pictures/" + imageName;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -203,7 +203,7 @@ public class BesedaActivity extends AppCompatActivity {
             Bitmap bmScaledImg = Bitmap.createScaledBitmap(bmRawImg, targetWidth, targetHeight, true);
             imageViewExtention.setImageBitmap(bmScaledImg);
 
-            besedaTextView besedaTextExtention = (besedaTextView) layout2.findViewById(R.id.textBesedaExtention);
+            besedaTextView besedaTextExtention = layout2.findViewById(R.id.textBesedaExtention);
             String besedaTextX = rs.getString(rs.getColumnIndex("Text"+(i+2)));
             if (variant1Selected==(besedaInitialVariant.equals("1"))) {
                 besedaTextExtention.setMarkersString(createMarkersString(i + 2));
@@ -218,7 +218,7 @@ public class BesedaActivity extends AppCompatActivity {
             mLinearLayout.addView(layout2);
 
             if (srollTextX==i+2) {
-                scrollTextView = (besedaTextView) layout2.findViewById(R.id.textBesedaExtention);
+                scrollTextView = layout2.findViewById(R.id.textBesedaExtention);
             }
 
         }
@@ -303,9 +303,9 @@ public class BesedaActivity extends AppCompatActivity {
         for (int m_loop=0;m_loop<listBesedaMarkers.size();m_loop=m_loop+1) {
             if (listBesedaMarkers.get(m_loop).getTextIndex() == inputTextIndex) {
                 markersString = markersString +
-                        Integer.toString(listBesedaMarkers.get(m_loop).getStartIndex()) +
+                        listBesedaMarkers.get(m_loop).getStartIndex() +
                         " " +
-                        Integer.toString(listBesedaMarkers.get(m_loop).getEndIndex()) +
+                        listBesedaMarkers.get(m_loop).getEndIndex() +
                         " ";
             }
         }

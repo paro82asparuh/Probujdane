@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     private static double SPACE_GB = 1024 * SPACE_MB;
     private static double SPACE_TB = 1024 * SPACE_GB;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
     public void startMusicTask (View view) {
         Intent intent = new Intent(this, MusicEntireActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "MainActivity");
         startActivity(intent);
     }
 
@@ -415,7 +415,7 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
                 fileLength = new Integer(connection.getContentLength());
 
                 File file = new File(context.getExternalFilesDir(null), besediDatabaseArchiveName);
-                String filePath = new String(file.getAbsolutePath());
+                String filePath = file.getAbsolutePath();
 
                 // Check if there is enough space
                 StatFs stat = new StatFs(filePath);
@@ -430,7 +430,7 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
                 // download the file
                 input = connection.getInputStream();
                 output = new FileOutputStream(filePath);
-                byte data[] = new byte[4096];
+                byte[] data = new byte[4096];
                 total = new Long(0);
                 int count;
                 while ((count = input.read(data)) != -1) {
@@ -587,7 +587,7 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_INTERNET: {
                 // If request is cancelled, the result arrays are empty.

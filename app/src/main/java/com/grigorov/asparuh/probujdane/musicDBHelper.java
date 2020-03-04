@@ -49,12 +49,35 @@ public class musicDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getSongsInfo () {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT ID, Title, Type_, File_Name " +
+                        "FROM table1 " +
+                        "ORDER BY CAST(ID AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
     public Cursor getSongSingle (String songID) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Title, Text, Type_, File_Name " +
                         "FROM table1 WHERE " +
                         "ID='"+songID+"' " +
                         //"ORDER BY CAST(ID AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
+    public Cursor searchInMusic (String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT " +
+                        "offsets(table1) AS offs, ID, Title, Text, Type_, File_Name " +
+                        "FROM table1 WHERE table1 MATCH " +
+                        "'" + query + "' " +
+                        "ORDER BY CAST(length(offs) AS int) DESC " +
+                        "LIMIT 50" +
                         ";"
                 , null );
         return res;

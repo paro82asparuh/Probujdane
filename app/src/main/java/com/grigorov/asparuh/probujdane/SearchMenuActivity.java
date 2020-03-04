@@ -34,7 +34,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.grigorov.asparuh.probujdane.besedaInfo;
+import com.grigorov.asparuh.probujdane.searchResult;
+
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -42,7 +46,15 @@ import static android.widget.Toast.LENGTH_LONG;
 
 public class SearchMenuActivity extends AppCompatActivity {
 
-    private besediDBHelper mydb;
+    public final static int SEARCH_RESULT_BESEDI=1;
+    public final static int SEARCH_RESULT_MOLITVI=2;
+    public final static int SEARCH_RESULT_FORMULI=3;
+    public final static int SEARCH_RESULT_MUSIC=4;
+
+    private besediDBHelper myBesediDB;
+    private MolitviDBHelper myMolivtiDB;
+    private formuliDBHelper myFormuliDB;
+    private musicDBHelper myMusicDB;
 
     private EditText editSearchTextInput;
 
@@ -58,14 +70,23 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private String screenWidthInPixels;
 
-    private Integer searchCounter;
-
     private int searchItemTextSize;
     private int searchOptionsTextSize;
     private int searchButtonTextSize;
 
     static private int textMainMaxLenght=500;
     static private String stringSentenceEnds = ".?!\n";
+
+    private String searchQuery;
+
+    private int startCharTextMain;
+    private int endCharTextMain;
+    private Boolean addDotsInFront;
+    private Boolean addDotsInEnd;
+    private String newTextMainPre;
+    private int scrollCharIndex;
+    private int posMatch1;
+    private int posMatch2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +130,8 @@ public class SearchMenuActivity extends AppCompatActivity {
                 getResources().getString(R.string.search_option_all_besedi),
                 getResources().getString(R.string.search_option_one_beseda),
                 getResources().getString(R.string.search_option_molitvi),
-                getResources().getString(R.string.search_option_formuli)
+                getResources().getString(R.string.search_option_formuli),
+                getResources().getString(R.string.search_option_music)
         };
 
         spinnerSearchWhat = (Spinner)findViewById(R.id.spinnerSearchWhat);
@@ -136,25 +158,28 @@ public class SearchMenuActivity extends AppCompatActivity {
             }
         });
 
-        searchCounter=0;
-
         listSearchResult.clear();
         searchResultAdapter = new SearchResultAdapter(this, listSearchResult);
         listSearchView = (ListView) findViewById(R.id.search_list_view);
         listSearchView.setAdapter(searchResultAdapter);
 
-        mydb = new besediDBHelper(this);
+        myBesediDB = new besediDBHelper(this);
+        myMolivtiDB = new MolitviDBHelper(this);
+        myFormuliDB = new formuliDBHelper(this);
+        myMusicDB = new musicDBHelper(this);
 
     }
 
     public void onResume () {
         super.onResume();
-        mydb = new besediDBHelper(this);
+        myBesediDB = new besediDBHelper(this);
+        myMolivtiDB = new MolitviDBHelper(this);
     }
 
     public void onPause () {
         super.onPause();
-        mydb.close();
+        myBesediDB.close();
+        myMolivtiDB.close();
     }
 
     private void updateBesedaInputVisibility() {
@@ -212,7 +237,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             //return getCustomView(position, convertView, parent);
             View row = inflater.inflate(R.layout.spinner_search_top, parent, false);
-            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerSearchTop);
+            TextView textView1        = row.findViewById(R.id.textViewSpinnerSearchTop);
             textView1.setText(data[position]);
             textView1.setTextSize(searchOptionsTextSize);
             return row;
@@ -223,7 +248,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
             /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
             View row = inflater.inflate(R.layout.spinner_search_item, parent, false);
-            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerSearch);
+            TextView textView1        = row.findViewById(R.id.textViewSpinnerSearch);
             textView1.setText(data[position]);
             textView1.setTextSize(searchOptionsTextSize);
             return row;
@@ -256,9 +281,9 @@ public class SearchMenuActivity extends AppCompatActivity {
                 viewHolder = new ViewHolder();
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(R.layout.search_list_item, parent, false);
-                viewHolder.textUpLeft = (TextView) convertView.findViewById(R.id.searchTextUpLeft);
-                viewHolder.textUpRight = (TextView) convertView.findViewById(R.id.searchTextUpRight);
-                viewHolder.textMain = (TextView) convertView.findViewById(R.id.searchTexMain);
+                viewHolder.textUpLeft = convertView.findViewById(R.id.searchTextUpLeft);
+                viewHolder.textUpRight = convertView.findViewById(R.id.searchTextUpRight);
+                viewHolder.textMain = convertView.findViewById(R.id.searchTexMain);
                 // Cache the viewHolder object inside the fresh view
                 convertView.setTag(viewHolder);
             } else {
@@ -292,23 +317,74 @@ public class SearchMenuActivity extends AppCompatActivity {
             viewHolder.textUpRight.setTextSize(searchItemTextSize);
             viewHolder.textMain.setTextSize(searchItemTextSize);
 
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
-                    Intent intent = new Intent(SearchMenuActivity.this, BesedaActivity.class);
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaNameVar", currentSearchResult.getBesedaName());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar", currentSearchResult.getBesedaDateYear());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar", currentSearchResult.getBesedaDateMonth());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar", currentSearchResult.getBesedaDateDay());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaLinkVar", currentSearchResult.getBesedaLink());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaVarinatVar", currentSearchResult.getBesedaVariant());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaMarkersVar", currentSearchResult.getBesedaMarkers());
-                    intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BesedaScrollIndecesVar", currentSearchResult.getScrollIndeces());
-                    startActivity(intent);
-                }
-            });
+            if (currentSearchResult.getType()==SEARCH_RESULT_BESEDI) {
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
+                        Intent intent = new Intent(SearchMenuActivity.this, BesedaActivity.class);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaNameVar", currentSearchResult.getBesedaName());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateYearVar", currentSearchResult.getBesedaDateYear());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateMonthVar", currentSearchResult.getBesedaDateMonth());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaDateDayVar", currentSearchResult.getBesedaDateDay());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaLinkVar", currentSearchResult.getBesedaLink());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaVarinatVar", currentSearchResult.getBesedaVariant());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BesedaScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        startActivity(intent);
+                    }
+                });
+            } else if (currentSearchResult.getType()==SEARCH_RESULT_MOLITVI) {
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
+                        Intent intent = new Intent(SearchMenuActivity.this, MolitvaActivity.class);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaTitleVar", currentSearchResult.getMolitva().getMolitvaTitle());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaTextVar", currentSearchResult.getMolitva().getMolitvaText());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                        // scrolling in molitva is not used for now
+                        //intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        startActivity(intent);
+                    }
+                });
+            } else if (currentSearchResult.getType()==SEARCH_RESULT_FORMULI) {
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
+                        Intent intent = new Intent(SearchMenuActivity.this, FormulaActivity.class);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.FormulaTitleVar", currentSearchResult.getFormula().getTitle());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.FormulaTextVar", currentSearchResult.getFormula().getText());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.FormulaMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                        // scrolling in molitva is not used for now
+                        //intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        startActivity(intent);
+                    }
+                });
+            } else if (currentSearchResult.getType()==SEARCH_RESULT_MUSIC) {
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
+                        Intent intent = new Intent(SearchMenuActivity.this, MusicEntireActivity.class);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "SearchMenuActivity");
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongIDVar", currentSearchResult.getSong().getSongID());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongNameVar", currentSearchResult.getSong().getSongName());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongTextVar", currentSearchResult.getSong().getSongText());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongTypeVar", currentSearchResult.getSong().getSongType());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongFileNameVar", currentSearchResult.getSong().getSongFileName());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.FormulaMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                        // scrolling in molitva is not used for now
+                        //intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        startActivity(intent);
+                    }
+                });
+            }
             // Return the completed view to render on screen
             return convertView;
         }
@@ -323,15 +399,14 @@ public class SearchMenuActivity extends AppCompatActivity {
         inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null :
                 getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
-        String searchQuery = editSearchTextInput.getText().toString();
+        searchQuery = editSearchTextInput.getText().toString();
 
         // Option NEAR on every word
-        if (spinnerSearchWhat.getSelectedItem().toString() ==
-                getResources().getString(R.string.search_option_every_word_near) ) {
+        if (spinnerSearchWhat.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_every_word_near))) {
             String[] splitQuery = searchQuery.trim().split("\\s+");
-            if (splitQuery.length>1) {
+            if (splitQuery.length > 1) {
                 searchQuery = splitQuery[0];
-                for (int sq_loop = 1; sq_loop < splitQuery.length; sq_loop=sq_loop+1) {
+                for (int sq_loop = 1; sq_loop < splitQuery.length; sq_loop = sq_loop + 1) {
                     searchQuery = searchQuery + " NEAR/300 " + splitQuery[sq_loop];
                 }
             }
@@ -339,27 +414,39 @@ public class SearchMenuActivity extends AppCompatActivity {
 
         // Option exact phrase
         if (spinnerSearchWhat.getSelectedItem().toString() ==
-                getResources().getString(R.string.search_option_exact_phrase) ) {
+                getResources().getString(R.string.search_option_exact_phrase)) {
             searchQuery = "\"" + searchQuery + "\"";
         }
 
         // Options every word and direct FTS do not need special query modifications
 
-        Cursor rs = mydb.searchInBesedi(searchQuery);
+        // Clear previous results
+        listSearchResult.clear();
+        searchResultAdapter.clear();
+
+        if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_besedi))) {
+            searchInBesedi();
+        } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_molitvi))) {
+            searchInMolitvi();
+        } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_formuli))) {
+            searchInFormuli();
+        } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_music))) {
+            searchInMusic();
+        }
+
+    }
+
+    public void searchInBesedi() {
+
+        Cursor rs = myBesediDB.searchInBesedi(searchQuery);
 
         if (rs.getCount()<1) {
             Toast toast = Toast.makeText(getApplicationContext(),
                     getResources().getString(R.string.search_no_results), LENGTH_LONG);
             toast.show();
         } else {
-
-            // Clear previous results
-            listSearchResult.clear();
-            searchResultAdapter.clear();
-
             rs.moveToFirst();
-
-            listSearchResult.ensureCapacity(rs.getCount());
+            listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
 
             for (int i = 0; i < rs.getCount(); i++) {
 
@@ -369,216 +456,25 @@ public class SearchMenuActivity extends AppCompatActivity {
                 String besedaDateYear = rs.getString(rs.getColumnIndex("Year_"));
                 String besedaDateMonth = rs.getString(rs.getColumnIndex("Month_"));
                 String besedaDateDay = rs.getString(rs.getColumnIndex("Day_of_Month"));
-                String newTextUpRight = besedaDateDay + "." + besedaDateMonth + "." + besedaDateYear;
+                String newTextUpRight = getResources().getString(R.string.beseda) + " " +
+                        besedaDateDay + "." + besedaDateMonth + "." + besedaDateYear;
 
-                // Beseda text extract
                 // Convert the offset output to strings
-                String[] offsetsStrings = rs.getString(0).split(" "); // Split to " " to read integers
-                //// Convert the offset output to integers
-                //Integer[] offsetsInts = new Integer[offsetsStrings.length];
-                //for (int iOffs=0;iOffs<offsetsStrings.length;iOffs++ ) {
-                //    offsetsInts[iOffs]=Integer.parseInt(offsetsStrings[iOffs]);
-                //}
-                //Convert the offset output to offsetRes array
-                ArrayList<offsetRes> offsets = new ArrayList<offsetRes>();
-                offsets.ensureCapacity(offsetsStrings.length/4);
-                for (int iOffs=0;iOffs<offsetsStrings.length;iOffs=iOffs+4 ) {
-                    offsets.add(new offsetRes(
-                            Integer.parseInt(offsetsStrings[iOffs]),
-                            Integer.parseInt(offsetsStrings[iOffs+1]),
-                            Integer.parseInt(offsetsStrings[iOffs+2]),
-                            Integer.parseInt(offsetsStrings[iOffs+3])
-                    ));
-                }
-                // Algorithm description
-                // The text extract shall be only one per beseda
-                // The text extract shall be from only one column "TextN"
-                // If all matches are from different columns,
-                //      the match from the smallest column shall be selected (match earliest in text)
-                // If there are couple of matches per column(s)
-                //      the couple with smallest distances between matches shall be selected.
-                //          If the distance is the same, the smallest column shall be selected
-                int posMatch1 = 0;
-                int posMatch2 = -1;
-                int matchesAbsDiffOffsetInColumn = -1;
-                if (offsets.size()>1) {
-                    for (int i_offs=0; i_offs<offsets.size();i_offs++) {
-                        int i_ColumnNumber = offsets.get(i_offs).getColumnNumber();
-                        int i_offsetInColumn = offsets.get(i_offs).getOffsetInColumn();
-                        for (int j_offs=i_offs+1; j_offs<offsets.size();j_offs++) {
-                            int j_ColumnNumber = offsets.get(j_offs).getColumnNumber();
-                            int j_offsetInColumn = offsets.get(j_offs).getOffsetInColumn();
-                            int ijAbsDiffOffsetInColumn = i_offsetInColumn-j_offsetInColumn;
-                            if (ijAbsDiffOffsetInColumn<0) { ijAbsDiffOffsetInColumn = (-1)*ijAbsDiffOffsetInColumn; }
-                            if (posMatch2>=0) {
-                                matchesAbsDiffOffsetInColumn =
-                                        (offsets.get(posMatch1).getOffsetInColumn() - offsets.get(posMatch2).getOffsetInColumn());
-                            } else {
-                                matchesAbsDiffOffsetInColumn=0;
-                            }
-                            if (matchesAbsDiffOffsetInColumn<0) { matchesAbsDiffOffsetInColumn = (-1)*matchesAbsDiffOffsetInColumn; }
-                            if (i_ColumnNumber==j_ColumnNumber) {
-                                if ( (posMatch2==-1) ||
-                                        (ijAbsDiffOffsetInColumn < matchesAbsDiffOffsetInColumn) ||
-                                            ( (ijAbsDiffOffsetInColumn == matchesAbsDiffOffsetInColumn) &&
-                                                    ( (i_ColumnNumber<offsets.get(posMatch1).getColumnNumber()) ||
-                                                            ((i_ColumnNumber==offsets.get(posMatch1).getColumnNumber()) &&
-                                                                    (i_offsetInColumn<offsets.get(posMatch1).getOffsetInColumn())
-                                                            )
-                                                    )
-                                            )
-                                        ) {
-                                    if (i_offsetInColumn < j_offsetInColumn) {
-                                        posMatch1 = i_offs;
-                                        posMatch2 = j_offs;
-                                    } else {
-                                        posMatch1 = j_offs;
-                                        posMatch2 = i_offs;
-                                    }
-                                }
-                            }
-                        }
-                        if (
-                                (posMatch2==-1) &&
-                                ( i_ColumnNumber < offsets.get(posMatch1).getColumnNumber() )
-                                ) {
-                            posMatch1 = i_offs;
-                        }
-                    }
-                }
+                ArrayList<OffsetRes> offsets = getOffsets(rs);
+
+                prepareMatches(offsets);
 
                 // Get the full column string
-                //String newTextMainPre = rs.getString(offsets.get(posMatch1).getColumnNumber()-9);
-                String newTextMainPre = rs.getString(7+((offsets.get(posMatch1).getColumnNumber()-14)/2));
+                newTextMainPre = rs.getString(7+((offsets.get(posMatch1).getColumnNumber()-14)/2));
 
-                // In a string a character is encoded in 2 bytes
-                int startCharMatch1 = characterOffsetForByteOffsetInUTF8String((offsets.get(posMatch1).getOffsetInColumn()),newTextMainPre);
-                int endCharMatch1 = characterOffsetForByteOffsetInUTF8String(
-                        (offsets.get(posMatch1).getOffsetInColumn()) + (offsets.get(posMatch1).getTermLenght()) ,
-                        newTextMainPre
-                    )-1;
-                int startCharMatch2 = -1;
-                int endCharMatch2 = -1;
-                if (posMatch2>=0) {
-                    startCharMatch2 = characterOffsetForByteOffsetInUTF8String((offsets.get(posMatch2).getOffsetInColumn()),newTextMainPre);
-                    endCharMatch2 = characterOffsetForByteOffsetInUTF8String(
-                            (offsets.get(posMatch2).getOffsetInColumn()) + (offsets.get(posMatch2).getTermLenght()) ,
-                            newTextMainPre
-                        )-1;
-                }
+                String newTextMain = prepareTextMain(offsets);
 
+                String scrollIndeces = (1 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2)) +
+                        " " + scrollCharIndex;
 
-                // Algorithm description
-                // searchResult textMain shall be textMainMaxLenght characters long or shorter
-                // It shall start from the first sentence start before the match1
-                // It shall end at the last sentence end after match2 (if it exists) still within textMainMaxLenght
-                int startPrevSentence = 0;
-                int endNextSentence = newTextMainPre.length()-1;
-                for (int i_sent_loop = 0; i_sent_loop<stringSentenceEnds.length(); i_sent_loop++ ){
-                    int currentSententceIndex = 0;
-                    currentSententceIndex = 1 +
-                            newTextMainPre.lastIndexOf(stringSentenceEnds.charAt(i_sent_loop),startCharMatch1);
-                    if ( (currentSententceIndex>0) &&
-                            (currentSententceIndex>startPrevSentence)) {
-                        startPrevSentence = currentSententceIndex;
-                    }
-                    if (startCharMatch2>=0) {
-                        currentSententceIndex =
-                                newTextMainPre.indexOf(stringSentenceEnds.charAt(i_sent_loop), endCharMatch2);
-                    } else {
-                        currentSententceIndex =
-                                newTextMainPre.indexOf(stringSentenceEnds.charAt(i_sent_loop), endCharMatch1);
-                    }
-                    if ( (currentSententceIndex>=0) &&
-                            (currentSententceIndex<endNextSentence)) {
-                        endNextSentence = currentSententceIndex;
-                    }
-                }
-                int startCharTextMain = 0;
-                int endCharTextMain = newTextMainPre.length()-1;
-                Boolean addDotsInFront = new Boolean(false);
-                Boolean addDotsInEnd = new Boolean(false);
-                if ( (endNextSentence-startPrevSentence) < textMainMaxLenght ) {
-                    startCharTextMain = startPrevSentence;
-                    endCharTextMain = endNextSentence;
-                } else if ( (endCharMatch1-startPrevSentence) < textMainMaxLenght ) {
-                    startCharTextMain = startPrevSentence;
-                    endCharTextMain = startCharTextMain + textMainMaxLenght-3;
-                    addDotsInEnd=true;
-                } else {
-                    startCharTextMain = endCharMatch1 - (textMainMaxLenght-3);
-                    endCharTextMain = endCharMatch1;
-                    addDotsInFront=true;
-                }
+                String newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
 
-                String newTextMain = newTextMainPre.substring(startCharTextMain,endCharTextMain+1);
-                int scrollCharIndex = startCharTextMain;
-                if (addDotsInFront==true) {
-                    newTextMain = "..."+newTextMain;
-                    scrollCharIndex = scrollCharIndex + 3;
-                }
-                if (addDotsInEnd==true) {
-                    newTextMain = newTextMain+"...";
-                }
-                String scrollIndeces = Integer.toString( 1+((offsets.get(posMatch1).getColumnNumber()-14)/2) ) +
-                        " " + Integer.toString(scrollCharIndex);
-
-                String newSearchMarkers = "";
-                for (int k_offs=0; k_offs<offsets.size();k_offs++) {
-                    if ( offsets.get(posMatch1).getColumnNumber() == offsets.get(k_offs).getColumnNumber() ) {
-                        int startMarkerIndex = 0;
-                        int endMarkerIndex = newTextMainPre.length()-1;
-                        boolean addToMarkers = false;
-                        int currentStartCharIndex = characterOffsetForByteOffsetInUTF8String(
-                                offsets.get(k_offs).getOffsetInColumn(),newTextMainPre
-                        );
-                        int currentEndCharIndex = characterOffsetForByteOffsetInUTF8String(
-                                offsets.get(k_offs).getOffsetInColumn()+offsets.get(k_offs).getTermLenght(),
-                                newTextMainPre
-                        );
-                        if ( (currentStartCharIndex>=startCharTextMain) &&  (currentEndCharIndex<=endCharTextMain) ) {
-                            startMarkerIndex = currentStartCharIndex-startCharTextMain;
-                            endMarkerIndex = currentEndCharIndex-startCharTextMain;
-                            addToMarkers = true;
-                        } else if ( (currentStartCharIndex>=startCharTextMain) &&  (currentStartCharIndex<=endCharTextMain) ) {
-                            startMarkerIndex = currentStartCharIndex-startCharTextMain;
-                            endMarkerIndex = endCharTextMain-startCharTextMain;
-                            addToMarkers = true;
-                        } else if ( (currentEndCharIndex>=startCharTextMain) &&  (currentEndCharIndex<=endCharTextMain) ) {
-                            startMarkerIndex = startCharTextMain-startCharTextMain;
-                            endMarkerIndex = currentEndCharIndex-startCharTextMain;
-                            addToMarkers = true;
-                        }
-                        if (addDotsInFront==true) {
-                            startMarkerIndex = startMarkerIndex+3;
-                            endMarkerIndex = endMarkerIndex+3;
-                        }
-                        if (addToMarkers == true) {
-                            newSearchMarkers = newSearchMarkers + String.valueOf(startMarkerIndex) + " " + String.valueOf(endMarkerIndex) + " ";
-                        }
-                    }
-                }
-
-                String newBesedaMarkers = "";
-                for (int m_offs=0; m_offs<offsets.size();m_offs++) {
-                    newBesedaMarkers = newBesedaMarkers + Integer.toString(1+(offsets.get(m_offs).getColumnNumber()-14)/2);
-                    newBesedaMarkers = newBesedaMarkers + " ";
-                    newBesedaMarkers = newBesedaMarkers + Integer.toString(
-                            characterOffsetForByteOffsetInUTF8String(
-                                    offsets.get(m_offs).getOffsetInColumn(),
-                                    rs.getString(7+((offsets.get(m_offs).getColumnNumber()-14)/2))
-                                    ));
-                    newBesedaMarkers = newBesedaMarkers + " ";
-                    newBesedaMarkers = newBesedaMarkers + Integer.toString(
-                            characterOffsetForByteOffsetInUTF8String(
-                                    offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
-                                    rs.getString(7+((offsets.get(m_offs).getColumnNumber()-14)/2))
-                            ));
-                    newBesedaMarkers = newBesedaMarkers + " ";
-                }
-
-                //String newTextMain = rs.getString(0) + "\n\n" + rs.getString(rs.getColumnIndex("Text1"));
-                //newTextMain = newTextMain.substring(0, 99);
+                String newItemMarkers = prepareBesedaMarkers(offsets,rs);
 
                 Integer besedaID = 0;
                 String besedaName = rs.getString(rs.getColumnIndex("Name"));
@@ -586,30 +482,418 @@ public class SearchMenuActivity extends AppCompatActivity {
                 String besedaVariant = rs.getString(rs.getColumnIndex("Variant"));
                 besedaInfo bInfo = new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink);
 
-                listSearchResult.add(new searchResult(newTextUpleft, newTextUpRight, newTextMain,
-                        newSearchMarkers, newBesedaMarkers, bInfo, besedaVariant, scrollIndeces));
+                listSearchResult.add(new searchResult(SEARCH_RESULT_BESEDI, newTextUpleft, newTextUpRight, newTextMain,
+                        newSearchMarkers, newItemMarkers, bInfo, besedaVariant, scrollIndeces));
                 rs.moveToNext();
             }
 
             searchResultAdapter.notifyDataSetChanged();
             listSearchView.smoothScrollToPosition(0);
-
-            searchCounter++;
-
         }
-
         if (!rs.isClosed())  {
             rs.close();
         }
     }
 
-    private class offsetRes {
+
+    public void searchInMolitvi () {
+
+        Cursor rs = myMolivtiDB.searchInMolitvi(searchQuery);
+
+        if (rs.getCount()<1) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
+            toast.show();
+        } else {
+            rs.moveToFirst();
+            listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
+
+            for (int i = 0; i < rs.getCount(); i++) {
+
+                String molitvaText = rs.getString(rs.getColumnIndex("Text"));
+                String newTextUpleft = rs.getString(rs.getColumnIndex("Title"));
+                String newTextUpRight = getResources().getString(R.string.molitva);
+
+                // Convert the offset output to strings
+                ArrayList<OffsetRes> offsets = getOffsets(rs);
+
+                prepareMatches(offsets);
+
+                // Get the full column string
+                newTextMainPre = rs.getString(1+offsets.get(posMatch1).getColumnNumber());
+
+                String newTextMain = prepareTextMain(offsets);
+
+                String scrollIndeces = offsets.get(posMatch1).getColumnNumber() +
+                        " " + scrollCharIndex;
+
+                String newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+
+                String newItemMarkers = prepareMolitvaMarkers(offsets,rs);
+
+                listSearchResult.add(new searchResult(SEARCH_RESULT_MOLITVI, newTextUpleft, newTextUpRight, newTextMain,
+                        newSearchMarkers, newItemMarkers, new Molitva(newTextUpleft, molitvaText),
+                        scrollIndeces) );
+
+                        rs.moveToNext();
+
+            }
+
+            searchResultAdapter.notifyDataSetChanged();
+            listSearchView.smoothScrollToPosition(0);
+        }
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
+
+    public void searchInFormuli () {
+
+        Cursor rs = myFormuliDB.searchInFormuli(searchQuery);
+
+        if (rs.getCount()<1) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
+            toast.show();
+        } else {
+            rs.moveToFirst();
+            listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
+
+            for (int i = 0; i < rs.getCount(); i++) {
+
+                String formulaID = rs.getString(rs.getColumnIndex("ID"));
+                String formulaText = rs.getString(rs.getColumnIndex("Text"));
+                String newTextUpleft = rs.getString(rs.getColumnIndex("Title"));
+                String newTextUpRight = getResources().getString(R.string.formula);
+
+                // Convert the offset output to strings
+                ArrayList<OffsetRes> offsets = getOffsets(rs);
+
+                prepareMatches(offsets);
+
+                // Get the full column string
+                newTextMainPre = rs.getString(1+offsets.get(posMatch1).getColumnNumber());
+
+                String newTextMain = prepareTextMain(offsets);
+
+                String scrollIndeces = offsets.get(posMatch1).getColumnNumber() +
+                        " " + scrollCharIndex;
+
+                String newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+
+                String newItemMarkers = prepareMolitvaMarkers(offsets,rs);
+
+                listSearchResult.add(new searchResult(SEARCH_RESULT_FORMULI, newTextUpleft, newTextUpRight, newTextMain,
+                        newSearchMarkers, newItemMarkers, new Formula(Integer.parseInt(formulaID), newTextUpleft, formulaText),
+                        scrollIndeces) );
+
+                rs.moveToNext();
+
+            }
+
+            searchResultAdapter.notifyDataSetChanged();
+            listSearchView.smoothScrollToPosition(0);
+        }
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
+
+    public void searchInMusic () {
+
+        Cursor rs = myMusicDB.searchInMusic(searchQuery);
+
+        if (rs.getCount()<1) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
+            toast.show();
+        } else {
+            rs.moveToFirst();
+            listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
+
+            for (int i = 0; i < rs.getCount(); i++) {
+
+                String musicID = rs.getString(rs.getColumnIndex("ID"));
+                String musicText = rs.getString(rs.getColumnIndex("Text"));
+                String musicFileName= rs.getString(rs.getColumnIndex("Text"));
+                String musicType = rs.getString(rs.getColumnIndex("Type_"));
+                String newTextUpleft = rs.getString(rs.getColumnIndex("Title"));
+                String newTextUpRight;
+                if (musicType.equals("Songs")) {
+                    newTextUpRight = getResources().getString(R.string.song_string);
+                } else if (musicType.equals("Panevrtimia")) {
+                    newTextUpRight = getResources().getString(R.string.panevritmia_string);
+                } else {
+                    newTextUpRight = "";
+                }
+
+                // Convert the offset output to strings
+                ArrayList<OffsetRes> offsets = getOffsets(rs);
+
+                prepareMatches(offsets);
+
+                // Get the full column string
+                newTextMainPre = rs.getString(1+offsets.get(posMatch1).getColumnNumber());
+
+                String newTextMain = prepareTextMain(offsets);
+
+                String scrollIndeces = offsets.get(posMatch1).getColumnNumber() +
+                        " " + scrollCharIndex;
+
+                String newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+
+                String newItemMarkers = prepareMolitvaMarkers(offsets,rs);
+
+                listSearchResult.add(new searchResult(SEARCH_RESULT_MUSIC, newTextUpleft, newTextUpRight, newTextMain,
+                        newSearchMarkers, newItemMarkers, new Song(musicID, newTextUpleft, musicText,
+                            musicType, musicFileName),
+                        scrollIndeces) );
+
+                rs.moveToNext();
+
+            }
+
+            searchResultAdapter.notifyDataSetChanged();
+            listSearchView.smoothScrollToPosition(0);
+        }
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
+
+
+    private void prepareMatches (ArrayList<OffsetRes> offsets) {
+        // Algorithm description
+        // The text extract shall be only one per beseda
+        // The text extract shall be from only one column "TextN"
+        // If all matches are from different columns,
+        //      the match from the smallest column shall be selected (match earliest in text)
+        // If there are couple of matches per column(s)
+        //      the couple with smallest distances between matches shall be selected.
+        //          If the distance is the same, the smallest column shall be selected
+        posMatch1 = 0;
+        posMatch2 = -1;
+        int matchesAbsDiffOffsetInColumn = -1;
+        if (offsets.size()>1) {
+            for (int i_offs=0; i_offs<offsets.size();i_offs++) {
+                int i_ColumnNumber = offsets.get(i_offs).getColumnNumber();
+                int i_offsetInColumn = offsets.get(i_offs).getOffsetInColumn();
+                for (int j_offs=i_offs+1; j_offs<offsets.size();j_offs++) {
+                    int j_ColumnNumber = offsets.get(j_offs).getColumnNumber();
+                    int j_offsetInColumn = offsets.get(j_offs).getOffsetInColumn();
+                    int ijAbsDiffOffsetInColumn = i_offsetInColumn-j_offsetInColumn;
+                    if (ijAbsDiffOffsetInColumn<0) { ijAbsDiffOffsetInColumn = (-1)*ijAbsDiffOffsetInColumn; }
+                    if (posMatch2>=0) {
+                        matchesAbsDiffOffsetInColumn =
+                                (offsets.get(posMatch1).getOffsetInColumn() - offsets.get(posMatch2).getOffsetInColumn());
+                    } else {
+                        matchesAbsDiffOffsetInColumn=0;
+                    }
+                    if (matchesAbsDiffOffsetInColumn<0) { matchesAbsDiffOffsetInColumn = (-1)*matchesAbsDiffOffsetInColumn; }
+                    if (i_ColumnNumber==j_ColumnNumber) {
+                        if ( (posMatch2==-1) ||
+                                (ijAbsDiffOffsetInColumn < matchesAbsDiffOffsetInColumn) ||
+                                ( (ijAbsDiffOffsetInColumn == matchesAbsDiffOffsetInColumn) &&
+                                        ( (i_ColumnNumber<offsets.get(posMatch1).getColumnNumber()) ||
+                                                ((i_ColumnNumber==offsets.get(posMatch1).getColumnNumber()) &&
+                                                        (i_offsetInColumn<offsets.get(posMatch1).getOffsetInColumn())
+                                                )
+                                        )
+                                )
+                        ) {
+                            if (i_offsetInColumn < j_offsetInColumn) {
+                                posMatch1 = i_offs;
+                                posMatch2 = j_offs;
+                            } else {
+                                posMatch1 = j_offs;
+                                posMatch2 = i_offs;
+                            }
+                        }
+                    }
+                }
+                if (
+                        (posMatch2==-1) &&
+                                ( i_ColumnNumber < offsets.get(posMatch1).getColumnNumber() )
+                ) {
+                    posMatch1 = i_offs;
+                }
+            }
+        }
+    }
+
+    private ArrayList<OffsetRes> getOffsets (Cursor rs) {
+        String[] offsetsStrings = rs.getString(0).split(" "); // Split to " " to read integers
+        ArrayList<OffsetRes> offsets = new ArrayList<OffsetRes>();
+        offsets.ensureCapacity(offsetsStrings.length/4);
+        for (int iOffs=0;iOffs<offsetsStrings.length;iOffs=iOffs+4 ) {
+            offsets.add(new OffsetRes(
+                    Integer.parseInt(offsetsStrings[iOffs]),
+                    Integer.parseInt(offsetsStrings[iOffs+1]),
+                    Integer.parseInt(offsetsStrings[iOffs+2]),
+                    Integer.parseInt(offsetsStrings[iOffs+3])
+            ));
+        }
+        return offsets;
+    }
+
+    private String prepareTextMain(ArrayList<OffsetRes> offsets) {
+
+        // In a string a character is encoded in 2 bytes
+        int startCharMatch1 = characterOffsetForByteOffsetInUTF8String((offsets.get(posMatch1).getOffsetInColumn()),newTextMainPre);
+        int endCharMatch1 = characterOffsetForByteOffsetInUTF8String(
+                (offsets.get(posMatch1).getOffsetInColumn()) + (offsets.get(posMatch1).getTermLenght()) ,
+                newTextMainPre
+        )-1;
+        int startCharMatch2 = -1;
+        int endCharMatch2 = -1;
+        if (posMatch2>=0) {
+            startCharMatch2 = characterOffsetForByteOffsetInUTF8String((offsets.get(posMatch2).getOffsetInColumn()),newTextMainPre);
+            endCharMatch2 = characterOffsetForByteOffsetInUTF8String(
+                    (offsets.get(posMatch2).getOffsetInColumn()) + (offsets.get(posMatch2).getTermLenght()) ,
+                    newTextMainPre
+            )-1;
+        }
+
+        // Algorithm description
+        // searchResult textMain shall be textMainMaxLenght characters long or shorter
+        // It shall start from the first sentence start before the match1
+        // It shall end at the last sentence end after match2 (if it exists) still within textMainMaxLenght
+        int startPrevSentence = 0;
+        int endNextSentence = newTextMainPre.length()-1;
+        for (int i_sent_loop = 0; i_sent_loop<stringSentenceEnds.length(); i_sent_loop++ ){
+            int currentSententceIndex = 0;
+            currentSententceIndex = 1 +
+                    newTextMainPre.lastIndexOf(stringSentenceEnds.charAt(i_sent_loop),startCharMatch1);
+            if ( (currentSententceIndex>0) &&
+                    (currentSententceIndex>startPrevSentence)) {
+                startPrevSentence = currentSententceIndex;
+            }
+            if (startCharMatch2>=0) {
+                currentSententceIndex =
+                        newTextMainPre.indexOf(stringSentenceEnds.charAt(i_sent_loop), endCharMatch2);
+            } else {
+                currentSententceIndex =
+                        newTextMainPre.indexOf(stringSentenceEnds.charAt(i_sent_loop), endCharMatch1);
+            }
+            if ( (currentSententceIndex>=0) &&
+                    (currentSententceIndex<endNextSentence)) {
+                endNextSentence = currentSententceIndex;
+            }
+        }
+        startCharTextMain = 0;
+        endCharTextMain = newTextMainPre.length()-1;
+        addDotsInFront = new Boolean(false);
+        addDotsInEnd = new Boolean(false);
+        if ( (endNextSentence-startPrevSentence) < textMainMaxLenght ) {
+            startCharTextMain = startPrevSentence;
+            endCharTextMain = endNextSentence;
+        } else if ( (endCharMatch1-startPrevSentence) < textMainMaxLenght ) {
+            startCharTextMain = startPrevSentence;
+            endCharTextMain = startCharTextMain + textMainMaxLenght-3;
+            addDotsInEnd=true;
+        } else {
+            startCharTextMain = endCharMatch1 - (textMainMaxLenght-3);
+            endCharTextMain = endCharMatch1;
+            addDotsInFront=true;
+        }
+
+        String newTextMain = newTextMainPre.substring(startCharTextMain,endCharTextMain+1);
+        scrollCharIndex = startCharTextMain;
+        if (addDotsInFront==true) {
+            newTextMain = "..."+newTextMain;
+            scrollCharIndex = scrollCharIndex + 3;
+        }
+        if (addDotsInEnd==true) {
+            newTextMain = newTextMain+"...";
+        }
+        return newTextMain;
+    }
+
+    private String prepareSearchMarkers(ArrayList<OffsetRes> offsets, String newTextMainPre) {
+        String newSearchMarkers = "";
+        for (int k_offs=0; k_offs<offsets.size();k_offs++) {
+            if ( offsets.get(posMatch1).getColumnNumber() == offsets.get(k_offs).getColumnNumber() ) {
+                int startMarkerIndex = 0;
+                int endMarkerIndex = newTextMainPre.length()-1;
+                boolean addToMarkers = false;
+                int currentStartCharIndex = characterOffsetForByteOffsetInUTF8String(
+                        offsets.get(k_offs).getOffsetInColumn(),newTextMainPre
+                );
+                int currentEndCharIndex = characterOffsetForByteOffsetInUTF8String(
+                        offsets.get(k_offs).getOffsetInColumn()+offsets.get(k_offs).getTermLenght(),
+                        newTextMainPre
+                );
+                if ( (currentStartCharIndex>=startCharTextMain) &&  (currentEndCharIndex<=endCharTextMain) ) {
+                    startMarkerIndex = currentStartCharIndex-startCharTextMain;
+                    endMarkerIndex = currentEndCharIndex-startCharTextMain;
+                    addToMarkers = true;
+                } else if ( (currentStartCharIndex>=startCharTextMain) &&  (currentStartCharIndex<=endCharTextMain) ) {
+                    startMarkerIndex = currentStartCharIndex-startCharTextMain;
+                    endMarkerIndex = endCharTextMain-startCharTextMain;
+                    addToMarkers = true;
+                } else if ( (currentEndCharIndex>=startCharTextMain) &&  (currentEndCharIndex<=endCharTextMain) ) {
+                    startMarkerIndex = startCharTextMain-startCharTextMain;
+                    endMarkerIndex = currentEndCharIndex-startCharTextMain;
+                    addToMarkers = true;
+                }
+                if (addDotsInFront==true) {
+                    startMarkerIndex = startMarkerIndex+3;
+                    endMarkerIndex = endMarkerIndex+3;
+                }
+                if (addToMarkers == true) {
+                    newSearchMarkers = newSearchMarkers + startMarkerIndex + " " + endMarkerIndex + " ";
+                }
+            }
+        }
+        return newSearchMarkers;
+    }
+
+
+    private String prepareBesedaMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
+        String newItemMarkers = "";
+        for (int m_offs=0; m_offs<offsets.size();m_offs++) {
+            newItemMarkers = newItemMarkers + (1 + (offsets.get(m_offs).getColumnNumber() - 14) / 2);
+            newItemMarkers = newItemMarkers + " ";
+            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn(),
+                    rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
+            );
+            newItemMarkers = newItemMarkers + " ";
+            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
+                    rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
+            );
+            newItemMarkers = newItemMarkers + " ";
+        }
+        return newItemMarkers;
+    }
+
+    private String prepareMolitvaMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
+        String newItemMarkers = "";
+        for (int m_offs=0; m_offs<offsets.size();m_offs++) {
+            newItemMarkers = newItemMarkers + offsets.get(m_offs).getColumnNumber();
+            newItemMarkers = newItemMarkers + " ";
+            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn(),
+                    rs.getString(1 + (offsets.get(m_offs).getColumnNumber()))
+            );
+            newItemMarkers = newItemMarkers + " ";
+            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
+                    rs.getString(1 + ((offsets.get(m_offs).getColumnNumber())))
+            );
+            newItemMarkers = newItemMarkers + " ";
+        }
+        return newItemMarkers;
+    }
+    
+    private class OffsetRes {
         private int columnNumber;
         private int termNumber;
         private int offsetInColumn;
         private int termLenght;
 
-        public offsetRes (int newColumnNumber, int newTermNumber,
+        public OffsetRes (int newColumnNumber, int newTermNumber,
                           int newOffsetInColumn, int newTermLenght) {
             columnNumber = newColumnNumber;
             termNumber = newTermNumber;
@@ -649,11 +933,7 @@ public class SearchMenuActivity extends AppCompatActivity {
      */
         int characterOffset = 0;
         byte[] stringBytes = new byte[0];
-        try {
-            stringBytes = string.getBytes("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        stringBytes = string.getBytes(StandardCharsets.UTF_8);
         for (int i = 0; i < byteOffset; i++) {
             byte c = stringBytes[i];
             if ((c & 0xc0) != 0x80) {

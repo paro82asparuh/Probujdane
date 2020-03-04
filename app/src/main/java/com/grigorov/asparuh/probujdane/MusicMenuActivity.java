@@ -162,7 +162,7 @@ public class MusicMenuActivity extends AppCompatActivity {
 
         // Add all the new tracks to the playlist.
         int size = paths.size();
-        ContentValues values [] = new ContentValues[size];
+        ContentValues[] values = new ContentValues[size];
         for (int k = 0; k < size; ++k) {
             values[k] = new ContentValues();
             values[k].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, k);

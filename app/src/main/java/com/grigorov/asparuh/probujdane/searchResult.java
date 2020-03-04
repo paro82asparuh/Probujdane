@@ -8,19 +8,31 @@ import java.util.ArrayList;
 
 public class searchResult {
 
+    public final static int SEARCH_RESULT_BESEDI=1;
+    public final static int SEARCH_RESULT_MOLITVI=2;
+    public final static int SEARCH_RESULT_FORMULI=3;
+    public final static int SEARCH_RESULT_MUSIC=4;
+
+    private int type;
+
     private String textUpLeft;
     private String textUpRight;
     private String textMain;
     private ArrayList<resultMarker> listResultMarkers= new ArrayList<resultMarker>();
     private besedaInfo bInfo;
     private String besedaVariant;
-    private String besedaMarkers;
+    private String itemMarkers;
     private String scrollIndeces;
 
-    public searchResult (String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
-                         String inputSearchMarker, String inputBesedaMarkers,
+    private Molitva molitva;
+    private Formula formula;
+    private Song song;
+
+    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+                         String inputSearchMarker, String inputItemMarkers,
                          besedaInfo inputBesedaInfo, String inputBesedaVariant,
                          String inputScrollIndeces) {
+        type = inputType;
         bInfo = inputBesedaInfo;
         besedaVariant = inputBesedaVariant;
         textUpLeft = inputTextUpLeft;
@@ -36,7 +48,76 @@ public class searchResult {
                     )
             );
         }
-        besedaMarkers = inputBesedaMarkers;
+        itemMarkers = inputItemMarkers;
+        scrollIndeces = inputScrollIndeces;
+    }
+
+    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+                         String inputSearchMarker, String inputItemMarkers,
+                         Molitva inputMolitva,
+                         String inputScrollIndeces) {
+        type = inputType;
+        molitva = inputMolitva;
+        textUpLeft = inputTextUpLeft;
+        textUpRight = inputTextUpRight;
+        textMain = inputTextMain;
+        listResultMarkers.clear();
+        String[] inputSearchMarkers = inputSearchMarker.split(" "); // Split to " " to read integers
+        for (int marker_loop=0; marker_loop<inputSearchMarkers.length;marker_loop=marker_loop+2) {
+            listResultMarkers.add(
+                    new resultMarker(
+                            Integer.parseInt(inputSearchMarkers[marker_loop]),
+                            Integer.parseInt(inputSearchMarkers[marker_loop+1])
+                    )
+            );
+        }
+        itemMarkers = inputItemMarkers;
+        scrollIndeces = inputScrollIndeces;
+    }
+
+    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+                         String inputSearchMarker, String inputItemMarkers,
+                         Formula inputFormula,
+                         String inputScrollIndeces) {
+        type = inputType;
+        formula = inputFormula;
+        textUpLeft = inputTextUpLeft;
+        textUpRight = inputTextUpRight;
+        textMain = inputTextMain;
+        listResultMarkers.clear();
+        String[] inputSearchMarkers = inputSearchMarker.split(" "); // Split to " " to read integers
+        for (int marker_loop=0; marker_loop<inputSearchMarkers.length;marker_loop=marker_loop+2) {
+            listResultMarkers.add(
+                    new resultMarker(
+                            Integer.parseInt(inputSearchMarkers[marker_loop]),
+                            Integer.parseInt(inputSearchMarkers[marker_loop+1])
+                    )
+            );
+        }
+        itemMarkers = inputItemMarkers;
+        scrollIndeces = inputScrollIndeces;
+    }
+
+    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+                         String inputSearchMarker, String inputItemMarkers,
+                         Song inputSong,
+                         String inputScrollIndeces) {
+        type = inputType;
+        song = inputSong;
+        textUpLeft = inputTextUpLeft;
+        textUpRight = inputTextUpRight;
+        textMain = inputTextMain;
+        listResultMarkers.clear();
+        String[] inputSearchMarkers = inputSearchMarker.split(" "); // Split to " " to read integers
+        for (int marker_loop=0; marker_loop<inputSearchMarkers.length;marker_loop=marker_loop+2) {
+            listResultMarkers.add(
+                    new resultMarker(
+                            Integer.parseInt(inputSearchMarkers[marker_loop]),
+                            Integer.parseInt(inputSearchMarkers[marker_loop+1])
+                    )
+            );
+        }
+        itemMarkers = inputItemMarkers;
         scrollIndeces = inputScrollIndeces;
     }
 
@@ -98,9 +179,16 @@ public class searchResult {
         return this.besedaVariant;
     }
 
-    public String getBesedaMarkers () { return besedaMarkers; }
+    public String getItemMarkers () { return itemMarkers; }
 
     public String getScrollIndeces () { return scrollIndeces; }
 
+    public Molitva getMolitva () { return molitva; }
+
+    public Formula getFormula () { return formula; }
+
+    public Song getSong () { return song; }
+
+    public int getType () { return type; }
 
 }

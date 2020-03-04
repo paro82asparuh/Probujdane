@@ -38,6 +38,8 @@ public class MusicService extends Service implements
 
     private Song playedSong;
 
+    private Playlist playedPlaylist;
+
     private boolean playerIsReleased;
 
     @Override
@@ -59,6 +61,8 @@ public class MusicService extends Service implements
     public void onCompletion(MediaPlayer mp) {
         songPosn++;
         if(songPosn<songs.size()) {
+            Intent intentToPlayNextSong = new Intent("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong");
+            getApplicationContext().sendBroadcast(intentToPlayNextSong);
             playSong();
         } else {
             //stopSelf();
@@ -81,6 +85,7 @@ public class MusicService extends Service implements
         // notification
         Intent notIntent = new Intent(this, MusicEntireActivity.class);
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notIntent.putExtra("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "Notification");
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -162,6 +167,14 @@ public class MusicService extends Service implements
         return playedSong;
     }
 
+    public Playlist getPlayedPlaylist() {
+        return playedPlaylist;
+    }
+
+    public void setPlaylist (Playlist inputPlaylist) {
+        playedPlaylist=inputPlaylist;
+    }
+
     public void setSong(int songIndex){
         songPosn=songIndex;
     }
@@ -195,15 +208,23 @@ public class MusicService extends Service implements
     }
 
     public void playPrev(){
-        songPosn--;
-        if(songPosn<0) songPosn=songs.size()-1;
-        playSong();
+        if(songs.size()>1) {
+            songPosn--;
+            if (songPosn < 0) songPosn = songs.size() - 1;
+            Intent intentToPlayNextSong = new Intent("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong");
+            getApplicationContext().sendBroadcast(intentToPlayNextSong);
+            playSong();
+        }
     }
 
     public void playNext(){
-        songPosn++;
-        if(songPosn>=songs.size()) songPosn=0;
-        playSong();
+        if(songs.size()>1) {
+            songPosn++;
+            if (songPosn >= songs.size()) songPosn = 0;
+            Intent intentToPlayNextSong = new Intent("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong");
+            getApplicationContext().sendBroadcast(intentToPlayNextSong);
+            playSong();
+        }
     }
 
     public void stopPlayer() {
@@ -220,5 +241,7 @@ public class MusicService extends Service implements
         playerIsReleased = true;
     }
 
+    public int getSongPosn () { return songPosn; }
 
+    public int getSongsSize () { return songs.size(); }
 }

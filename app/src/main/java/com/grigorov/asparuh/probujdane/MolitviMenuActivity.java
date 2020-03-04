@@ -48,7 +48,7 @@ public class MolitviMenuActivity extends AppCompatActivity {
                 viewHolder = new MolitviMenuActivity.MolitvaAdapter.ViewHolder();
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 convertView = inflater.inflate(R.layout.molitvi_list_item, parent, false);
-                viewHolder.molitvaTitle = (TextView) convertView.findViewById(R.id.textMolitvaTitle);
+                viewHolder.molitvaTitle = convertView.findViewById(R.id.textMolitvaTitle);
                 // Cache the viewHolder object inside the fresh view
                 convertView.setTag(viewHolder);
             } else {
@@ -64,6 +64,7 @@ public class MolitviMenuActivity extends AppCompatActivity {
                     Intent intent = new Intent(MolitviMenuActivity.this, MolitvaActivity.class);
                     intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaTitleVar", currentMolitva.getMolitvaTitle());
                     intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaTextVar", currentMolitva.getMolitvaText());
+                    intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaMarkersVar", "");
                     intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
                     startActivity(intent);
                 }

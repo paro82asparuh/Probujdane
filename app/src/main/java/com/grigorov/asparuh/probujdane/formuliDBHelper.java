@@ -39,4 +39,17 @@ public class formuliDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor searchInFormuli (String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT " +
+                        "offsets(table1) AS offs, ID, Title, Text " +
+                        "FROM table1 WHERE table1 MATCH " +
+                        "'" + query + "' " +
+                        "ORDER BY CAST(length(offs) AS int) DESC " +
+                        "LIMIT 50" +
+                        ";"
+                , null );
+        return res;
+    }
+
 }
