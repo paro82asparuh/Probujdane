@@ -41,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -95,6 +96,8 @@ public class SearchMenuActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
+        String searchSource = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_GLOBAL");
+        String searchInputText = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.searchInputText", "");
         searchItemTextSize = Integer.parseInt(besedaTextSizeString);
         searchOptionsTextSize = searchItemTextSize + 2;
         searchButtonTextSize = searchItemTextSize + 4;
@@ -115,6 +118,8 @@ public class SearchMenuActivity extends AppCompatActivity {
         editSearchTextInput.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editSearchTextInput, 0);
+        editSearchTextInput.setText(searchInputText);
+        editSearchTextInput.setSelection(searchInputText.length());
 
         linearLayoutScrollViewSearchResults = (LinearLayout) findViewById(R.id.search_lenear_layout_scroll_view);
 
@@ -128,7 +133,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         optionsSearchWhere = new String[]{
                 getResources().getString(R.string.search_option_whole_slovo),
                 getResources().getString(R.string.search_option_all_besedi),
-                getResources().getString(R.string.search_option_one_beseda),
+                //getResources().getString(R.string.search_option_one_beseda),
                 getResources().getString(R.string.search_option_molitvi),
                 getResources().getString(R.string.search_option_formuli),
                 getResources().getString(R.string.search_option_music)
@@ -145,6 +150,17 @@ public class SearchMenuActivity extends AppCompatActivity {
         spinnerSearchWhere.setAdapter(adapterSearchWhere);
         adapterSearchWhere.notifyDataSetChanged();
         spinnerSearchWhere.setSelection(0,true);
+        if (searchSource.equals("SEARCH_SOURCE_GLOBAL")) {
+            spinnerSearchWhere.setSelection(0,true);
+        } else if (searchSource.equals("SEARCH_ALL_BESEDI")) {
+            spinnerSearchWhere.setSelection(1,true);
+        } else if (searchSource.equals("SEARCH_SOURCE_MUSIC")) {
+            spinnerSearchWhere.setSelection(4,true);
+        } else if (searchSource.equals("SEARCH_SOURCE_MOLITVI")) {
+            spinnerSearchWhere.setSelection(2,true);
+        } else if (searchSource.equals("SEARCH_SOURCE_FORMULI")) {
+            spinnerSearchWhere.setSelection(3,true);
+        }
 
         updateBesedaInputVisibility();
 
@@ -432,7 +448,14 @@ public class SearchMenuActivity extends AppCompatActivity {
             searchInFormuli();
         } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_music))) {
             searchInMusic();
+        } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo))) {
+            searchInBesedi();
+            searchInMolitvi();
+            searchInFormuli();
+            searchInMusic();
+            sortSearchResultsWholeSlovo();
         }
+
 
     }
 
@@ -441,9 +464,11 @@ public class SearchMenuActivity extends AppCompatActivity {
         Cursor rs = myBesediDB.searchInBesedi(searchQuery);
 
         if (rs.getCount()<1) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
-            toast.show();
+            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.search_no_results), LENGTH_LONG);
+                toast.show();
+            }
         } else {
             rs.moveToFirst();
             listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
@@ -461,6 +486,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 // Convert the offset output to strings
                 ArrayList<OffsetRes> offsets = getOffsets(rs);
+                int numberMatches = offsets.size();
 
                 prepareMatches(offsets);
 
@@ -482,7 +508,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                 String besedaVariant = rs.getString(rs.getColumnIndex("Variant"));
                 besedaInfo bInfo = new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink);
 
-                listSearchResult.add(new searchResult(SEARCH_RESULT_BESEDI, newTextUpleft, newTextUpRight, newTextMain,
+                listSearchResult.add(new searchResult(SEARCH_RESULT_BESEDI, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
                         newSearchMarkers, newItemMarkers, bInfo, besedaVariant, scrollIndeces));
                 rs.moveToNext();
             }
@@ -501,9 +527,11 @@ public class SearchMenuActivity extends AppCompatActivity {
         Cursor rs = myMolivtiDB.searchInMolitvi(searchQuery);
 
         if (rs.getCount()<1) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
-            toast.show();
+            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.search_no_results), LENGTH_LONG);
+                toast.show();
+            }
         } else {
             rs.moveToFirst();
             listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
@@ -516,6 +544,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 // Convert the offset output to strings
                 ArrayList<OffsetRes> offsets = getOffsets(rs);
+                int numberMatches = offsets.size();
 
                 prepareMatches(offsets);
 
@@ -531,7 +560,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 String newItemMarkers = prepareMolitvaMarkers(offsets,rs);
 
-                listSearchResult.add(new searchResult(SEARCH_RESULT_MOLITVI, newTextUpleft, newTextUpRight, newTextMain,
+                listSearchResult.add(new searchResult(SEARCH_RESULT_MOLITVI, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
                         newSearchMarkers, newItemMarkers, new Molitva(newTextUpleft, molitvaText),
                         scrollIndeces) );
 
@@ -552,9 +581,11 @@ public class SearchMenuActivity extends AppCompatActivity {
         Cursor rs = myFormuliDB.searchInFormuli(searchQuery);
 
         if (rs.getCount()<1) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
-            toast.show();
+            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.search_no_results), LENGTH_LONG);
+                toast.show();
+            }
         } else {
             rs.moveToFirst();
             listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
@@ -568,6 +599,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 // Convert the offset output to strings
                 ArrayList<OffsetRes> offsets = getOffsets(rs);
+                int numberMatches = offsets.size();
 
                 prepareMatches(offsets);
 
@@ -583,7 +615,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 String newItemMarkers = prepareMolitvaMarkers(offsets,rs);
 
-                listSearchResult.add(new searchResult(SEARCH_RESULT_FORMULI, newTextUpleft, newTextUpRight, newTextMain,
+                listSearchResult.add(new searchResult(SEARCH_RESULT_FORMULI, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
                         newSearchMarkers, newItemMarkers, new Formula(Integer.parseInt(formulaID), newTextUpleft, formulaText),
                         scrollIndeces) );
 
@@ -604,9 +636,11 @@ public class SearchMenuActivity extends AppCompatActivity {
         Cursor rs = myMusicDB.searchInMusic(searchQuery);
 
         if (rs.getCount()<1) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
-            toast.show();
+            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.search_no_results), LENGTH_LONG);
+                toast.show();
+            }
         } else {
             rs.moveToFirst();
             listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
@@ -629,6 +663,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 // Convert the offset output to strings
                 ArrayList<OffsetRes> offsets = getOffsets(rs);
+                int numberMatches = offsets.size();
 
                 prepareMatches(offsets);
 
@@ -644,7 +679,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 String newItemMarkers = prepareMolitvaMarkers(offsets,rs);
 
-                listSearchResult.add(new searchResult(SEARCH_RESULT_MUSIC, newTextUpleft, newTextUpRight, newTextMain,
+                listSearchResult.add(new searchResult(SEARCH_RESULT_MUSIC, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
                         newSearchMarkers, newItemMarkers, new Song(musicID, newTextUpleft, musicText,
                             musicType, musicFileName),
                         scrollIndeces) );
@@ -661,8 +696,12 @@ public class SearchMenuActivity extends AppCompatActivity {
         }
     }
 
+    private void sortSearchResultsWholeSlovo() {
+        Collections.sort(listSearchResult,searchResult.numberMatchesComparator);
+    }
 
-    private void prepareMatches (ArrayList<OffsetRes> offsets) {
+
+    public void prepareMatches (ArrayList<OffsetRes> offsets) {
         // Algorithm description
         // The text extract shall be only one per beseda
         // The text extract shall be from only one column "TextN"
@@ -721,7 +760,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<OffsetRes> getOffsets (Cursor rs) {
+    public ArrayList<OffsetRes> getOffsets (Cursor rs) {
         String[] offsetsStrings = rs.getString(0).split(" "); // Split to " " to read integers
         ArrayList<OffsetRes> offsets = new ArrayList<OffsetRes>();
         offsets.ensureCapacity(offsetsStrings.length/4);
@@ -736,7 +775,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         return offsets;
     }
 
-    private String prepareTextMain(ArrayList<OffsetRes> offsets) {
+    public String prepareTextMain(ArrayList<OffsetRes> offsets) {
 
         // In a string a character is encoded in 2 bytes
         int startCharMatch1 = characterOffsetForByteOffsetInUTF8String((offsets.get(posMatch1).getOffsetInColumn()),newTextMainPre);
@@ -887,7 +926,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         return newItemMarkers;
     }
     
-    private class OffsetRes {
+    public class OffsetRes {
         private int columnNumber;
         private int termNumber;
         private int offsetInColumn;

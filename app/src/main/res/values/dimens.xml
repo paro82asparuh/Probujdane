@@ -37,4 +37,5 @@
     <dimen name="list_music_playlists_divider_hight">10dp</dimen>
     <dimen name="text_size_formula_title">16sp</dimen>
     <dimen name="text_size_formula_text">12sp</dimen>
+    <dimen name="text_size_beseda_search_controls">16sp</dimen>
 </resources>

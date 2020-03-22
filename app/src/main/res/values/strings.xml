@@ -88,4 +88,6 @@
     <string name="beseda">Беседа</string>
     <string name="molitva">Молитва</string>
     <string name="formula">Формула</string>
+    <string name="beseda_local_search_button_string">Търси в тази беседа</string>
+    <string name="beseda_global_search_button_string">Търси навсякъде</string>
 </resources>

@@ -40,6 +40,9 @@ public class FormulaActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         formulaTitle = intent.getStringExtra("com.grigorov.asparuh.probujdane.FormulaTitleVar");
+        if (formulaTitle.equals("")) {
+            formulaTitle = getResources().getString(R.string.formula);
+        }
         formulaText = intent.getStringExtra("com.grigorov.asparuh.probujdane.FormulaTextVar");
         screenWidthInPixels = intent.getStringExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels");
 
@@ -148,6 +151,7 @@ public class FormulaActivity extends AppCompatActivity {
 
     public void startSearchMenuTask (View view) {
         Intent intent = new Intent(this, SearchMenuActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_FORMULI");
         startActivity(intent);
     }
 

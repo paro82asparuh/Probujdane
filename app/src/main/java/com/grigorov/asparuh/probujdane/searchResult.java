@@ -1,6 +1,7 @@
 package com.grigorov.asparuh.probujdane;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by agr on 28/01/2018.
@@ -28,11 +29,14 @@ public class searchResult {
     private Formula formula;
     private Song song;
 
-    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+    private int numberMatches;
+
+    public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
                          String inputSearchMarker, String inputItemMarkers,
                          besedaInfo inputBesedaInfo, String inputBesedaVariant,
                          String inputScrollIndeces) {
         type = inputType;
+        numberMatches = inputNumberMatches;
         bInfo = inputBesedaInfo;
         besedaVariant = inputBesedaVariant;
         textUpLeft = inputTextUpLeft;
@@ -52,11 +56,12 @@ public class searchResult {
         scrollIndeces = inputScrollIndeces;
     }
 
-    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+    public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
                          String inputSearchMarker, String inputItemMarkers,
                          Molitva inputMolitva,
                          String inputScrollIndeces) {
         type = inputType;
+        numberMatches = inputNumberMatches;
         molitva = inputMolitva;
         textUpLeft = inputTextUpLeft;
         textUpRight = inputTextUpRight;
@@ -75,11 +80,12 @@ public class searchResult {
         scrollIndeces = inputScrollIndeces;
     }
 
-    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+    public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
                          String inputSearchMarker, String inputItemMarkers,
                          Formula inputFormula,
                          String inputScrollIndeces) {
         type = inputType;
+        numberMatches = inputNumberMatches;
         formula = inputFormula;
         textUpLeft = inputTextUpLeft;
         textUpRight = inputTextUpRight;
@@ -98,11 +104,12 @@ public class searchResult {
         scrollIndeces = inputScrollIndeces;
     }
 
-    public searchResult (int inputType, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+    public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
                          String inputSearchMarker, String inputItemMarkers,
                          Song inputSong,
                          String inputScrollIndeces) {
         type = inputType;
+        numberMatches = inputNumberMatches;
         song = inputSong;
         textUpLeft = inputTextUpLeft;
         textUpRight = inputTextUpRight;
@@ -190,5 +197,15 @@ public class searchResult {
     public Song getSong () { return song; }
 
     public int getType () { return type; }
+
+    public int getNumberMatches() { return numberMatches; }
+
+    public static Comparator<searchResult> numberMatchesComparator = new Comparator<searchResult>() {
+        @Override
+        public int compare(searchResult result1, searchResult result2) {
+            return (result2.getNumberMatches() < result1.getNumberMatches() ? -1 :
+                    (result2.getNumberMatches() == result1.getNumberMatches() ? 0 : 1));
+        }
+    };
 
 }

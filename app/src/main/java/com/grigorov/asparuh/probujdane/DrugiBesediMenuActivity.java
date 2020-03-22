@@ -33,6 +33,7 @@ public class DrugiBesediMenuActivity extends AppCompatActivity {
 
     public void startSearchMenuTask (View view) {
         Intent intent = new Intent(this, SearchMenuActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_ALL_BESEDI");
         startActivity(intent);
     }
 

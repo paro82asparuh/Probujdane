@@ -95,8 +95,34 @@ public class besediDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor searchInBeseda (String query, String besedaLink, String besedaDateYear,
+                                  String besedaDateMonth, String besedaDateDay, String besedaVariant) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT " +
+                        "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
+                        getAllTextColumnIDs() +
+                        "FROM table1 WHERE " +
+                        "Link='"+besedaLink+"' " +
+                        "And " +
+                        "Year_='"+besedaDateYear+"' " +
+                        "And " +
+                        "Month_='"+besedaDateMonth+"' " +
+                        "And " +
+                        "Day_of_Month='"+besedaDateDay+"' " +
+                        "And " +
+                        "Variant='"+besedaVariant+"' " +
+                        "And " +
+                        "table1 MATCH " +
+                        "'" + query + "' " +
+                        "ORDER BY CAST(length(offs) AS int) DESC " +
+                        "LIMIT 50" +
+                        ";"
+                , null );
+        return res;
+    }
+
     private String getAllTextColumnIDs() {
-        String result = new String("");
+        String result = "";
         result="Text1, Text2, Text3, Text4, Text5, Text6, Text7, Text8, Text9, Text10 " +
                 "Text11, Text12, Text13, Text14, Text15, Text16, Text17, Text18, Text19, Text20 " +
                 "Text21, Text22, Text23, Text24, Text25, Text26, Text27, Text28, Text29, Text30 " +

@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/len_1"
-            android:onClick="startSearchMenuTask" />
+            android:onClick="showSearchControls" />
 
         <TextView
             android:layout_width="0dp"
@@ -44,10 +44,31 @@
 
     </LinearLayout>
 
-    <View
+    <LinearLayout
+        android:id="@+id/linear_layout_empty_1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="5"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_search_controls"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="70">
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_empty_2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground" >
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textBesedaName"

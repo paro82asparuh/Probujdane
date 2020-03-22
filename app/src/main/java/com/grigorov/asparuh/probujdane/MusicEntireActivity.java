@@ -457,13 +457,18 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         // Get the source
         Intent intent = getIntent();
-        activitySource = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.musicActivitySourceVar","MainActivity");
+        activitySource = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "MainActivity");
 
         topMusicLinearLayout = (LinearLayout) findViewById(R.id.topMusicLinearLayout);
 
         // Initialize the databases
         songsDB = new musicDBHelper(this);
         playlistsDB = new playlistsDBhelper(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         setListPlaylistsList();
 
@@ -480,6 +485,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         buttonMusicPlayPause = (TextView) findViewById(R.id.buttonMusicPlayPause);
         musicInfoText  = (TextView) findViewById(R.id.musicInfoText);
         musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
+        if (musicBound==true) {
+            if (musicSrv.isPlaying()==true) {
+                musicInfoText.setText(musicSrv.getPlayedSong().getSongName());
+            }
+        }
 
         //Seekbar
         seekbarMusic = (SeekBar) findViewById(R.id.seekbarMusic);
@@ -510,7 +520,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             String searchedSongID = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.SongIDVar");
             showSongLayout(searchedSongID,false, 0);
 
-            String formulaMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.FormulaMarkersVar");
+            String formulaMarkers =  getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.FormulaMarkersVar");
             if (formulaMarkers.equals("")==false) {
                 String[] inputFormulaMarkers = formulaMarkers.split(" "); // Split to " " to read integers
                 for (int marker_loop=0; marker_loop<inputFormulaMarkers.length;marker_loop=marker_loop+3) {
@@ -549,6 +559,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                         + songList.get(musicSrv.getSongPosn()).getSongName()
                     );
                 seekbarMusic.setProgress(0);
+                if (musicState == STATE_SONG_FROM_PLAYLIST) {
+                    showSongLayout(songList.get(musicSrv.getSongPosn()).getSongID(),
+                            true,
+                            musicSrv.getSongPosn()
+                    );
+                }
             }
         };
         registerReceiver(broadcastReceiverPlayAnotherSong, new IntentFilter("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong"));
@@ -1192,18 +1208,17 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
     public void initService () {
         bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
         startService(playIntent);
     }
 
     public void onButtonSongPlayPressed (View view) {
-        startPlayingSingleSong(songOnScreen.getSongID());
+        if (musicState == STATE_SONG_FROM_PLAYLIST) {
+            startPlayingPlaylist(playlistOnScreen.getPlaylistID(),songOnScreen.getSongPositionInPlaylist());
+        } else {
+            startPlayingSingleSong(songOnScreen.getSongID());
+        }
     }
 
     public void startPlayingSingleSong (String songID) {
@@ -1306,6 +1321,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
         handlerUpdateSeekbar.removeCallbacks(runnableUpdateSeekbar);
         unregisterReceiver(broadcastReceiverEndMusicPlay);
+        unregisterReceiver(broadcastReceiverPlayAnotherSong);
         super.onDestroy();
     }
 
@@ -1335,18 +1351,31 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 stopService(playIntent);
                 startPlayingPlaylist(playlistOnScreen.getPlaylistID(), songOnScreen.getSongPositionInPlaylist() );
             } else if ( ( musicState == STATE_SONG_SINGLE) || (musicState == STATE_SONG_FROM_SEARCH) ) {
+                if (songOnScreen.isSongPlayble()==true) {
+                    buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
+                    unbindService(musicConnection);
+                    stopService(playIntent);
+                    startPlayingSingleSong(songOnScreen.getSongID());
+                }
+            } else if (musicState == STATE_PLAYLIST) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 unbindService(musicConnection);
                 stopService(playIntent);
-                startPlayingSingleSong(songOnScreen.getSongID());
+                startPlayingPlaylist(playlistOnScreen.getPlaylistID(), 0);
             }
         } else if (musicState == STATE_SONG_FROM_PLAYLIST) {
             buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
             startPlayingPlaylist(playlistOnScreen.getPlaylistID(), songOnScreen.getSongPositionInPlaylist() );
         } else if ( ( musicState == STATE_SONG_SINGLE) || (musicState == STATE_SONG_FROM_SEARCH) ) {
+            if (songOnScreen.isSongPlayble()==true) {
+                buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
+                startPlayingSingleSong(songOnScreen.getSongID());
+            }
+        } else if (musicState == STATE_PLAYLIST) {
             buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
-            startPlayingSingleSong(songOnScreen.getSongID());
+            startPlayingPlaylist(playlistOnScreen.getPlaylistID(), 0);
         }
+
     }
 
     public void startMusicSearchMenuTask (View view) {
@@ -1376,6 +1405,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         public int getEndIndex() {
             return endIndex;
         }
+    }
+
+    public void startSearchMenuTask (View view) {
+        Intent intent = new Intent(this, SearchMenuActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_MUSIC");
+        startActivity(intent);
     }
 
 }

@@ -102,7 +102,7 @@ public class besedaTextView extends android.support.v7.widget.AppCompatTextView 
             String line = text.substring(lineStart, lineEnd);
             float lineWidth = StaticLayout.getDesiredWidth(text, lineStart, lineEnd, getPaint());
 
-            String [] words = line.toString().split(" ");
+            String [] words = line.split(" ");
             float x = 0;
             if (isFirstLineOfParagraph()) {
                 x += 100;

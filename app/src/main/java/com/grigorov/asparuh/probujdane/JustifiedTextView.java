@@ -35,7 +35,7 @@ public class JustifiedTextView extends android.support.v7.widget.AppCompatTextVi
         mViewWidth = getMeasuredWidth();
         //String text = (String) getText();
         //String text = "" + getText();
-        String text = (String) getText().toString();
+        String text = getText().toString();
         mLineY = 0;
         mLineY += getTextSize();
         Layout layout = getLayout();

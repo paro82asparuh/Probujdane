@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
     public void startSearchMenuTask (View view) {
         Intent intent = new Intent(this, SearchMenuActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_ALL_BESEDI");
         startActivity(intent);
     }
 

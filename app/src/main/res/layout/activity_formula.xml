@@ -57,7 +57,7 @@
         android:gravity="center"
         android:textColor="@color/colorFormulaTitleText"
         android:textSize="@dimen/text_size_formula_title"
-        android:text="To be overwritten from java code" />
+        android:text="@string/formula" />
 
     <View
         android:layout_width="match_parent"

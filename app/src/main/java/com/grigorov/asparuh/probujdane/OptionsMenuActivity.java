@@ -95,7 +95,7 @@ public class OptionsMenuActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             //return getCustomView(position, convertView, parent);
             View row = inflater.inflate(R.layout.spinner_options_text_size_top, parent, false);
-            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerTextSizesTop);
+            TextView textView1        = row.findViewById(R.id.textViewSpinnerTextSizesTop);
             textView1.setText(OptionsMenuActivity.getBesedaTextSizeString(position));
             return row;
         }
@@ -105,7 +105,7 @@ public class OptionsMenuActivity extends AppCompatActivity {
 
             /********** Inflate spinner_rows.xml file for each row ( Defined below ) ************/
             View row = inflater.inflate(R.layout.spinner_options_text_size_item, parent, false);
-            TextView textView1        = (TextView)row.findViewById(R.id.textViewSpinnerTextSizes);
+            TextView textView1        = row.findViewById(R.id.textViewSpinnerTextSizes);
             textView1.setText(OptionsMenuActivity.getBesedaTextSizeString(position));
             return row;
         }

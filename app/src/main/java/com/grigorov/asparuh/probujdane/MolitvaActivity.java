@@ -148,6 +148,7 @@ public class MolitvaActivity extends AppCompatActivity {
 
     public void startSearchMenuTask (View view) {
         Intent intent = new Intent(this, SearchMenuActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_MOLITVI");
         startActivity(intent);
     }
 

@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,12 +25,16 @@ import android.text.style.LeadingMarginSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -60,10 +65,24 @@ public class BesedaActivity extends AppCompatActivity {
     private int srollTextX;
     private int srollTextIndex;
     private int scrollTextViewCounter;
+    private int scrollSearchResultIndex;
     private ScrollView scrollViewBeseda;
     private besedaTextView scrollTextView;
 
     private ArrayList<besedaMarker> listBesedaMarkers= new ArrayList<besedaMarker>();
+    private ArrayList<String> listBesedaTexts= new ArrayList<String>();
+
+    private LinearLayout linearLayoutSearchControls;
+    private LinearLayout linearLayoutEmpty1;
+    private LinearLayout linearLayoutEmpty2;
+    private EditText editSearchTextBesedatInput;
+    private boolean searchControlsShown;
+    private boolean searchKeyboardShown;
+    private int numberSearchResults;
+
+    private Cursor rs;
+
+    private String searchQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,20 +117,31 @@ public class BesedaActivity extends AppCompatActivity {
             }
         }
 
+        searchQuery = "";
         mydb = new besediDBHelper(this);
 
-        updateVariant ();
+        searchControlsShown = false;
+        searchKeyboardShown = true;
+        updateFullLayout ();
 
     }
 
-    private void updateVariant () {
+    private void updateFullLayout () {
 
         setContentView(R.layout.activity_beseda);
+        linearLayoutSearchControls = (LinearLayout) findViewById(R.id.linear_layout_search_controls);
+        linearLayoutEmpty1 = (LinearLayout) findViewById(R.id.linear_layout_empty_1);
+        linearLayoutEmpty2 = (LinearLayout) findViewById(R.id.linear_layout_empty_2);
+        if (searchControlsShown==false) {
+            hideSearchControls(linearLayoutSearchControls);
+        } else {
+            showSearchControls(linearLayoutSearchControls);
+        }
 
         scrollViewBeseda = (ScrollView) findViewById(R.id.scrollViewBeseda);
         scrollTextViewCounter = 0;
 
-        Cursor rs = mydb.getbeseda(besedaLink, besedaDateYear, besedaDateMonth, besedaDateDay);
+        rs = mydb.getbeseda(besedaLink, besedaDateYear, besedaDateMonth, besedaDateDay);
         rs.moveToFirst();
         if (variant1Selected==false) {
             rs.moveToNext();
@@ -121,7 +151,10 @@ public class BesedaActivity extends AppCompatActivity {
             variantsLinearLayout.removeAllViews();
         }
 
+        listBesedaTexts.clear();
+
         String besedaText1 = rs.getString(rs.getColumnIndex("Text1"));
+        listBesedaTexts.add(besedaText1);
 
         TextView textViewName = (TextView) findViewById(R.id.textBesedaName);
         textViewName.setText(besedaName);
@@ -205,6 +238,7 @@ public class BesedaActivity extends AppCompatActivity {
 
             besedaTextView besedaTextExtention = layout2.findViewById(R.id.textBesedaExtention);
             String besedaTextX = rs.getString(rs.getColumnIndex("Text"+(i+2)));
+            listBesedaTexts.add(besedaTextX);
             if (variant1Selected==(besedaInitialVariant.equals("1"))) {
                 besedaTextExtention.setMarkersString(createMarkersString(i + 2));
                 besedaTextExtention.setScrollToChar(srollTextIndex);
@@ -238,6 +272,10 @@ public class BesedaActivity extends AppCompatActivity {
 
     public void startSearchMenuTask (View view) {
         Intent intent = new Intent(this, SearchMenuActivity.class);
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_ALL_BESEDI");
+        searchQuery = editSearchTextBesedatInput.getText().toString();
+        intent.putExtra("com.grigorov.asparuh.probujdane.searchInputText", searchQuery);
+        hideSearchControls(view);
         startActivity(intent);
     }
 
@@ -258,7 +296,7 @@ public class BesedaActivity extends AppCompatActivity {
             showMessage(errorMessage);
         } else {
             variant1Selected = true;
-            updateVariant ();
+            updateFullLayout ();
             String variantUpdatedMessage = getString(R.string.variant1_updated);
             showMessage(variantUpdatedMessage);
         }
@@ -271,7 +309,7 @@ public class BesedaActivity extends AppCompatActivity {
             showMessage(errorMessage);
         } else {
             variant1Selected = false;
-            updateVariant ();
+            updateFullLayout ();
             String variantUpdatedMessage = getString(R.string.variant2_updated);
             showMessage(variantUpdatedMessage);
         }
@@ -391,6 +429,170 @@ public class BesedaActivity extends AppCompatActivity {
     }
 
 
+    public void hideSearchControls (View view) {
+        searchControlsShown = false;
+        searchKeyboardShown = true;
+        linearLayoutSearchControls.removeAllViews();
+        LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                0.0f
+        );
+        linearLayoutSearchControls.setLayoutParams(param0);
+        LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                5.0f
+        );
+        linearLayoutEmpty1.setLayoutParams(param1);
+        linearLayoutEmpty1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
+        LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                5.0f
+        );
+        linearLayoutEmpty2.setLayoutParams(param2);
+        linearLayoutEmpty2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
+
+    }
+
+    public void showSearchControls (View view) {
+
+        searchControlsShown = true;
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.beseda_search_controls, null, false);
+        linearLayoutSearchControls.addView(inflatedLayout);
+        editSearchTextBesedatInput = (EditText)findViewById(R.id.edit_search_text_beseda_input);
+        editSearchTextBesedatInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    startSearchInBeseda(editSearchTextBesedatInput);
+                }
+                return false;
+            }
+        });
+        editSearchTextBesedatInput.requestFocus();
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editSearchTextBesedatInput, 0);
+        if (searchKeyboardShown==true) {
+            showSearchKeyboard();
+        } else {
+            hideSearchkeyboard();
+        }
+        editSearchTextBesedatInput.setText(searchQuery);
+        editSearchTextBesedatInput.setSelection(searchQuery.length());
+
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                70.0f
+        );
+        linearLayoutSearchControls.setLayoutParams(param);
+        LinearLayout.LayoutParams param1 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                10.0f
+        );
+        linearLayoutEmpty1.setLayoutParams(param1);
+        linearLayoutEmpty1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorMainBackground));
+        LinearLayout.LayoutParams param2 = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                10.0f
+        );
+        linearLayoutEmpty2.setLayoutParams(param2);
+        linearLayoutEmpty2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorMainBackground));
+    }
+
+    private void hideSearchkeyboard() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editSearchTextBesedatInput.getWindowToken(), 0);
+    }
+
+    private void showSearchKeyboard () {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editSearchTextBesedatInput, 0);
+    }
+
+    public void startSearchInBeseda (View view) {
+
+        searchKeyboardShown = false;
+        hideSearchkeyboard();
+
+        numberSearchResults = 0;
+
+        String searchBesedaVariant;
+        if (variant1Selected==true) {
+            searchBesedaVariant="1";
+        } else {
+            searchBesedaVariant="2";
+        }
+
+        searchQuery = editSearchTextBesedatInput.getText().toString();
+
+        listBesedaMarkers.clear();
+        
+        for (int i=0; i<listBesedaTexts.size(); i++) {
+            int index = 0;
+            while ((index=listBesedaTexts.get(i).toLowerCase().indexOf(searchQuery.toLowerCase(),(index+1)))>=0) {
+                int markerEndIndex = index+searchQuery.length()-1;
+                if (markerEndIndex>=listBesedaTexts.get(i).length()) {
+                    markerEndIndex = listBesedaTexts.get(i).length()-1;
+                }
+                listBesedaMarkers.add(
+                        new besedaMarker(
+                                i+1,
+                                index,
+                                markerEndIndex
+                        )
+                );
+                numberSearchResults++;
+                if (index==listBesedaTexts.get(i).length()) break;
+            }
+        }
+
+        if (numberSearchResults==0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
+            toast.show();
+            listBesedaMarkers.clear();
+            srollTextX=0;
+            srollTextIndex = 0;
+        } else {
+            scrollSearchResultIndex = 0;
+            updateScrollFromSearch();
+        }
+        updateFullLayout();
+
+    }
+
+    public void goToNextSearchResult(View view) {
+        if (numberSearchResults>0) {
+            scrollSearchResultIndex++;
+            if (scrollSearchResultIndex>=numberSearchResults) {
+                scrollSearchResultIndex=0;
+            }
+            updateScrollFromSearch();
+            updateFullLayout();
+        }
+    }
+
+    public void goToPreviousSearchResult(View view) {
+        if (numberSearchResults>0) {
+            scrollSearchResultIndex--;
+            if (scrollSearchResultIndex<0) {
+                scrollSearchResultIndex=numberSearchResults-1;
+            }
+            updateScrollFromSearch();
+            updateFullLayout();
+        }
+    }
+
+    private void updateScrollFromSearch() {
+        srollTextX = listBesedaMarkers.get(scrollSearchResultIndex).getTextIndex();
+        srollTextIndex = listBesedaMarkers.get(scrollSearchResultIndex).getStartIndex();
+    }
 }
 
 
