@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.os.StatFs;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -130,19 +132,38 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startMolitviTask (View view) {
-        Intent intent = new Intent(this, MolitviMenuActivity.class);
-        startActivity(intent);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            Intent intent = new Intent(this, MolitviMenuActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void startFormuliTask (View view) {
-        Intent intent = new Intent(this, FormuliMenuActivity.class);
-        startActivity(intent);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            Intent intent = new Intent(this, FormuliMenuActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void startMusicTask (View view) {
-        Intent intent = new Intent(this, MusicEntireActivity.class);
-        intent.putExtra("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "MainActivity");
-        startActivity(intent);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("com.grigorov.asparuh.probujdane.musicState", "1");
+            editor.putString("com.grigorov.asparuh.probujdane.musicStateOld", "1");
+            Intent intent = new Intent(this, MusicEntireActivity.class);
+            intent.putExtra("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "MainActivity");
+            startActivity(intent);
+        }
     }
 
     public void startNotificationsTask (View view) {
@@ -151,9 +172,14 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startSearchMenuTask (View view) {
-        Intent intent = new Intent(this, SearchMenuActivity.class);
-        intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_ALL_BESEDI");
-        startActivity(intent);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            Intent intent = new Intent(this, SearchMenuActivity.class);
+            intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_GLOBAL");
+            startActivity(intent);
+        }
     }
 
     public void startOptionsMenuTask (View view) {
@@ -162,28 +188,53 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startNedelniBesediTask(View view) {
-        SelectedBesediType = Nedelni_Besedi;
-        startBesediListTask(view);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            SelectedBesediType = Nedelni_Besedi;
+            startBesediListTask(view);
+        }
     }
 
     public void startOOKBesediTask(View view) {
-        SelectedBesediType = OOK_Besedi;
-        startBesediListTask(view);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            SelectedBesediType = OOK_Besedi;
+            startBesediListTask(view);
+        }
     }
 
     public void startMOKBesediTask(View view) {
-        SelectedBesediType = MOK_Besedi;
-        startBesediListTask(view);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            SelectedBesediType = MOK_Besedi;
+            startBesediListTask(view);
+        }
     }
 
     public void startUtrinniSlovaBesediTask(View view) {
-        SelectedBesediType = Utrinni_Slova_Besedi;
-        startBesediListTask(view);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            SelectedBesediType = Utrinni_Slova_Besedi;
+            startBesediListTask(view);
+        }
     }
 
     public void startSyborniBesediTask(View view) {
-        SelectedBesediType = Syborni_Besedi;
-        startBesediListTask(view);
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            SelectedBesediType = Syborni_Besedi;
+            startBesediListTask(view);
+        }
     }
 
     private void startBesediListTask(View view) {
@@ -606,6 +657,16 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
             // other 'case' lines to check for other
             // permissions this app might request.
         }
+    }
+
+    @Override
+    protected void onStop() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("com.grigorov.asparuh.probujdane.musicState", "1");
+        editor.commit();
+
+        super.onStop();
     }
 
 

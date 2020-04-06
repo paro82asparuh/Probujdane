@@ -77,8 +77,8 @@ public class FormulaActivity extends AppCompatActivity {
             for (int markerIndex=0;markerIndex<listFormulaMarkers.size();markerIndex=markerIndex+1) {
                 if (
                         (listFormulaMarkers.get(markerIndex).getColumnIndex()==1) &&
-                                (listFormulaMarkers.get(markerIndex).getStartIndex()>=textIndex) &&
-                                (listFormulaMarkers.get(markerIndex).getEndIndex()<=textIndex)
+                                (listFormulaMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
+                                (listFormulaMarkers.get(markerIndex).getEndIndex()>=textIndex)
                 ) {
                     marked = true;
                 }
@@ -94,7 +94,7 @@ public class FormulaActivity extends AppCompatActivity {
             formulaTitleBuilder.append(spannableString);
         }
 
-        TextView textViewTitle = (TextView) findViewById(R.id.textFormulaTitle);
+        TextView textViewTitle = findViewById(R.id.textFormulaTitle);
         textViewTitle.setText(formulaTitleBuilder);
 
         SpannableStringBuilder formulaTextBuilder = new SpannableStringBuilder();
@@ -106,7 +106,7 @@ public class FormulaActivity extends AppCompatActivity {
                 if (
                         (listFormulaMarkers.get(markerIndex).getColumnIndex()==2) &&
                                 (listFormulaMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
-                                (listFormulaMarkers.get(markerIndex).getEndIndex()>textIndex)
+                                (listFormulaMarkers.get(markerIndex).getEndIndex()>=textIndex)
                 ) {
                     marked = true;
                 }
@@ -122,7 +122,7 @@ public class FormulaActivity extends AppCompatActivity {
             formulaTextBuilder.append(spannableString);
         }
 
-        TextView textViewText = (TextView) findViewById(R.id.textFormulaText);
+        TextView textViewText = findViewById(R.id.textFormulaText);
         textViewText.setGravity(CENTER_HORIZONTAL);
         textViewText.setText(formulaTextBuilder);
 
@@ -141,10 +141,10 @@ public class FormulaActivity extends AppCompatActivity {
         int formulaTextSize = Integer.parseInt(formulaTextSizeString);
         int formulaNameSize = formulaTextSize + 4;
 
-        TextView textViewTitle = (TextView) findViewById(R.id.textFormulaTitle);
+        TextView textViewTitle = findViewById(R.id.textFormulaTitle);
         textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, formulaNameSize);
 
-        TextView textViewText = (TextView) findViewById(R.id.textFormulaText);
+        TextView textViewText = findViewById(R.id.textFormulaText);
         textViewText.setTextSize(TypedValue.COMPLEX_UNIT_SP, formulaTextSize);
 
     }

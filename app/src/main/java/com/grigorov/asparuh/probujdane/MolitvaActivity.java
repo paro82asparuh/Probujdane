@@ -73,8 +73,8 @@ public class MolitvaActivity extends AppCompatActivity {
             for (int markerIndex=0;markerIndex<listMolitvaMarkers.size();markerIndex=markerIndex+1) {
                 if (
                         (listMolitvaMarkers.get(markerIndex).getColumnIndex()==1) &&
-                        (listMolitvaMarkers.get(markerIndex).getStartIndex()>=textIndex) &&
-                        (listMolitvaMarkers.get(markerIndex).getEndIndex()<=textIndex)
+                        (listMolitvaMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
+                        (listMolitvaMarkers.get(markerIndex).getEndIndex()>=textIndex)
                 ) {
                     marked = true;
                 }
@@ -90,7 +90,7 @@ public class MolitvaActivity extends AppCompatActivity {
             molitvaTitleBuilder.append(spannableString);
         }
 
-        TextView textViewTitle = (TextView) findViewById(R.id.textMolitvaTitle);
+        TextView textViewTitle = findViewById(R.id.textMolitvaTitle);
         textViewTitle.setText(molitvaTitleBuilder);
 
         SpannableStringBuilder molitvaTextBuilder = new SpannableStringBuilder();
@@ -102,7 +102,7 @@ public class MolitvaActivity extends AppCompatActivity {
                 if (
                     (listMolitvaMarkers.get(markerIndex).getColumnIndex()==2) &&
                     (listMolitvaMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
-                    (listMolitvaMarkers.get(markerIndex).getEndIndex()>textIndex)
+                    (listMolitvaMarkers.get(markerIndex).getEndIndex()>=textIndex)
                 ) {
                     marked = true;
                 }
@@ -118,7 +118,7 @@ public class MolitvaActivity extends AppCompatActivity {
             molitvaTextBuilder.append(spannableString);
         }
 
-        TextView textViewText = (TextView) findViewById(R.id.textMolitvaText);
+        TextView textViewText = findViewById(R.id.textMolitvaText);
         textViewText.setGravity(CENTER_HORIZONTAL);
         textViewText.setText(molitvaTextBuilder);
 
@@ -138,10 +138,10 @@ public class MolitvaActivity extends AppCompatActivity {
         int molitvaTextSize = Integer.parseInt(molitvaTextSizeString);
         int molitvaNameSize = molitvaTextSize + 4;
 
-        TextView textViewTitle = (TextView) findViewById(R.id.textMolitvaTitle);
+        TextView textViewTitle = findViewById(R.id.textMolitvaTitle);
         textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, molitvaNameSize);
 
-        TextView textViewText = (TextView) findViewById(R.id.textMolitvaText);
+        TextView textViewText = findViewById(R.id.textMolitvaText);
         textViewText.setTextSize(TypedValue.COMPLEX_UNIT_SP, molitvaTextSize);
 
     }

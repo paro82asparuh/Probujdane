@@ -2,9 +2,12 @@ package com.grigorov.asparuh.probujdane;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ public class FormuliMenuActivity extends AppCompatActivity {
     private ArrayList<Formula> listFormuli= new ArrayList<Formula>();
     private FormulaAdapter formulaAdapter;
     private formuliDBHelper mydb;
+    private int formulaTextSize;
 
     public class FormulaAdapter extends ArrayAdapter<Formula> {
 
@@ -54,20 +58,19 @@ public class FormuliMenuActivity extends AppCompatActivity {
             //TextView tvBesedaName = (TextView) convertView.findViewById(R.id.textBesediName);
             //TextView tvBesedaDate = (TextView) convertView.findViewById(R.id.textBesediDate);
             // Populate the data into the template view using the data object
-            String formulihownText = "";
-            formulihownText = currentFormula.getTitle();
-            if (formulihownText.equals("")==false) {
-                formulihownText += "\n";
+            String stringFormulaShownText = "";
+            stringFormulaShownText = currentFormula.getTitle();
+            if (stringFormulaShownText.equals("")==false) {
+                stringFormulaShownText += "\n";
             }
-            formulihownText += currentFormula.getText();
-            viewHolder.formulaShownText.setText(formulihownText);
+            stringFormulaShownText += currentFormula.getText();
+            viewHolder.formulaShownText.setText(stringFormulaShownText);
+            viewHolder.formulaShownText.setTextSize(formulaTextSize);
             // Return the completed view to render on screen
             return convertView;
         }
 
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +81,10 @@ public class FormuliMenuActivity extends AppCompatActivity {
         mydb = new formuliDBHelper(this);
         setListFormuli();
 
+        updateTextSize();
+
         formulaAdapter = new FormulaAdapter(this, listFormuli);
-        ListView listView1 = (ListView) findViewById(R.id.listViewFormuli);
+        ListView listView1 = findViewById(R.id.listViewFormuli);
         listView1.setAdapter(formulaAdapter);
     
     }
@@ -87,6 +92,7 @@ public class FormuliMenuActivity extends AppCompatActivity {
     public void onResume () {
         super.onResume();
         mydb = new formuliDBHelper(this);
+        updateTextSize();
     }
 
     public void onPause () {
@@ -129,7 +135,17 @@ public class FormuliMenuActivity extends AppCompatActivity {
 
     }
 
+    private void updateTextSize () {
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String formulaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
+        formulaTextSize = Integer.parseInt(formulaTextSizeString);
+        int formulaTitleSize = formulaTextSize + 4;
+
+        TextView textViewTitle = findViewById(R.id.textFormuliTitle);
+        textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, formulaTitleSize);
+
+    }
 
 
 

@@ -8,10 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -23,6 +25,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +45,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private musicDBHelper songsDB;
     private playlistsDBhelper playlistsDB;
 
-    private int musicState;
-    private int musicStateOld;
+    private Integer musicState;
+    private Integer musicStateOld;
     public final static int STATE_MENU =1;
     public final static int STATE_SONGS_LIST =2;
     public final static int STATE_PANEVRITMIA_LIST = 3;
@@ -183,7 +186,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 public void onClick(final View v) {
                     // Put the logic on press here
                     // Store the scroll view location
-                    ListView listView1 = (ListView) findViewById(R.id.listViewMusicSongs);
+                    ListView listView1 = findViewById(R.id.listViewMusicSongs);
                     scrollViewSongsListFirstVisiblePosition = listView1.getFirstVisiblePosition();
                     // Invoke the song layout
                     showSongLayout(currentSongInfo.getSongID(),false, 0);
@@ -251,7 +254,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 public void onClick(final View v) {
                     // Put the logic on press here
                     // Store the scroll view location
-                    ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylists);
+                    ListView listView1 = findViewById(R.id.listViewMusicPlaylists);
                     scrollViewPlaylistsListFirstVisiblePosition = listView1.getFirstVisiblePosition();
                     // Invoke the song layout
                     showPlaylistLayout(currentPlaylist.getPlaylistID());
@@ -373,7 +376,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 public void onClick(final View v) {
                     // Put the logic on press here
                     // Store the scroll view location
-                    ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylist);
+                    ListView listView1 = findViewById(R.id.listViewMusicPlaylist);
                     scrollViewPlaylistFirstVisiblePosition = listView1.getFirstVisiblePosition();
                     // Invoke the song layout
                     showSongLayout(currentSong.getSongID(),true, currentSong.getSongPositionInPlaylist());
@@ -459,7 +462,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         Intent intent = getIntent();
         activitySource = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "MainActivity");
 
-        topMusicLinearLayout = (LinearLayout) findViewById(R.id.topMusicLinearLayout);
+        topMusicLinearLayout = findViewById(R.id.topMusicLinearLayout);
 
         // Initialize the databases
         songsDB = new musicDBHelper(this);
@@ -482,8 +485,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         registerBroadcastReceivers();
 
-        buttonMusicPlayPause = (TextView) findViewById(R.id.buttonMusicPlayPause);
-        musicInfoText  = (TextView) findViewById(R.id.musicInfoText);
+        buttonMusicPlayPause = findViewById(R.id.buttonMusicPlayPause);
+        musicInfoText  = findViewById(R.id.musicInfoText);
         musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
         if (musicBound==true) {
             if (musicSrv.isPlaying()==true) {
@@ -492,7 +495,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
 
         //Seekbar
-        seekbarMusic = (SeekBar) findViewById(R.id.seekbarMusic);
+        seekbarMusic = findViewById(R.id.seekbarMusic);
         seekbarMusic.setMax(seekBarMaxUnits);
         seekbarMusic.setProgress(0);
         seekbarMusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -517,22 +520,78 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         listSongMarkers.clear();
         if (activitySource.equals("SearchMenuActivity")) {
-            String searchedSongID = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.SongIDVar");
-            showSongLayout(searchedSongID,false, 0);
-
-            String formulaMarkers =  getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.FormulaMarkersVar");
-            if (formulaMarkers.equals("")==false) {
-                String[] inputFormulaMarkers = formulaMarkers.split(" "); // Split to " " to read integers
-                for (int marker_loop=0; marker_loop<inputFormulaMarkers.length;marker_loop=marker_loop+3) {
+            String songMarkers =  getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.FormulaMarkersVar");
+            if (songMarkers.equals("")==false) {
+                String[] inputSongMarkers = songMarkers.split(" "); // Split to " " to read integers
+                for (int marker_loop=0; marker_loop<inputSongMarkers.length;marker_loop=marker_loop+3) {
                     listSongMarkers.add(
                             new SongMarker(
-                                    Integer.parseInt(inputFormulaMarkers[marker_loop]),
-                                    Integer.parseInt(inputFormulaMarkers[marker_loop+1]),
-                                    Integer.parseInt(inputFormulaMarkers[marker_loop+2])
+                                    Integer.parseInt(inputSongMarkers[marker_loop]),
+                                    Integer.parseInt(inputSongMarkers[marker_loop+1]),
+                                    Integer.parseInt(inputSongMarkers[marker_loop+2])
                             )
                     );
                 }
             }
+            String searchedSongID = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.SongIDVar");
+            showSongLayout(searchedSongID,false, 0);
+        } else {
+            /* Removed as it is very complex to keep and restors all state vars
+                Estimated to not be really needed for the user!
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            String stringInputMusicState = sharedPref.getString("com.grigorov.asparuh.probujdane.musicState", "1");
+            Integer inputMusicState = Integer.parseInt(stringInputMusicState);
+            String stringInputMusicStateOld = sharedPref.getString("com.grigorov.asparuh.probujdane.musicStateOld", "1");
+            Integer inputMusicStateOld = Integer.parseInt(stringInputMusicStateOld);
+            String inputMusicSongID = sharedPref.getString("com.grigorov.asparuh.probujdane.musicSongID", "1");
+            String stringInputMusicSongPositionInPlaylist = sharedPref.getString("com.grigorov.asparuh.probujdane.musicSongPositionInPlaylist", "");
+            String inputMusicPlaylistID = sharedPref.getString("com.grigorov.asparuh.probujdane.musicPlaylistID", "");
+            Integer inputMusicSongPositionInPlaylist;
+            boolean inputSongFromPlaylist;
+            switch (inputMusicState) {
+                case STATE_SONGS_LIST:
+                    startSongsListTask(topMusicLinearLayout);
+                    break;
+                case STATE_PANEVRITMIA_LIST:
+                    startPanevritmiaTask(topMusicLinearLayout);
+                    break;
+                case STATE_INSTRUMENTAl_LIST:
+                    startPanevritmiaInstrumentalTask(topMusicLinearLayout);
+                    break;
+                case STATE_SONG_SINGLE:
+                    musicStateOld = inputMusicStateOld;
+                    showSongLayout(inputMusicSongID, false, -1);
+                    break;
+                case STATE_SONG_FROM_PLAYLIST:
+                    inputMusicSongPositionInPlaylist = Integer.parseInt(stringInputMusicSongPositionInPlaylist);
+                    inputSongFromPlaylist = ((inputMusicSongPositionInPlaylist.equals("-1"))==false);
+                    setPlaylistOnScreen(inputMusicPlaylistID);
+                    showSongLayout(inputMusicSongID, inputSongFromPlaylist, inputMusicSongPositionInPlaylist);
+                    break;
+                case STATE_PLAYLISTS_LIST:
+                    startPlaylistsTask(topMusicLinearLayout);
+                    break;
+                case STATE_PLAYLIST:
+                    showPlaylistLayout(inputMusicPlaylistID);
+                    break;
+                case STATE_PLAYLIST_ADD_SONG:
+                    setPlaylistOnScreen(inputMusicPlaylistID);
+                    showPlaylistAddSongLayout();
+                    break;
+                case STATE_PLAYLIST_REMOVE_SONG:
+                    setPlaylistOnScreen(inputMusicPlaylistID);
+                    showPlaylistRemoveSongLayout();
+                    break;
+                case STATE_PLAYLIST_CREATE_NEW_FROM_SONG:
+                    musicStateOld = inputMusicStateOld;
+                    inputMusicSongPositionInPlaylist = Integer.parseInt(stringInputMusicSongPositionInPlaylist);
+                    inputSongFromPlaylist = ((inputMusicSongPositionInPlaylist.equals("-1"))==false);
+                    setSongOnScreen(inputMusicSongID, inputMusicSongPositionInPlaylist);
+                    onButtonSongAdd2PlaylistPressed(topMusicLinearLayout);
+                    break;
+                default:
+            }
+             */
         }
 
     }
@@ -626,8 +685,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void startSongsListTask (View view) {
-        musicState = STATE_SONGS_LIST;
         musicStateOld = musicState;
+        musicState = STATE_SONGS_LIST;
 
         topMusicLinearLayout.removeAllViews();
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
@@ -640,8 +699,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void startPanevritmiaTask (View view) {
-        musicState = STATE_PANEVRITMIA_LIST;
         musicStateOld = musicState;
+        musicState = STATE_PANEVRITMIA_LIST;
 
         topMusicLinearLayout.removeAllViews();
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
@@ -654,8 +713,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void startPanevritmiaInstrumentalTask (View view) {
-        musicState = STATE_INSTRUMENTAl_LIST;
         musicStateOld = musicState;
+        musicState = STATE_INSTRUMENTAl_LIST;
 
         topMusicLinearLayout.removeAllViews();
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
@@ -691,7 +750,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void showListSongs() {
         songsInfoAdapter = new MusicEntireActivity.SongsInfoAdapter(this, listSongsInfo);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMusicSongs);
+        ListView listView1 = findViewById(R.id.listViewMusicSongs);
         listView1.setAdapter(songsInfoAdapter);
         listView1.setSelection(scrollViewSongsListFirstVisiblePosition);
     }
@@ -721,19 +780,35 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         setListPlaylistsList();
 
-        musicState = STATE_PLAYLISTS_LIST;
         musicStateOld = musicState;
+        musicState = STATE_PLAYLISTS_LIST;
 
         topMusicLinearLayout.removeAllViews();
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, null, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         playlistsListAdapter = new MusicEntireActivity.PlaylistsListAdapter(this, listPlaylists);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylists);
+        ListView listView1 = findViewById(R.id.listViewMusicPlaylists);
         listView1.setAdapter(playlistsListAdapter);
         listView1.setSelection(scrollViewPlaylistsListFirstVisiblePosition);
     }
 
+    private void setSongOnScreen (String songID, Integer songPositionInPlaylist) {
+        Cursor rs = songsDB.getSongSingle(songID);
+        rs.moveToFirst();
+
+        songOnScreen = new Song (songID,
+                rs.getString(rs.getColumnIndex("Title")),
+                rs.getString(rs.getColumnIndex("Text")),
+                rs.getString(rs.getColumnIndex("Type_")),
+                rs.getString(rs.getColumnIndex("File_Name"))
+        );
+        songOnScreen.setSongPositionInPlaylist(songPositionInPlaylist);
+
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
 
     public void showSongLayout (String songID, boolean fromPlaylist, Integer songPositionInPlaylist) {
         if (activitySource.equals("SearchMenuActivity")) {
@@ -748,20 +823,13 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_song, null, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
-        Cursor rs = songsDB.getSongSingle(songID);
-        rs.moveToFirst();
+        setSongOnScreen(songID, songPositionInPlaylist);
 
-        songOnScreen = new Song (songID,
-                rs.getString(rs.getColumnIndex("Title")),
-                rs.getString(rs.getColumnIndex("Text")),
-                rs.getString(rs.getColumnIndex("Type_")),
-                rs.getString(rs.getColumnIndex("File_Name"))
-            );
-        songOnScreen.setSongPositionInPlaylist(songPositionInPlaylist);
-
-        if (!rs.isClosed())  {
-            rs.close();
-        }
+        // Get text sizes
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String songTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
+        int songTextSize = Integer.parseInt(songTextSizeString);
+        int songTitleSize = songTextSize + 4;
 
         // Populate Song details into the layout
         // Add search markers if needed!
@@ -775,8 +843,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             for (int markerIndex=0;markerIndex<listSongMarkers.size();markerIndex=markerIndex+1) {
                 if (
                         (listSongMarkers.get(markerIndex).getColumnIndex()==1) &&
-                                (listSongMarkers.get(markerIndex).getStartIndex()>=textIndex) &&
-                                (listSongMarkers.get(markerIndex).getEndIndex()<=textIndex)
+                                (listSongMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
+                                (listSongMarkers.get(markerIndex).getEndIndex()>=textIndex)
                 ) {
                     marked = true;
                 }
@@ -792,8 +860,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             songNameBuilder.append(spannableString);
         }
 
-        TextView textViewSongTitle = (TextView) findViewById(R.id.textSongTitle);
+        TextView textViewSongTitle = findViewById(R.id.textSongTitle);
         textViewSongTitle.setText(songNameBuilder);
+        textViewSongTitle.setTextSize(songTitleSize);
 
         SpannableStringBuilder songTextBuilder = new SpannableStringBuilder();
         for (int textIndex=0; textIndex < songOnScreen.getSongText().length(); textIndex++) {
@@ -804,7 +873,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 if (
                         (listSongMarkers.get(markerIndex).getColumnIndex()==2) &&
                                 (listSongMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
-                                (listSongMarkers.get(markerIndex).getEndIndex()>textIndex)
+                                (listSongMarkers.get(markerIndex).getEndIndex()>=textIndex)
                 ) {
                     marked = true;
                 }
@@ -820,8 +889,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             songTextBuilder.append(spannableString);
         }
 
-        TextView textViewSongText = (TextView) findViewById(R.id.textSongText);
+        TextView textViewSongText = findViewById(R.id.textSongText);
         textViewSongText.setText(songTextBuilder);
+        textViewSongText.setTextSize(songTextSize);
 
         if (songOnScreen.isSongPlayble()==false) {
             LinearLayout linearSongPlayOptions = topMusicLinearLayout.findViewById(R.id.linearSongPlayOptions);
@@ -834,14 +904,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     }
 
-
-    public void showPlaylistLayout (String playlistID) {
-        musicState = STATE_PLAYLIST;
-
-        topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlist, null, false);
-        topMusicLinearLayout.addView(inflatedLayout);
-
+    private void setPlaylistOnScreen (String playlistID) {
         Cursor rs = playlistsDB.getPlaylist(playlistID);
         rs.moveToFirst();
 
@@ -854,17 +917,27 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         if (!rs.isClosed())  {
             rs.close();
         }
+    }
+
+    public void showPlaylistLayout (String playlistID) {
+        musicState = STATE_PLAYLIST;
+
+        topMusicLinearLayout.removeAllViews();
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlist, null, false);
+        topMusicLinearLayout.addView(inflatedLayout);
+
+        setPlaylistOnScreen(playlistID);
 
         listPlaylistsSongs = playlistOnScreen.getSongsArrayList();
 
         // Populate Playlist details into the layout
         playlistAdapter = new MusicEntireActivity.PlaylistAdapter(this, listPlaylistsSongs);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylist);
+        ListView listView1 = findViewById(R.id.listViewMusicPlaylist);
         listView1.setAdapter(playlistAdapter);
         listView1.setSelection(scrollViewPlaylistFirstVisiblePosition);
 
         TextView textPlaylistName;
-        textPlaylistName = (TextView) findViewById(R.id.textPlaylistName);
+        textPlaylistName = findViewById(R.id.textPlaylistName);
         textPlaylistName.setText(playlistOnScreen.getPlaylistName());
 
         View viewPlaylistPlay;
@@ -877,7 +950,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         });
 
         TextView textPlaylistAddSong;
-        textPlaylistAddSong = (TextView) findViewById(R.id.textPlaylistAddSong);
+        textPlaylistAddSong = findViewById(R.id.textPlaylistAddSong);
         textPlaylistAddSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -895,7 +968,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         });
 
         TextView textPlaylistRemoveSong;
-        textPlaylistRemoveSong = (TextView) findViewById(R.id.textPlaylistRemoveSong);
+        textPlaylistRemoveSong = findViewById(R.id.textPlaylistRemoveSong);
         textPlaylistRemoveSong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -913,7 +986,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         });
 
         TextView textDeletePlaylist;
-        textDeletePlaylist = (TextView) findViewById(R.id.textDeletePlaylist);
+        textDeletePlaylist = findViewById(R.id.textDeletePlaylist);
         textDeletePlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -974,7 +1047,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
 
         playlistEditSongsInfoAdapter = new MusicEntireActivity.PlaylistEditSongsInfoAdapter(this, listPlaylistEditSongsInfo);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylistAdd);
+        ListView listView1 = findViewById(R.id.listViewMusicPlaylistAdd);
         listView1.setAdapter(playlistEditSongsInfoAdapter);
 
         View viewMusicPlaylistAddTick;
@@ -1008,7 +1081,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         listPlaylistEditSongsInfo = playlistOnScreen.getSongsInfoArrayList(getApplicationContext());
 
         playlistEditSongsInfoAdapter = new MusicEntireActivity.PlaylistEditSongsInfoAdapter(this, listPlaylistEditSongsInfo);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylistRem);
+        ListView listView1 = findViewById(R.id.listViewMusicPlaylistRem);
         listView1.setAdapter(playlistEditSongsInfoAdapter);
 
         View viewMusicPlaylistRemoveTick;
@@ -1050,15 +1123,15 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonSongAdd2PlaylistPressed(View view) {
-        musicState = STATE_PLAYLIST_CREATE_NEW_FROM_SONG;
         musicStateOld = musicState;
+        musicState = STATE_PLAYLIST_CREATE_NEW_FROM_SONG;
 
         topMusicLinearLayout.removeAllViews();
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, null, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         playlistsSelectAdapter = new MusicEntireActivity.PlaylistsSelectAdapter(this, listPlaylists);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMusicPlaylists);
+        ListView listView1 = findViewById(R.id.listViewMusicPlaylists);
         listView1.setAdapter(playlistsSelectAdapter);
     }
 
@@ -1325,6 +1398,49 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         super.onDestroy();
     }
 
+    @Override
+    protected void onStop() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("com.grigorov.asparuh.probujdane.musicState", musicState.toString());
+        switch (musicState) {
+            case STATE_SONG_SINGLE:
+                editor.putString("com.grigorov.asparuh.probujdane.musicStateOld", musicStateOld.toString());
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongID", songOnScreen.getSongID());
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongPositionInPlaylist", songOnScreen.getSongPositionInPlaylist().toString());
+                break;
+            case STATE_SONG_FROM_SEARCH:
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongID", songOnScreen.getSongID());
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongPositionInPlaylist", songOnScreen.getSongPositionInPlaylist().toString());
+                break;
+            case STATE_SONG_FROM_PLAYLIST:
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongID", songOnScreen.getSongID());
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongPositionInPlaylist", songOnScreen.getSongPositionInPlaylist().toString());
+                editor.putString("com.grigorov.asparuh.probujdane.musicPlaylistID", playlistOnScreen.getPlaylistID());
+                break;
+            case STATE_PLAYLIST:
+                editor.putString("com.grigorov.asparuh.probujdane.musicPlaylistID", playlistOnScreen.getPlaylistID());
+                break;
+            case STATE_PLAYLIST_ADD_SONG:
+                editor.putString("com.grigorov.asparuh.probujdane.musicPlaylistID", playlistOnScreen.getPlaylistID());
+                break;
+            case STATE_PLAYLIST_REMOVE_SONG:
+                editor.putString("com.grigorov.asparuh.probujdane.musicPlaylistID", playlistOnScreen.getPlaylistID());
+                break;
+            case STATE_PLAYLIST_CREATE_NEW_FROM_SONG:
+                editor.putString("com.grigorov.asparuh.probujdane.musicStateOld", musicStateOld.toString());
+                editor.putString("com.grigorov.asparuh.probujdane.musicSongID", songOnScreen.getSongID());
+                break;
+            default:
+        }
+
+
+
+        editor.commit();
+
+        super.onStop();
+    }
+
     public void onButtonMusicPrevPressed (View view) {
         musicSrv.playPrev();
     }
@@ -1410,6 +1526,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     public void startSearchMenuTask (View view) {
         Intent intent = new Intent(this, SearchMenuActivity.class);
         intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_MUSIC");
+        startActivity(intent);
+    }
+
+
+    public void startOptionsMenuTask (View view) {
+        Intent intent = new Intent(this, OptionsMenuActivity.class);
         startActivity(intent);
     }
 

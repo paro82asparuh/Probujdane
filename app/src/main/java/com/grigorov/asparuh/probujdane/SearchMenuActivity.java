@@ -94,17 +94,12 @@ public class SearchMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_menu);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
         String searchSource = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_GLOBAL");
         String searchInputText = getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.searchInputText", "");
-        searchItemTextSize = Integer.parseInt(besedaTextSizeString);
-        searchOptionsTextSize = searchItemTextSize + 2;
-        searchButtonTextSize = searchItemTextSize + 4;
-        Button searchButton = (Button) findViewById(R.id.search_button);
-        searchButton.setTextSize(searchButtonTextSize);
 
-        editSearchTextInput   = (EditText)findViewById(R.id.search_text_input);
+        updateTextSizes();
+
+        editSearchTextInput   = findViewById(R.id.search_text_input);
         editSearchTextInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
@@ -121,7 +116,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         editSearchTextInput.setText(searchInputText);
         editSearchTextInput.setSelection(searchInputText.length());
 
-        linearLayoutScrollViewSearchResults = (LinearLayout) findViewById(R.id.search_lenear_layout_scroll_view);
+        linearLayoutScrollViewSearchResults = findViewById(R.id.search_lenear_layout_scroll_view);
 
         optionsSearchWhat = new String[]{
                 getResources().getString(R.string.search_option_every_word),
@@ -139,13 +134,13 @@ public class SearchMenuActivity extends AppCompatActivity {
                 getResources().getString(R.string.search_option_music)
         };
 
-        spinnerSearchWhat = (Spinner)findViewById(R.id.spinnerSearchWhat);
+        spinnerSearchWhat = findViewById(R.id.spinnerSearchWhat);
         SpinnerSearchAdapter adapterSearchWhat = new SpinnerSearchAdapter(this, R.layout.spinner_search_item, optionsSearchWhat);
         spinnerSearchWhat.setAdapter(adapterSearchWhat);
         adapterSearchWhat.notifyDataSetChanged();
         spinnerSearchWhat.setSelection(0,true);
 
-        spinnerSearchWhere = (Spinner)findViewById(R.id.spinnerSearchWhere);
+        spinnerSearchWhere = findViewById(R.id.spinnerSearchWhere);
         SpinnerSearchAdapter adapterSearchWhere = new SpinnerSearchAdapter(this, R.layout.spinner_search_item, optionsSearchWhere);
         spinnerSearchWhere.setAdapter(adapterSearchWhere);
         adapterSearchWhere.notifyDataSetChanged();
@@ -176,7 +171,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
         listSearchResult.clear();
         searchResultAdapter = new SearchResultAdapter(this, listSearchResult);
-        listSearchView = (ListView) findViewById(R.id.search_list_view);
+        listSearchView = findViewById(R.id.search_list_view);
         listSearchView.setAdapter(searchResultAdapter);
 
         myBesediDB = new besediDBHelper(this);
@@ -190,6 +185,17 @@ public class SearchMenuActivity extends AppCompatActivity {
         super.onResume();
         myBesediDB = new besediDBHelper(this);
         myMolivtiDB = new MolitviDBHelper(this);
+        updateTextSizes();
+    }
+
+    private void updateTextSizes() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String besedaTextSizeString = sharedPref.getString("com.grigorov.asparuh.probujdane.textsize", "14");
+        searchItemTextSize = Integer.parseInt(besedaTextSizeString);
+        searchOptionsTextSize = searchItemTextSize + 2;
+        searchButtonTextSize = searchItemTextSize + 4;
+        Button searchButton = findViewById(R.id.search_button);
+        searchButton.setTextSize(searchButtonTextSize);
     }
 
     public void onPause () {
@@ -199,10 +205,10 @@ public class SearchMenuActivity extends AppCompatActivity {
     }
 
     private void updateBesedaInputVisibility() {
-        LinearLayout linearLayoutBesedaInput = (LinearLayout) findViewById(R.id.search_beseda_input_linear);
+        LinearLayout linearLayoutBesedaInput = findViewById(R.id.search_beseda_input_linear);
         View view1 = findViewById(R.id.search_beseda_input_v1);
         View view2 = findViewById(R.id.search_beseda_input_v2);
-        EditText editTextBesedaInput = (EditText) findViewById(R.id.search_beseda_input_text);
+        EditText editTextBesedaInput = findViewById(R.id.search_beseda_input_text);
         LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) linearLayoutScrollViewSearchResults.getLayoutParams();
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) linearLayoutBesedaInput.getLayoutParams();
         if  ( optionsSearchWhere[spinnerSearchWhere.getSelectedItemPosition()] ==
@@ -491,12 +497,19 @@ public class SearchMenuActivity extends AppCompatActivity {
                 prepareMatches(offsets);
 
                 // Get the full column string
-                newTextMainPre = rs.getString(7+((offsets.get(posMatch1).getColumnNumber()-14)/2));
-
-                String newTextMain = prepareTextMain(offsets);
-
-                String scrollIndeces = (1 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2)) +
-                        " " + scrollCharIndex;
+                String newTextMain;
+                String scrollIndeces;
+                if (offsets.get(posMatch1).getColumnNumber()==6) {
+                    // If the result is in the title
+                    newTextMainPre = rs.getString(3);
+                    newTextMain = prepareTextMain(offsets);
+                    scrollIndeces = "1 0";
+                } else {
+                    newTextMainPre = rs.getString(7 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2));
+                    newTextMain = prepareTextMain(offsets);
+                    scrollIndeces = (1 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2)) +
+                            " " + scrollCharIndex;
+                }
 
                 String newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
 
@@ -798,7 +811,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         // It shall start from the first sentence start before the match1
         // It shall end at the last sentence end after match2 (if it exists) still within textMainMaxLenght
         int startPrevSentence = 0;
-        int endNextSentence = newTextMainPre.length()-1;
+        int endNextSentence = newTextMainPre.length();
         for (int i_sent_loop = 0; i_sent_loop<stringSentenceEnds.length(); i_sent_loop++ ){
             int currentSententceIndex = 0;
             currentSententceIndex = 1 +
@@ -820,7 +833,7 @@ public class SearchMenuActivity extends AppCompatActivity {
             }
         }
         startCharTextMain = 0;
-        endCharTextMain = newTextMainPre.length()-1;
+        endCharTextMain = newTextMainPre.length();
         addDotsInFront = new Boolean(false);
         addDotsInEnd = new Boolean(false);
         if ( (endNextSentence-startPrevSentence) < textMainMaxLenght ) {
@@ -836,7 +849,7 @@ public class SearchMenuActivity extends AppCompatActivity {
             addDotsInFront=true;
         }
 
-        String newTextMain = newTextMainPre.substring(startCharTextMain,endCharTextMain+1);
+        String newTextMain = newTextMainPre.substring(startCharTextMain,endCharTextMain);
         scrollCharIndex = startCharTextMain;
         if (addDotsInFront==true) {
             newTextMain = "..."+newTextMain;
@@ -853,7 +866,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         for (int k_offs=0; k_offs<offsets.size();k_offs++) {
             if ( offsets.get(posMatch1).getColumnNumber() == offsets.get(k_offs).getColumnNumber() ) {
                 int startMarkerIndex = 0;
-                int endMarkerIndex = newTextMainPre.length()-1;
+                int endMarkerIndex = newTextMainPre.length();
                 boolean addToMarkers = false;
                 int currentStartCharIndex = characterOffsetForByteOffsetInUTF8String(
                         offsets.get(k_offs).getOffsetInColumn(),newTextMainPre
@@ -891,17 +904,30 @@ public class SearchMenuActivity extends AppCompatActivity {
     private String prepareBesedaMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
         String newItemMarkers = "";
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
-            newItemMarkers = newItemMarkers + (1 + (offsets.get(m_offs).getColumnNumber() - 14) / 2);
-            newItemMarkers = newItemMarkers + " ";
-            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
-                    offsets.get(m_offs).getOffsetInColumn(),
-                    rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
-            );
-            newItemMarkers = newItemMarkers + " ";
-            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
-                    offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
-                    rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
-            );
+            if (offsets.get(m_offs).getColumnNumber()==6) {
+                newItemMarkers = newItemMarkers + "0 ";
+                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                        offsets.get(m_offs).getOffsetInColumn(),
+                        rs.getString(3)
+                );
+                newItemMarkers = newItemMarkers + " ";
+                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                        offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
+                        rs.getString(3)
+                );
+            } else {
+                newItemMarkers = newItemMarkers + (1 + (offsets.get(m_offs).getColumnNumber() - 14) / 2);
+                newItemMarkers = newItemMarkers + " ";
+                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                        offsets.get(m_offs).getOffsetInColumn(),
+                        rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
+                );
+                newItemMarkers = newItemMarkers + " ";
+                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                        offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
+                        rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
+                );
+            }
             newItemMarkers = newItemMarkers + " ";
         }
         return newItemMarkers;

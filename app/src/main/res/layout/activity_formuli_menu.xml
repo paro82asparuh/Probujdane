@@ -45,7 +45,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textBesediListTitle"
+        android:id="@+id/textFormuliTitle"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:minHeight="0dp"

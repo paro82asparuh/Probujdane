@@ -123,12 +123,12 @@ public class besediDBHelper extends SQLiteOpenHelper {
 
     private String getAllTextColumnIDs() {
         String result = "";
-        result="Text1, Text2, Text3, Text4, Text5, Text6, Text7, Text8, Text9, Text10 " +
-                "Text11, Text12, Text13, Text14, Text15, Text16, Text17, Text18, Text19, Text20 " +
-                "Text21, Text22, Text23, Text24, Text25, Text26, Text27, Text28, Text29, Text30 " +
-                "Text31, Text32, Text33, Text34, Text35, Text36, Text37, Text38, Text39, Text40 " +
-                "Text41, Text42, Text43, Text44, Text45, Text46, Text47, Text48, Text49, Text50 " +
-                "Text51, Text52, Text53, Text54, Text55, Text56, Text57, Text58, Text59, Text60 " +
+        result="Text1, Text2, Text3, Text4, Text5, Text6, Text7, Text8, Text9, Text10, " +
+                "Text11, Text12, Text13, Text14, Text15, Text16, Text17, Text18, Text19, Text20, " +
+                "Text21, Text22, Text23, Text24, Text25, Text26, Text27, Text28, Text29, Text30, " +
+                "Text31, Text32, Text33, Text34, Text35, Text36, Text37, Text38, Text39, Text40, " +
+                "Text41, Text42, Text43, Text44, Text45, Text46, Text47, Text48, Text49, Text50, " +
+                "Text51, Text52, Text53, Text54, Text55, Text56, Text57, Text58, Text59, Text60, " +
                 "Text61, Text62, Text63, Text64, Text65, Text66, Text67, Text68 ";
         return result;
     }

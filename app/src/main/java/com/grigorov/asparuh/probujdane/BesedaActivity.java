@@ -19,6 +19,8 @@ import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
@@ -129,16 +131,16 @@ public class BesedaActivity extends AppCompatActivity {
     private void updateFullLayout () {
 
         setContentView(R.layout.activity_beseda);
-        linearLayoutSearchControls = (LinearLayout) findViewById(R.id.linear_layout_search_controls);
-        linearLayoutEmpty1 = (LinearLayout) findViewById(R.id.linear_layout_empty_1);
-        linearLayoutEmpty2 = (LinearLayout) findViewById(R.id.linear_layout_empty_2);
+        linearLayoutSearchControls = findViewById(R.id.linear_layout_search_controls);
+        linearLayoutEmpty1 = findViewById(R.id.linear_layout_empty_1);
+        linearLayoutEmpty2 = findViewById(R.id.linear_layout_empty_2);
         if (searchControlsShown==false) {
             hideSearchControls(linearLayoutSearchControls);
         } else {
             showSearchControls(linearLayoutSearchControls);
         }
 
-        scrollViewBeseda = (ScrollView) findViewById(R.id.scrollViewBeseda);
+        scrollViewBeseda = findViewById(R.id.scrollViewBeseda);
         scrollTextViewCounter = 0;
 
         rs = mydb.getbeseda(besedaLink, besedaDateYear, besedaDateMonth, besedaDateDay);
@@ -147,7 +149,7 @@ public class BesedaActivity extends AppCompatActivity {
             rs.moveToNext();
         }
         if (rs.getCount()<=1) {
-            variantsLinearLayout = (ViewGroup) findViewById(R.id.buttonsVariantsBesedaLinearLaoyt);
+            variantsLinearLayout = findViewById(R.id.buttonsVariantsBesedaLinearLaoyt);
             variantsLinearLayout.removeAllViews();
         }
 
@@ -156,10 +158,36 @@ public class BesedaActivity extends AppCompatActivity {
         String besedaText1 = rs.getString(rs.getColumnIndex("Text1"));
         listBesedaTexts.add(besedaText1);
 
-        TextView textViewName = (TextView) findViewById(R.id.textBesedaName);
-        textViewName.setText(besedaName);
+        int flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
+        SpannableStringBuilder besedaNameBuilder = new SpannableStringBuilder();
+        for (int textIndex=0; textIndex < besedaName.length(); textIndex++) {
+            String c = String.valueOf(besedaName.charAt(textIndex));
+            SpannableString spannableString = new SpannableString(c);
+            boolean marked = false;
+            for (int markerIndex=0;markerIndex<listBesedaMarkers.size();markerIndex=markerIndex+1) {
+                if (
+                        (listBesedaMarkers.get(markerIndex).getTextIndex()==0) &&
+                                (listBesedaMarkers.get(markerIndex).getStartIndex()<=textIndex) &&
+                                (listBesedaMarkers.get(markerIndex).getEndIndex()>=textIndex)
+                ) {
+                    marked = true;
+                }
+            }
+            if (marked==false) {
+                spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorBesedaNameText, null)),
+                        0, spannableString.length(), flag);
+            } else {
+                spannableString.setSpan(new StyleSpan(Typeface.ITALIC), 0, spannableString.length(), flag);
+                spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorSearchResultMarker, null)),
+                        0, spannableString.length(), flag);
+            }
+            besedaNameBuilder.append(spannableString);
+        }
 
-        TextView textViewDetailes = (TextView) findViewById(R.id.textBesedaDetails);
+        TextView textViewName = findViewById(R.id.textBesedaName);
+        textViewName.setText(besedaNameBuilder);
+
+        TextView textViewDetailes = findViewById(R.id.textBesedaDetails);
         String besedaDetails = "\n" + rs.getString(rs.getColumnIndex("Type_1"))+", ";
         for (int i=2; i<=4; i++) {
             String typeX = rs.getString(rs.getColumnIndex("Type_"+i));
@@ -179,12 +207,12 @@ public class BesedaActivity extends AppCompatActivity {
         //besedaDetails = besedaDetails + "\n";
         textViewDetailes.setText(besedaDetails);
 
-        Button buttonLink = (Button) findViewById(R.id.textBesedaLink);
+        Button buttonLink = findViewById(R.id.textBesedaLink);
         //besedaLink = rs.getString(rs.getColumnIndex("Link"));
         String linkToBeinsaBg = getResources().getString(R.string.link_beinsa_bg);
         buttonLink.setText(linkToBeinsaBg);
 
-        besedaTextView textViewText1 = (besedaTextView) findViewById(R.id.textBesedaText1);
+        besedaTextView textViewText1 = findViewById(R.id.textBesedaText1);
         //TextView textViewText1 = (TextView) findViewById(R.id.textBesedaText1);
         if (variant1Selected==(besedaInitialVariant.equals("1"))) {
             textViewText1.setMarkersString(createMarkersString(1));
@@ -197,10 +225,10 @@ public class BesedaActivity extends AppCompatActivity {
         textViewText1.onPreDraw();
 
         if (srollTextX==1) {
-            scrollTextView = (besedaTextView) findViewById(R.id.textBesedaText1);
+            scrollTextView = findViewById(R.id.textBesedaText1);
         }
 
-        mLinearLayout = (ViewGroup) findViewById(R.id.textBesedaLinearLayout);
+        mLinearLayout = findViewById(R.id.textBesedaLinearLayout);
 
         numberOfImages = rs.getInt(rs.getColumnIndex("Number_of_Images"));
 
@@ -361,13 +389,13 @@ public class BesedaActivity extends AppCompatActivity {
         int besedaLinkSize = besedaTextSize + 2;
         int besedaNameSize = besedaTextSize + 4;
 
-        TextView textViewBesedaDetails = (TextView) findViewById(R.id.textBesedaDetails);
+        TextView textViewBesedaDetails = findViewById(R.id.textBesedaDetails);
         textViewBesedaDetails.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaDetailsSize);
 
-        Button buttonBesedaLink = (Button) findViewById(R.id.textBesedaLink);
+        Button buttonBesedaLink = findViewById(R.id.textBesedaLink);
         buttonBesedaLink.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaLinkSize);
 
-        TextView textViewBesedaName = (TextView) findViewById(R.id.textBesedaName);
+        TextView textViewBesedaName = findViewById(R.id.textBesedaName);
         textViewBesedaName.setTextSize(TypedValue.COMPLEX_UNIT_SP,besedaNameSize);
 
         for (int i=0; i < mLinearLayout.getChildCount(); i++) {
@@ -461,7 +489,7 @@ public class BesedaActivity extends AppCompatActivity {
         searchControlsShown = true;
         View inflatedLayout= getLayoutInflater().inflate(R.layout.beseda_search_controls, null, false);
         linearLayoutSearchControls.addView(inflatedLayout);
-        editSearchTextBesedatInput = (EditText)findViewById(R.id.edit_search_text_beseda_input);
+        editSearchTextBesedatInput = findViewById(R.id.edit_search_text_beseda_input);
         editSearchTextBesedatInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {

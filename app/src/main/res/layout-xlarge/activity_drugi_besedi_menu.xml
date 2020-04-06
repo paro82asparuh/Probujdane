@@ -188,14 +188,14 @@
                     android:layout_weight="2" />
 
                 <Button
-                    android:layout_weight="8"
+                    android:layout_weight="10"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:text="@string/notifications_string"
+                    android:text="@string/options2_string"
                     android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
-                    android:onClick="startNotificationsTask" />
+                    android:onClick="startOptionsMenuTask" />
 
                 <Button
                     android:layout_width="0dp"
@@ -244,11 +244,11 @@
                     android:layout_weight="10"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:text="@string/poslednoto_slovo_string"
+                    android:text="@string/syborni_besedi_string"
                     android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
-                    android:onClick="startPoslednotoSlovoBesediTask" />
+                    android:onClick="startSyborniBesediTask" />
 
                 <View
                     android:layout_width="0dp"
@@ -346,11 +346,11 @@
                     android:layout_weight="10"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:text="@string/options2_string"
+                    android:text="@string/poslednoto_slovo_string"
                     android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
-                    android:onClick="startOptionsMenuTask" />
+                    android:onClick="startPoslednotoSlovoBesediTask" />
 
                 <View
                     android:layout_width="0dp"

@@ -26,7 +26,7 @@
     <string name="not_ready_string">Тази функционалност \nе в процес на разработка</string>
     <string name="no_external_storage_is_found">Проблем с паметта</string>
     <string name="no_besedi_database_found_and_read_only_external_storage">Базата данни с беседи не е намерена и паметта е достъпна само за четене</string>
-    <string name="dialog_besedi_update">Базата данни с беседи не е намерена. \nДа бъде ли свалена от интернет?</string>
+    <string name="dialog_besedi_update">Базата данни с беседи не е намерена. \nДа бъде ли свалена от интернет (386 МBytes) ?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="download_progress_message">Сваляне на базата данни с беседи</string>
