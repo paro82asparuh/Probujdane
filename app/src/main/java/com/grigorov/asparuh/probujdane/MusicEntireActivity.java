@@ -1433,10 +1433,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 break;
             default:
         }
-
-
-
         editor.commit();
+
+        if (musicBound==true) {
+            musicBound=false;
+            unbindService(musicConnection);
+        }
 
         super.onStop();
     }

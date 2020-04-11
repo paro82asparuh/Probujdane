@@ -22,10 +22,10 @@
             android:layout_height="match_parent"
             android:layout_weight="19"
             android:background="@color/colorMainEditTextBackground"
-            android:textCursorDrawable="@null"
             android:cursorVisible="true"
+            android:inputType="text"
             android:textColor="@color/colorMainText"
-            android:inputType="text" />
+            android:textCursorDrawable="@null" />
 
         <View
             android:layout_width="0dp"

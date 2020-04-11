@@ -1,13 +1,17 @@
 package com.grigorov.asparuh.probujdane;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.content.FileProvider;
@@ -23,6 +27,8 @@ import java.util.ArrayList;
 public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
+
+    public final static String NOTIFICATION_CHANNEL_ID = "PROBUJDANE_NOTIFICATION_CHANNEL_ID";
 
     //media player
     private MediaPlayer player;
@@ -89,14 +95,37 @@ public class MusicService extends Service implements
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.music_notification_channel_name);
+            String description = getString(R.string.music_notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
         Notification.Builder builder = new Notification.Builder(this);
 
         builder.setContentIntent(pendInt)
                 .setSmallIcon(R.drawable.music_play)
+                //.setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.ic_launcher))
+                .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.music_play))
                 .setTicker(songTitle)
                 .setOngoing(true)
-                .setContentTitle("Playing")
-                .setContentText(songTitle);
+                .setContentTitle("Playing");
+        String notificationContentText = "";
+        if (getSongsSize()>1) {
+            notificationContentText = playedPlaylist.getPlaylistName() + " - " +songTitle;
+        } else {
+            notificationContentText = songTitle;
+        }
+        builder.setContentText(notificationContentText);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(NOTIFICATION_CHANNEL_ID);
+        }
         Notification notification = builder.build();
                     // NO_CLEAR makes the notification stay when the user performs a "delete all" command
         notification.flags = notification.flags | Notification.FLAG_NO_CLEAR;
