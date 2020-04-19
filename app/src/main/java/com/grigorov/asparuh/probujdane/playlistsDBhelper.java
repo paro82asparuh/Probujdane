@@ -38,7 +38,7 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO table1 (ID, Name, Songs) VALUES ("+
                     "'1', "+
                     "'"+contextFromConstructor.getResources().getString(R.string.panevritmia_string)+"', "+
-                    "'165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185'"+
+                    "'166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186'"+
                     ");"
             );
         } catch (SQLException mSQLException) {
@@ -48,7 +48,7 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
             db.execSQL("INSERT INTO table1 (ID, Name, Songs) VALUES ("+
                     "'2', "+
                     "'"+contextFromConstructor.getResources().getString(R.string.panevritmia_intrumental_string)+"', "+
-                    "'145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164'"+
+                    "'145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165'"+
                     ");"
             );
         } catch (SQLException mSQLException) {
