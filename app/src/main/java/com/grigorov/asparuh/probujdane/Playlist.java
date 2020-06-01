@@ -15,6 +15,7 @@ public class Playlist {
     private String playlistID;
     private String playlistName;
     private String stringSongs;
+    private String stringPlayTypes;
 
     private ArrayList<Song> songs = new ArrayList<Song>();
 
@@ -32,13 +33,14 @@ public class Playlist {
     private musicDBHelper songsDB;
     private playlistsDBhelper playlistsDB;
 
-    public Playlist (String inputID, String inputName, String inputStringSongs, Context context) {
+    public Playlist (String inputID, String inputName, String inputStringSongs, String inputPlayTypeString, Context context) {
         playlistID = inputID;
         playlistName = inputName;
         stringSongs = inputStringSongs;
         // Make the ArrayList
         songsDB = new musicDBHelper(context);
         String[] songsStringSplit = inputStringSongs.split(" ");
+        String[] playTypeStringSplit = inputPlayTypeString.split(" ");
         songs.clear();
         songs.ensureCapacity(songsStringSplit.length);
         //List<String> songsStringSplit = inputStringSongs.split(" ");
@@ -51,12 +53,23 @@ public class Playlist {
                         rs.getString(rs.getColumnIndex("Title")),
                         rs.getString(rs.getColumnIndex("Text")),
                         rs.getString(rs.getColumnIndex("Type_")),
-                        rs.getString(rs.getColumnIndex("File_Name")),
+                        rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                        rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                        rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                        Integer.parseInt(playTypeStringSplit[i]),
                         i
                 ));
             }
         }
         songsDB.close();
+    }
+
+    public Playlist (Playlist inputPlaylist) {
+        playlistID = inputPlaylist.getPlaylistID();
+        playlistName = inputPlaylist.getPlaylistName();
+        stringSongs = inputPlaylist.getSongsString();
+        stringPlayTypes = inputPlaylist.getUpdatedSongsString();
+        songs = inputPlaylist.getSongsArrayList();
     }
 
     public ArrayList<Song> getSongsArrayList () {
@@ -67,16 +80,27 @@ public class Playlist {
         ArrayList<PlaylistSongInfo> songsInfo = new ArrayList<PlaylistSongInfo>();
         songsDB = new musicDBHelper(context);
         String[] songsStringSplit = stringSongs.split(" ");
+        String[] songsStringPlayTypesSplit = stringPlayTypes.split(" ");
         songsInfo.clear();
         songsInfo.ensureCapacity(songsStringSplit.length);
         //List<String> songsStringSplit = inputStringSongs.split(" ");
         for (int i=0; i<songsStringSplit.length; i++) {
             Cursor rs = songsDB.getSongSingle(songsStringSplit[i]);
             rs.moveToFirst();
+            boolean songVocalPlayable = false;
+            if (Integer.parseInt(songsStringPlayTypesSplit[i])==Song.PLAY_VOCAL) {
+                songVocalPlayable = true;
+            }
+            boolean songInstrumentalPlayable = false;
+            if (Integer.parseInt(songsStringPlayTypesSplit[i])==Song.PLAY_INSTRUMENTAL) {
+                songInstrumentalPlayable = true;
+            }
             songsInfo.add( new PlaylistSongInfo (
                     songsStringSplit[i],
                     rs.getString(rs.getColumnIndex("Title")),
-                    false,
+                    songVocalPlayable,
+                    songInstrumentalPlayable,
+                    Integer.parseInt(songsStringPlayTypesSplit[i]),
                     false,
                     i
             ));
@@ -98,13 +122,26 @@ public class Playlist {
         return result;
     }
 
+    private String getUpdatedPlayTypesString() {
+        String result = "";
+        result = "";
+        for(int i=0; i<songs.size(); i++) {
+            result = result + songs.get(i).getSongPlayType();
+            if (i!=(songs.size()-1)) {
+                result = result + " ";
+            }
+        }
+        stringPlayTypes = result;
+        return result;
+    }
+
     private void updateDBsongsString (Context context) {
         playlistsDB = new playlistsDBhelper(context);
-        playlistsDB.updatePlaylistSongs(playlistID, getUpdatedSongsString());
+        playlistsDB.updatePlaylistSongs(playlistID, getUpdatedSongsString(), getUpdatedPlayTypesString());
     }
 
     public void moveSongUp (Integer songCurrentPosition, Context context) {
-        if (songCurrentPosition>0) {
+        if ( (songCurrentPosition>0)&&(songs.size()>1)  ) {
             Song songTemp = songs.get(songCurrentPosition);
             songs.set(songCurrentPosition, songs.get(songCurrentPosition-1));
             songs.set(songCurrentPosition-1, songTemp);
@@ -115,7 +152,7 @@ public class Playlist {
     }
 
     public void moveSongDown (Integer songCurrentPosition, Context context) {
-        if (songCurrentPosition<(songs.size()-1)) {
+        if ( (songCurrentPosition<(songs.size()-1))&&(songs.size()>1) ) {
             Song songTemp = songs.get(songCurrentPosition);
             songs.set(songCurrentPosition, songs.get(songCurrentPosition+1));
             songs.set(songCurrentPosition+1, songTemp);
@@ -133,7 +170,7 @@ public class Playlist {
         updateDBsongsString(context);
     }
 
-    public void addSong (Integer songID, Context context) {
+    public void addSong (Integer songID, int playType, Context context) {
         songsDB = new musicDBHelper(context);
         Cursor rs = songsDB.getSongSingle(songID.toString());
         rs.moveToFirst();
@@ -142,17 +179,19 @@ public class Playlist {
                 rs.getString(rs.getColumnIndex("Title")),
                 rs.getString(rs.getColumnIndex("Text")),
                 rs.getString(rs.getColumnIndex("Type_")),
-                rs.getString(rs.getColumnIndex("File_Name")),
-                //rs.getPosition()
+                rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                playType,
                 songs.size()
         ));
         updateDBsongsString(context);
     }
 
-    public boolean isSongInPlaylist (String songID) {
+    public boolean isSongInPlaylist (String songID, int sonPlayType) {
         boolean result = false;
         for(int i=0; i<songs.size(); i++) {
-            if (songID.equals(songs.get(i).getSongID())) {
+            if (songID.equals(songs.get(i).getSongID()) && (sonPlayType==songs.get(i).getSongPlayType()) ) {
                 result = true;
             }
         }

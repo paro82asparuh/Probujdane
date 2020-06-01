@@ -33,12 +33,12 @@
                 android:id="@+id/textSongListen"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="center"
                 android:textColor="@color/colorSongTitleText"
                 android:textSize="@dimen/text_size_song_title"
-                android:text="@string/music_listen_string"
-                android:onClick="onButtonSongPlayPressed" />
+                android:text="@string/music_listen_vocal_string"
+                android:onClick="onButtonSongVocalPlayPressed" />
 
             <View
                 android:id="@+id/viewSongPlay"
@@ -46,7 +46,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/music_speaker_wb"
                 android:layout_weight="1"
-                android:onClick="onButtonSongPlayPressed" />
+                android:onClick="onButtonSongVocalPlayPressed" />
 
         </LinearLayout>
 
@@ -69,7 +69,7 @@
                 android:gravity="center"
                 android:textColor="@color/colorSongTitleText"
                 android:textSize="@dimen/text_size_song_title"
-                android:text="@string/music_add2playlist_string"
+                android:text="@string/music_vocal_add2playlist_string"
                 android:onClick="onButtonSongAdd2PlaylistPressed" />
 
             <View
@@ -92,6 +92,91 @@
 
     <View
         android:id="@+id/viewBelowSongPlayOptions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/linearInstrumentalPlayOptions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="10" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="10" >
+
+            <TextView
+                android:id="@+id/textInstrumentalListen"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:textColor="@color/colorSongTitleText"
+                android:textSize="@dimen/text_size_song_title"
+                android:text="@string/music_listen_instrumental_string"
+                android:onClick="onButtonSongInstrumentalPlayPressed" />
+
+            <View
+                android:id="@+id/viewInstrumentalPlay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/music_speaker_wb"
+                android:layout_weight="1"
+                android:onClick="onButtonSongInstrumentalPlayPressed" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="10" >
+
+            <TextView
+                android:id="@+id/textInstrumentalAdd2Playlist"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:textColor="@color/colorSongTitleText"
+                android:textSize="@dimen/text_size_song_title"
+                android:text="@string/music_instrumental_add2playlist_string"
+                android:onClick="onButtonSongAdd2PlaylistPressed" />
+
+            <View
+                android:id="@+id/viewInstrumentalAdd2Playlist"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/add2_playlist_wb"
+                android:layout_weight="1"
+                android:onClick="onButtonSongAdd2PlaylistPressed" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/viewBelowInstrumentalPlayOptions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />

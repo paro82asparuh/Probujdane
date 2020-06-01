@@ -26,7 +26,7 @@
     <string name="not_ready_string">Тази функционалност \nе в процес на разработка</string>
     <string name="no_external_storage_is_found">Проблем с паметта</string>
     <string name="no_besedi_database_found_and_read_only_external_storage">Базата данни с беседи не е намерена и паметта е достъпна само за четене</string>
-    <string name="dialog_besedi_update">Базата данни с беседи не е намерена. \nДа бъде ли свалена от интернет (386 МBytes) ?</string>
+    <string name="dialog_besedi_update">Базата данни с беседи не е намерена. \nДа бъде ли свалена от интернет (411 МBytes) ?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="download_progress_message">Сваляне на базата данни с беседи</string>
@@ -73,8 +73,12 @@
     <string name="instrumental_string">Инструментал</string>
     <string name="playlists_string">Плейлисти</string>
     <string name="music_listen_string">Слушай!</string>
+    <string name="music_listen_vocal_string">Слушай\nВокал!</string>
+    <string name="music_listen_instrumental_string">Слушай\nИнструментал!</string>
     <string name="no_music_selected_string">Избери песен или плейлист!</string>
     <string name="music_add2playlist_string">Добави към плейлист!</string>
+    <string name="music_vocal_add2playlist_string">Добави вокал към плейлист!</string>
+    <string name="music_instrumental_add2playlist_string">Добави инструментал към плейлист!</string>
     <string name="music_create_playlist_string">Създай нов плейлист!</string>
     <string name="music_play_playlist_string">Слушай плейлиста!</string>
     <string name="music_add_song_to_playlist_string">Добави към\nплейлиста!</string>
@@ -84,6 +88,7 @@
     <string name="music_playlist_add_title_string">Избери песни да се добавят към nплейлиста!</string>
     <string name="dialog_playlist_delete">Да бъде ли изтрит плейлист</string>
     <string name="create_new_playlist_string">Избери име на новия плейлист</string>
+    <string name="vocal">Вокал</string>
     <string name="instrumental">Инструментал</string>
     <string name="beseda">Беседа</string>
     <string name="molitva">Молитва</string>
@@ -92,4 +97,14 @@
     <string name="beseda_global_search_button_string">Търси навсякъде</string>
     <string name="music_notification_channel_name">Пробуждане</string>
     <string name="music_notification_channel_description">Нотификацияи за Пробуждане</string>
+    <string name="music_download_all_string">Свали всички!</string>
+    <string name="music_download_string">Свали!</string>
+    <string name="music_download_title_string">Пробуждане - Песен</string>
+    <string name="dialog_download_songs_start">Да бъдат ли свалена от интернет всички песни (</string>
+    <string name="dialog_download_songs_end"> МBytes) ?</string>
+    <string name="music_delete_songs_string">Изтрий песни!</string>
+    <string name="music_songs_rem_title_string">Избери музикалните файлове на кои песни да се изтрият!</string>
+    <string name="dialog_songs_delete_start">Да бъдат ли изтрити </string>
+    <string name="dialog_songs_delete_end">песни?</string>
+    <string name="dialog_songs_delete_one">Да бъде ли изтрита 1 песен?</string>
 </resources>

@@ -28,27 +28,29 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             db.execSQL("CREATE TABLE table1 ( " +
-                    " ID VARCHAR(32000), Name VARCHAR(32000), Songs VARCHAR(32000) " +
+                    " ID VARCHAR(32000), Name VARCHAR(32000), Songs VARCHAR(32000), PlayType VARCHAR(32000) " +
                     " );"
             );
         } catch (SQLException mSQLException) {
             Log.e("Loginerror", "getproductData >>" + mSQLException.toString());
         }
         try {
-            db.execSQL("INSERT INTO table1 (ID, Name, Songs) VALUES ("+
+            db.execSQL("INSERT INTO table1 (ID, Name, Songs, PlayType) VALUES ("+
                     "'1', "+
                     "'"+contextFromConstructor.getResources().getString(R.string.panevritmia_string)+"', "+
-                    "'166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186'"+
+                    "'150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170'"+", "+
+                    "'1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1'"+
                     ");"
             );
         } catch (SQLException mSQLException) {
             Log.e("Loginerror", "getproductData >>" + mSQLException.toString());
         }
         try {
-            db.execSQL("INSERT INTO table1 (ID, Name, Songs) VALUES ("+
+            db.execSQL("INSERT INTO table1 (ID, Name, Songs, PlayType) VALUES ("+
                     "'2', "+
                     "'"+contextFromConstructor.getResources().getString(R.string.panevritmia_intrumental_string)+"', "+
-                    "'145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165'"+
+                    "'150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170'"+", "+
+                    "'2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2'"+
                     ");"
             );
         } catch (SQLException mSQLException) {
@@ -78,7 +80,7 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res=null;
         try {
-            res = db.rawQuery("SELECT ID, Name, Songs FROM table1 " +
+            res = db.rawQuery("SELECT ID, Name, Songs, PlayType FROM table1 " +
                             "ORDER BY CAST(ID AS int) ASC" +
                             ";"
                     , null);
@@ -90,7 +92,7 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
 
     public Cursor getPlaylist (String playlistID) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery(  "SELECT Name, Songs " +
+        Cursor res =  db.rawQuery(  "SELECT Name, Songs, PlayType " +
                         "FROM table1 WHERE " +
                         "ID='"+playlistID+"' " +
                         //"ORDER BY CAST(ID AS int) ASC" +
@@ -99,11 +101,12 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public void updatePlaylistFull (String playlistID, String playlistName, String playlistSongsString) {
+    public void updatePlaylistFull (String playlistID, String playlistName, String playlistSongsString, String playlistPlayTypeString) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE table1 SET" +
                 "Name = '" + playlistName + "'," +
                 "Songs = '" + playlistSongsString + "' " +
+                "PlayType = '" + playlistPlayTypeString + "' " +
                 "WHERE ID='"+ playlistID +"' ;"
         );
     }
@@ -111,15 +114,16 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
     public void updatePlaylistName (String playlistID, String playlistName) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE table1 SET" +
-                "Name = '" + playlistName + "'," +
+                "Name = '" + playlistName + "' " +
                 "WHERE ID='"+ playlistID +"' ;"
         );
     }
 
-    public void updatePlaylistSongs (String playlistID, String playlistSongsString) {
+    public void updatePlaylistSongs (String playlistID, String playlistSongsString, String playlistPlayTypeString) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("UPDATE table1 SET " +
-                "Songs = '" + playlistSongsString + "' " +
+                "Songs = '" + playlistSongsString + "', " +
+                "PlayType = '" + playlistPlayTypeString + "' " +
                 "WHERE ID='"+ playlistID +"' ;"
         );
     }
@@ -131,12 +135,14 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
         );
     }
 
-    public void insertPlaylist (String playlistID, String playlistName, String playlistSongsString) {
+    public void insertPlaylist (String playlistID, String playlistName, String playlistSongsString, String playlistPlayTypeString) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("INSERT INTO table1 (ID, Name, Songs) VALUES(" +
+        db.execSQL("INSERT INTO table1 (ID, Name, Songs, PlayType) VALUES(" +
                 "'" + playlistID + "', " +
                 "'" + playlistName + "', " +
-                "'" + playlistSongsString + "');"
+                "'" + playlistSongsString + "', " +
+                "'" + playlistPlayTypeString +
+                "');"
         );
     }
 

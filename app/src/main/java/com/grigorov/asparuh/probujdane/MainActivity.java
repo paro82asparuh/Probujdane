@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
         context = getApplicationContext();
         downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+        stopMusicDownloads();
         BesediDatabaseOk = checkUpdateBesediDatabase();
 
         //set filter to only when download is complete and register broadcast receiver
@@ -667,6 +668,26 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
         editor.commit();
 
         super.onStop();
+    }
+
+    private void stopMusicDownloads () {
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterByStatus(DownloadManager.STATUS_PAUSED|
+                DownloadManager.STATUS_RUNNING|DownloadManager.STATUS_PENDING);
+        Cursor cursor = downloadManager.query( query );
+        for (int i = 0; i < cursor.getCount() ; i++)
+        {
+            cursor.moveToPosition(i);
+            String iTitle = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
+            String iDescription = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION));
+            String downloadID = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+            if ( iTitle.equals( getString(R.string.music_download_title_string))) {
+                downloadManager.remove(Long.parseLong(downloadID));
+            }
+        }
+        if (!cursor.isClosed())  {
+            cursor.close();
+        }
     }
 
 

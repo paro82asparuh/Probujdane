@@ -174,9 +174,15 @@ public class MusicService extends Service implements
 
         playedSong = songs.get(songPosn);
         songTitle = playedSong.getSongName();
+        String songFileName;
+        if (playedSong.getSongPlayType()==Song.PLAY_VOCAL) {
+            songFileName = playedSong.getSongVocalFileName();
+        } else {
+            songFileName = playedSong.getSongInstrumentalFileName();
+        }
         // get the file
         File songFile = new File(getApplicationContext().getExternalFilesDir(null)+playedSong.getSongSubPath(),
-                playedSong.getSongFileName());
+                songFileName);
         //set uri
         Uri trackUri = Uri.fromFile(songFile);
         //Uri trackUri = Uri.parse(songFile.toString());
@@ -201,7 +207,7 @@ public class MusicService extends Service implements
     }
 
     public void setPlaylist (Playlist inputPlaylist) {
-        playedPlaylist=inputPlaylist;
+        playedPlaylist= new Playlist(inputPlaylist);
     }
 
     public void setSong(int songIndex){

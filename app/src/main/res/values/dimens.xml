@@ -38,4 +38,5 @@
     <dimen name="text_size_formula_title">16sp</dimen>
     <dimen name="text_size_formula_text">12sp</dimen>
     <dimen name="text_size_beseda_search_controls">16sp</dimen>
+    <dimen name="text_size_songslist_play_options">12sp</dimen>
 </resources>

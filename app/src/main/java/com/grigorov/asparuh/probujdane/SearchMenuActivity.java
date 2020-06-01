@@ -398,7 +398,8 @@ public class SearchMenuActivity extends AppCompatActivity {
                         intent.putExtra("com.grigorov.asparuh.probujdane.SongNameVar", currentSearchResult.getSong().getSongName());
                         intent.putExtra("com.grigorov.asparuh.probujdane.SongTextVar", currentSearchResult.getSong().getSongText());
                         intent.putExtra("com.grigorov.asparuh.probujdane.SongTypeVar", currentSearchResult.getSong().getSongType());
-                        intent.putExtra("com.grigorov.asparuh.probujdane.SongFileNameVar", currentSearchResult.getSong().getSongFileName());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongVocalFileNameVar", currentSearchResult.getSong().getSongVocalFileName());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.SongInstrumentalFileNameVar", currentSearchResult.getSong().getSongInstrumentalFileName());
                         intent.putExtra("com.grigorov.asparuh.probujdane.FormulaMarkersVar", currentSearchResult.getItemMarkers());
                         intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
                         // scrolling in molitva is not used for now
@@ -662,7 +663,9 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 String musicID = rs.getString(rs.getColumnIndex("ID"));
                 String musicText = rs.getString(rs.getColumnIndex("Text"));
-                String musicFileName= rs.getString(rs.getColumnIndex("Text"));
+                String musicVocalFileName= rs.getString(rs.getColumnIndex("Vocal_File_Name"));
+                String musicInstrumentalFileName= rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
+                String musicFilesDownloaded= rs.getString(rs.getColumnIndex("Files_Downloaded"));
                 String musicType = rs.getString(rs.getColumnIndex("Type_"));
                 String newTextUpleft = rs.getString(rs.getColumnIndex("Title"));
                 String newTextUpRight;
@@ -694,7 +697,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
                 listSearchResult.add(new searchResult(SEARCH_RESULT_MUSIC, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
                         newSearchMarkers, newItemMarkers, new Song(musicID, newTextUpleft, musicText,
-                            musicType, musicFileName),
+                            musicType, musicVocalFileName, musicInstrumentalFileName, musicFilesDownloaded),
                         scrollIndeces) );
 
                 rs.moveToNext();

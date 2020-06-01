@@ -6,12 +6,118 @@
     android:background="@color/colorMainBackground"
     android:layout_weight="24">
 
+    <View
+        android:id="@+id/viewAboveDownload"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/linearDownload"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorMain"
+        android:orientation="horizontal"
+        android:layout_weight="2" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/textDownloadAll"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_download_all_string"
+            android:onClick="onDownloadAllPressed" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/download"
+            android:onClick="onDownloadAllPressed"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewBelowDownload"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/linearDeleteSongs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorMain"
+        android:orientation="horizontal"
+        android:layout_weight="2" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/textDeleteSongs"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_delete_songs_string"
+            android:onClick="onDeleteSongsPressed" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/delete"
+            android:onClick="onDeleteSongsPressed"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewBelowDeleteSongs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <ListView
         android:id="@+id/listViewMusicSongs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:minHeight="0dp"
-        android:layout_weight="1"
+        android:layout_weight="30"
         android:divider="@color/colorMainBackground"
         android:background="@color/colorMusicSongsListMain"
         android:dividerHeight="@dimen/list_music_songs_divider_hight"

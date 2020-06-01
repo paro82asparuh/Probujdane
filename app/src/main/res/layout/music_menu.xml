@@ -94,40 +94,6 @@
                 android:layout_weight="10"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/instrumental_string"
-                android:textSize="@dimen/text_size_besedi_menu_buttons"
-                android:textColor="@color/colorMainText"
-                android:background="@color/colorMain"
-                android:onClick="startPanevritmiaInstrumentalTask" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2" />
-
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="5">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2" />
-
-            <Button
-                android:layout_weight="10"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
                 android:text="@string/playlists_string"
                 android:textSize="@dimen/text_size_besedi_menu_buttons"
                 android:textColor="@color/colorMainText"

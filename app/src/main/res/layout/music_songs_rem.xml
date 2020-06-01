@@ -9,12 +9,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:background="@color/colorMainBackground" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/colorMain" />
 
@@ -22,7 +16,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="4"
         android:background="@color/colorMain"
         android:clickable="true">
 
@@ -32,15 +26,13 @@
             android:layout_weight="1" />
 
         <TextView
-            android:id="@+id/textCreateNewPlaylist"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="20"
             android:gravity="center"
             android:textColor="@color/colorMainText"
             android:textSize="@dimen/text_size_list_song_name"
-            android:text="@string/music_create_playlist_string"
-            android:onClick="onCreateNewPlaylistPressed" />
+            android:text="@string/music_songs_rem_title_string" />
 
         <View
             android:layout_width="0dp"
@@ -48,12 +40,11 @@
             android:layout_weight="1" />
 
         <View
-            android:id="@+id/textPlaylistPlus"
+            android:id="@+id/viewMusicSongsRemoveTick"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@drawable/add2_playlist"
-            android:layout_weight="2"
-            android:onClick="onCreateNewPlaylistPressed" />
+            android:background="@drawable/tick_done"
+            android:layout_weight="2" />
 
         <View
             android:layout_width="0dp"
@@ -70,27 +61,19 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_height="10dp"
+        android:layout_weight="0"
         android:background="@color/colorMainBackground" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <ListView
+        android:id="@+id/listViewMusicSongsRem"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="80"
-        android:background="@color/colorMainBackground"
-        android:clickable="true">
-
-        <ListView
-            android:id="@+id/listViewMusicPlaylists"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/colorMainBackground"
-            android:background="@color/colorMainBackground"
-            android:dividerHeight="@dimen/list_music_playlists_divider_hight"
-            />
-
-    </LinearLayout>
+        android:minHeight="0dp"
+        android:layout_weight="50"
+        android:divider="@color/colorMainBackground"
+        android:background="@color/colorMusicSongsListMain"
+        android:dividerHeight="@dimen/list_music_playlists_divider_hight"
+        />
 
 </LinearLayout>

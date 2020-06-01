@@ -8,18 +8,22 @@ public class songInfo {
 
     private String songID;
     private String songName;
-    private boolean songPlayable;
+    private boolean songVocalPlayable;
+    private boolean songInstrumentalPlayable;
 
-    public songInfo (String inputSongID, String inputSongName, boolean inputSongPlayable) {
+    public songInfo (String inputSongID, String inputSongName, boolean inputSongVocalPlayable, boolean inputSongInstrumentalPlayable) {
         songID = inputSongID;
         songName = inputSongName;
-        songPlayable = inputSongPlayable;
+        songVocalPlayable = inputSongVocalPlayable;
+        songInstrumentalPlayable = inputSongInstrumentalPlayable;
     }
 
     public String getSongID () { return this.songID; }
 
     public String getSongName () { return this.songName; }
 
-    public boolean isSongPlayble () { return this.songPlayable; }
+    public boolean isSongVocalPlayble () { return this.songVocalPlayable; }
+
+    public boolean isSongInstrumentalPlayble () { return this.songInstrumentalPlayable; }
 
 }
