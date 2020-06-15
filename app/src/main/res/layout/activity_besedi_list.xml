@@ -67,7 +67,7 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/colorListBesediListBackground"
-        android:layout_weight="5">
+        android:layout_weight="4">
 
         <View
             android:layout_width="0dp"
@@ -118,6 +118,57 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/colorListBesediListBackground"
+        android:layout_weight="4">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerDaysInDates"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerMonths"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorListBesediListBackground"
         android:layout_weight="5">
 
         <View
@@ -127,12 +178,12 @@
 
         <TextView
             android:id="@+id/buttonFilterYears"
-            android:layout_weight="24"
+            android:layout_weight="25"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:minHeight="0dp"
             android:gravity="center"
-            android:text="@string/filter_years_string"
+            android:text="@string/filter_string"
             android:textSize="@dimen/text_size_list_filtering"
             android:textColor="@color/colorListBesediListText"
             android:background="@color/colorListBesediListMain"
@@ -158,7 +209,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:minHeight="0dp"
-        android:layout_weight="50"
+        android:layout_weight="70"
         android:divider="@color/colorListBesediListBackground"
         android:background="@color/colorListBesediListBackground"
         android:dividerHeight="@dimen/list_beseda_divider_hight"

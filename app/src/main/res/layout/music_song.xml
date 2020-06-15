@@ -36,7 +36,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:textColor="@color/colorSongTitleText"
-                android:textSize="@dimen/text_size_song_title"
+                android:textSize="@dimen/text_size_song_text"
                 android:text="@string/music_listen_vocal_string"
                 android:onClick="onButtonSongVocalPlayPressed" />
 
@@ -68,7 +68,7 @@
                 android:layout_weight="3"
                 android:gravity="center"
                 android:textColor="@color/colorSongTitleText"
-                android:textSize="@dimen/text_size_song_title"
+                android:textSize="@dimen/text_size_song_text"
                 android:text="@string/music_vocal_add2playlist_string"
                 android:onClick="onButtonSongAdd2PlaylistPressed" />
 
@@ -121,7 +121,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:textColor="@color/colorSongTitleText"
-                android:textSize="@dimen/text_size_song_title"
+                android:textSize="@dimen/text_size_song_text"
                 android:text="@string/music_listen_instrumental_string"
                 android:onClick="onButtonSongInstrumentalPlayPressed" />
 
@@ -153,7 +153,7 @@
                 android:layout_weight="3"
                 android:gravity="center"
                 android:textColor="@color/colorSongTitleText"
-                android:textSize="@dimen/text_size_song_title"
+                android:textSize="@dimen/text_size_song_text"
                 android:text="@string/music_instrumental_add2playlist_string"
                 android:onClick="onButtonSongAdd2PlaylistPressed" />
 

@@ -15,11 +15,26 @@
         android:id="@+id/textSongName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="25"
+        android:layout_weight="20"
         android:gravity="left|center_vertical"
         android:textColor="@color/colorMainText"
         android:textSize="@dimen/text_size_list_song_name"
         android:text="To be overwritten from java code" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/textVocalPlay"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:textColor="@color/colorMainText"
+        android:textSize="@dimen/text_size_songslist_play_options"
+        android:text="@string/vocal" />
 
     <View
         android:layout_width="0dp"
@@ -38,11 +53,26 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
+    <TextView
+        android:id="@+id/textInstrumentalPlay"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_weight="10"
+        android:gravity="center"
+        android:text="@string/instrumental"
+        android:textColor="@color/colorMainText"
+        android:textSize="@dimen/text_size_songslist_play_options" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
     <View
         android:id="@+id/viewInstrumentalPlay"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/music_nota"
+        android:background="@drawable/music_speaker"
         android:layout_weight="3" />
 
     <View

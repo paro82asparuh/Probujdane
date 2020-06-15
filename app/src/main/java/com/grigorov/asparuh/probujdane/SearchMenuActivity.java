@@ -89,6 +89,8 @@ public class SearchMenuActivity extends AppCompatActivity {
     private int posMatch1;
     private int posMatch2;
 
+    private Integer numberSearchResults;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -447,6 +449,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         listSearchResult.clear();
         searchResultAdapter.clear();
 
+        numberSearchResults= new Integer(0);
         if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_besedi))) {
             searchInBesedi();
         } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_molitvi))) {
@@ -462,21 +465,20 @@ public class SearchMenuActivity extends AppCompatActivity {
             searchInMusic();
             sortSearchResultsWholeSlovo();
         }
-
+        if (numberSearchResults==0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    getResources().getString(R.string.search_no_results), LENGTH_LONG);
+            toast.show();
+        }
 
     }
 
     public void searchInBesedi() {
 
         Cursor rs = myBesediDB.searchInBesedi(searchQuery);
+        numberSearchResults = numberSearchResults + rs.getCount();
 
-        if (rs.getCount()<1) {
-            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
-                Toast toast = Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.search_no_results), LENGTH_LONG);
-                toast.show();
-            }
-        } else {
+        if (rs.getCount()>0) {
             rs.moveToFirst();
             listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
 
@@ -539,6 +541,7 @@ public class SearchMenuActivity extends AppCompatActivity {
     public void searchInMolitvi () {
 
         Cursor rs = myMolivtiDB.searchInMolitvi(searchQuery);
+        numberSearchResults = numberSearchResults + rs.getCount();
 
         if (rs.getCount()<1) {
             if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
@@ -593,6 +596,7 @@ public class SearchMenuActivity extends AppCompatActivity {
     public void searchInFormuli () {
 
         Cursor rs = myFormuliDB.searchInFormuli(searchQuery);
+        numberSearchResults = numberSearchResults + rs.getCount();
 
         if (rs.getCount()<1) {
             if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
@@ -648,6 +652,7 @@ public class SearchMenuActivity extends AppCompatActivity {
     public void searchInMusic () {
 
         Cursor rs = myMusicDB.searchInMusic(searchQuery);
+        numberSearchResults = numberSearchResults + rs.getCount();
 
         if (rs.getCount()<1) {
             if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {

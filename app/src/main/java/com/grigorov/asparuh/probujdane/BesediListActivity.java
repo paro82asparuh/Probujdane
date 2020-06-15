@@ -47,9 +47,13 @@ public class BesediListActivity extends AppCompatActivity {
     private Integer[] besediUniqueYears;
     private String[] besediFromYears;
     private String[] besediToYears;
+    private String[] months;
+    private String[] daysInDates;
 
     Spinner spinerFromYears;
     Spinner spinerToYears;
+    Spinner spinerMonths;
+    Spinner spinerDaysInDates;
 
     BesediInfoAdapter besediInfoAdapter;
 
@@ -134,21 +138,32 @@ public class BesediListActivity extends AppCompatActivity {
         // Read from the database
         mydb = new besediDBHelper(this);
         setListBesedi();
+        initDateStrings();
 
         // Spinners
-        spinerFromYears = (Spinner)findViewById(R.id.spinnerFromYear);
-        spinerToYears = (Spinner)findViewById(R.id.spinnerToYear);
+        spinerFromYears = findViewById(R.id.spinnerFromYear);
+        spinerToYears = findViewById(R.id.spinnerToYear);
+        spinerMonths = findViewById(R.id.spinnerMonths);
+        spinerDaysInDates = findViewById(R.id.spinnerDaysInDates);
         SpinnerBesediListAdapter adapterFromYears = new SpinnerBesediListAdapter(this, R.layout.spinner_besedi_list_item, besediFromYears);
         SpinnerBesediListAdapter adapterToYears = new SpinnerBesediListAdapter(this, R.layout.spinner_besedi_list_item, besediToYears);
+        SpinnerBesediListAdapter adapterMonths = new SpinnerBesediListAdapter(this, R.layout.spinner_besedi_list_item, months);
+        SpinnerBesediListAdapter adapterDaysInDates = new SpinnerBesediListAdapter(this, R.layout.spinner_besedi_list_item, daysInDates);
         spinerFromYears.setAdapter(adapterFromYears);
         adapterFromYears.notifyDataSetChanged();
         spinerToYears.setAdapter(adapterToYears);
         adapterToYears.notifyDataSetChanged();
+        spinerMonths.setAdapter(adapterMonths);
+        adapterMonths.notifyDataSetChanged();
+        spinerDaysInDates.setAdapter(adapterDaysInDates);
+        adapterDaysInDates.notifyDataSetChanged();
         spinerFromYears.setSelection(0,true);
         spinerToYears.setSelection(besediToYears.length-1,true);
+        spinerMonths.setSelection(0,true);
+        spinerDaysInDates.setSelection(0,true);
 
         besediInfoAdapter = new BesediInfoAdapter(this, listBesediInfo);
-        ListView listView1 = (ListView) findViewById(R.id.listViewBesedi);
+        ListView listView1 = findViewById(R.id.listViewBesedi);
         listView1.setAdapter(besediInfoAdapter);
     }
 
@@ -195,7 +210,7 @@ public class BesediListActivity extends AppCompatActivity {
     private void setTextBesediListTittle() {
         String setTextBesediListTitle;
         setTextBesediListTitle = BesediTypeCyrillic;
-        TextView textview1 = (TextView) findViewById(R.id.textBesediListTitle);
+        TextView textview1 = findViewById(R.id.textBesediListTitle);
         textview1.setText(setTextBesediListTitle);
     }
 
@@ -240,6 +255,28 @@ public class BesediListActivity extends AppCompatActivity {
 
     }
 
+    private void initDateStrings () {
+        months = new String[13];
+        months[0] = getResources().getString(R.string.month_string);
+        months[1] = getResources().getString(R.string.month_jan);
+        months[2] = getResources().getString(R.string.month_feb);
+        months[3] = getResources().getString(R.string.month_mar);
+        months[4] = getResources().getString(R.string.month_apr);
+        months[5] = getResources().getString(R.string.month_may);
+        months[6] = getResources().getString(R.string.month_jun);
+        months[7] = getResources().getString(R.string.month_jul);
+        months[8] = getResources().getString(R.string.month_aug);
+        months[9] = getResources().getString(R.string.month_sep);
+        months[10] = getResources().getString(R.string.month_oct);
+        months[11] = getResources().getString(R.string.month_nov);
+        months[12] = getResources().getString(R.string.month_dec);
+        daysInDates = new String[32];
+        daysInDates[0] = getResources().getString(R.string.day_string);
+        for (Integer i = 1; i<32; i++) {
+            daysInDates[i]=i.toString();
+        }
+    }
+
     private static boolean checkIntegerArrayContains(Integer[] integerArray, Integer integerToSearch)
     {
         boolean result = false;
@@ -277,6 +314,8 @@ public class BesediListActivity extends AppCompatActivity {
 
         Integer selectedFromYears = spinerFromYears.getSelectedItemPosition();
         Integer selectedToYears = spinerToYears.getSelectedItemPosition();
+        Integer selectedMonth = spinerMonths.getSelectedItemPosition();
+        Integer selectedDayInDate = spinerDaysInDates.getSelectedItemPosition();
 
         if (selectedFromYears > selectedToYears) {
             Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.not_valid_filter_years_string), LENGTH_LONG);
@@ -284,10 +323,26 @@ public class BesediListActivity extends AppCompatActivity {
             return;
         }
 
-        Cursor rs = mydb.getbesediInfoFiltered(BesediTypeCyrillic,
-                        besediUniqueYears[selectedFromYears], besediUniqueYears[selectedToYears]);
-        rs.moveToFirst();
+        //Cursor rs = mydb.getbesediInfoFiltered(BesediTypeCyrillic,
+        //                besediUniqueYears[selectedFromYears], besediUniqueYears[selectedToYears]);
+        //rs.moveToFirst();
 
+        Cursor rs;
+        if ( (selectedMonth==0) && (selectedDayInDate==0) ) {
+            rs = mydb.getbesediInfoFromYears(BesediTypeCyrillic,
+                                    besediUniqueYears[selectedFromYears], besediUniqueYears[selectedToYears]);
+        } else  if ( (selectedMonth==0) && (selectedDayInDate!=0) ) {
+            rs = mydb.getbesediInfoFromYearsDay(BesediTypeCyrillic,
+                    besediUniqueYears[selectedFromYears], besediUniqueYears[selectedToYears], selectedDayInDate);
+        } else  if ( (selectedMonth!=0) && (selectedDayInDate==0) ) {
+            rs = mydb.getbesediInfoFromYearsMonth(BesediTypeCyrillic,
+                    besediUniqueYears[selectedFromYears], besediUniqueYears[selectedToYears], selectedMonth);
+        } else {
+            rs = mydb.getbesediInfoFromYearsMonthDay(BesediTypeCyrillic,
+                    besediUniqueYears[selectedFromYears], besediUniqueYears[selectedToYears], selectedMonth, selectedDayInDate);
+        }
+
+        rs.moveToFirst();
         listBesediInfo.clear();
         listBesediInfo.ensureCapacity(rs.getCount());
 

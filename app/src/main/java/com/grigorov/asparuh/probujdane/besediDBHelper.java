@@ -64,6 +64,91 @@ public class besediDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getbesediInfoFromYears (String besediType, Integer selectedFromYears, Integer selectedToYears) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
+                        "FROM table1 WHERE Variant='1' " +
+                        "And " +
+                        "CAST(Year_ AS int)>="+selectedFromYears.toString() +" " +
+                        "And " +
+                        "CAST(Year_ AS int)<="+selectedToYears.toString() +" " +
+                        "And " +
+                        "(Type_1='"+besediType+"' OR" +
+                        " Type_2='"+besediType+"' OR" +
+                        " Type_3='"+besediType+"' OR" +
+                        " Type_4='"+besediType+"' ) " +
+                        "ORDER BY CAST(Year_ AS int) ASC, CAST(Month_ AS int) ASC, CAST(Day_of_Month AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
+    public Cursor getbesediInfoFromYearsDay (String besediType, Integer selectedFromYears, Integer selectedToYears, Integer selectedDayInDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
+                        "FROM table1 WHERE Variant='1' " +
+                        "And " +
+                        "CAST(Year_ AS int)>="+selectedFromYears.toString() +" " +
+                        "And " +
+                        "CAST(Year_ AS int)<="+selectedToYears.toString() +" " +
+                        "And " +
+                        "CAST(Day_of_Month AS int)="+selectedDayInDate.toString() +" " +
+                        "And " +
+                        "(Type_1='"+besediType+"' OR" +
+                        " Type_2='"+besediType+"' OR" +
+                        " Type_3='"+besediType+"' OR" +
+                        " Type_4='"+besediType+"' ) " +
+                        "ORDER BY CAST(Year_ AS int) ASC, CAST(Month_ AS int) ASC, CAST(Day_of_Month AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
+    public Cursor getbesediInfoFromYearsMonth (String besediType, Integer selectedFromYears, Integer selectedToYears, Integer selectedMonth) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
+                        "FROM table1 WHERE Variant='1' " +
+                        "And " +
+                        "CAST(Year_ AS int)>="+selectedFromYears.toString() +" " +
+                        "And " +
+                        "CAST(Year_ AS int)<="+selectedToYears.toString() +" " +
+                        "And " +
+                        "CAST(Month_ AS int)="+selectedMonth.toString() +" " +
+                        "And " +
+                        "(Type_1='"+besediType+"' OR" +
+                        " Type_2='"+besediType+"' OR" +
+                        " Type_3='"+besediType+"' OR" +
+                        " Type_4='"+besediType+"' ) " +
+                        "ORDER BY CAST(Year_ AS int) ASC, CAST(Month_ AS int) ASC, CAST(Day_of_Month AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
+    public Cursor getbesediInfoFromYearsMonthDay (String besediType, Integer selectedFromYears, Integer selectedToYears,
+                                                  Integer selectedMonth, Integer selectedDayInDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
+                        "FROM table1 WHERE Variant='1' " +
+                        "And " +
+                        "CAST(Year_ AS int)>="+selectedFromYears.toString() +" " +
+                        "And " +
+                        "CAST(Year_ AS int)<="+selectedToYears.toString() +" " +
+                        "And " +
+                        "CAST(Month_ AS int)="+selectedMonth.toString() +" " +
+                        "And " +
+                        "CAST(Day_of_Month AS int)="+selectedDayInDate.toString() +" " +
+                        "And " +
+                        "(Type_1='"+besediType+"' OR" +
+                        " Type_2='"+besediType+"' OR" +
+                        " Type_3='"+besediType+"' OR" +
+                        " Type_4='"+besediType+"' ) " +
+                        "ORDER BY CAST(Year_ AS int) ASC, CAST(Month_ AS int) ASC, CAST(Day_of_Month AS int) ASC" +
+                        ";"
+                , null );
+        return res;
+    }
+
     public Cursor getbeseda (String besedaLink, String besedaDateYear, String besedaDateMonth, String besedaDateDay) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT * " +

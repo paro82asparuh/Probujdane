@@ -26,12 +26,15 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <View
-        android:id="@+id/viewVocalPlay"
+    <TextView
+        android:id="@+id/textSongDownload"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/music_speaker"
-        android:layout_weight="3" />
+        android:gravity="center"
+        android:text="@string/music_download_string"
+        android:textColor="@color/colorMainText"
+        android:textSize="@dimen/text_size_songslist_play_options"
+        android:layout_weight="4" />
 
     <View
         android:layout_width="0dp"
@@ -39,11 +42,11 @@
         android:layout_weight="1" />
 
     <View
-        android:id="@+id/viewInstrumentalPlay"
+        android:id="@+id/viewSongDownload"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@drawable/music_nota"
-        android:layout_weight="3" />
+        android:background="@drawable/download"
+        android:layout_weight="2" />
 
     <View
         android:layout_width="0dp"

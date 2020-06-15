@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.grigorov.asparuh.probujdane.BesediListActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorTopLineBackground"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:background="@color/colorTopLineBackground"
+            android:textColor="@color/colorTopLineText"
+            android:textSize="@dimen/text_size_top_app_name"
+            android:text="@string/probujdane" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/len_1"
+            android:onClick="startSearchMenuTask" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/options_1"
+            android:onClick="startOptionsMenuTask" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textBesediListTitle"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:background="@color/colorListBesediListBackground"
+        android:textColor="@color/colorListBesediTypeText"
+        android:textSize="@dimen/text_size_not_ready"
+        android:text="To be overwritten from java code" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="4">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerFromYear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerToYear"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerDaysInDates"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Spinner
+            android:id="@+id/spinnerMonths"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:background="@drawable/spinner_besedi_list"
+            android:popupBackground="@drawable/spinner_besedi_list"
+            android:spinnerMode="dropdown"
+            android:layout_weight="12" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="5">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/buttonFilterYears"
+            android:layout_weight="51"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:minHeight="0dp"
+            android:gravity="center"
+            android:text="@string/filter_string"
+            android:textSize="@dimen/text_size_list_filtering"
+            android:textColor="@color/colorListBesediListText"
+            android:background="@color/colorListBesediListMain"
+            android:onClick="updateListBesedi" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorListBesediListBackground"
+        android:layout_weight="1" />
+
+    <ListView
+        android:id="@+id/listViewBesedi"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:minHeight="0dp"
+        android:layout_weight="70"
+        android:divider="@color/colorListBesediListBackground"
+        android:background="@color/colorListBesediListBackground"
+        android:dividerHeight="@dimen/list_beseda_divider_hight"
+        />
+
+</LinearLayout>

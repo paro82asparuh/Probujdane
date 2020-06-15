@@ -1,4 +1,5 @@
 <resources>
+    <string name="selected_screen_configuration">normal</string>
     <string name="probujdane">Пробуждане</string>
     <string name="app_name_label">Пробуждане</string>
     <string name="app_name">Probujdane</string>
@@ -26,7 +27,7 @@
     <string name="not_ready_string">Тази функционалност \nе в процес на разработка</string>
     <string name="no_external_storage_is_found">Проблем с паметта</string>
     <string name="no_besedi_database_found_and_read_only_external_storage">Базата данни с беседи не е намерена и паметта е достъпна само за четене</string>
-    <string name="dialog_besedi_update">Базата данни с беседи не е намерена. \nДа бъде ли свалена от интернет (411 МBytes) ?</string>
+    <string name="dialog_besedi_update">Базата данни с беседи не е намерена. \nДа бъде ли свалена от интернет (412 МBytes) ?</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
     <string name="download_progress_message">Сваляне на базата данни с беседи</string>
@@ -39,7 +40,7 @@
     <string name="database_ready">Базата данни с беседи е готова за ползване</string>
     <string name="besedi_list_alphabet_order">Подреди по азбучен ред</string>
     <string name="besedi_list_date_order">Подреди по дата</string>
-    <string name="filter_years_string">Филтрирай по години</string>
+    <string name="filter_string">Филтрирай!</string>
     <string name="list_besedi_from_years_string">От</string>
     <string name="list_besedi_to_years_string">До</string>
     <string name="not_valid_filter_years_string">Зададени са грешни години за филтриране</string>
@@ -100,11 +101,27 @@
     <string name="music_download_all_string">Свали всички!</string>
     <string name="music_download_string">Свали!</string>
     <string name="music_download_title_string">Пробуждане - Песен</string>
-    <string name="dialog_download_songs_start">Да бъдат ли свалена от интернет всички песни (</string>
+    <string name="dialog_download_songs_start">Да бъдат ли свалени от интернет всички песни (</string>
     <string name="dialog_download_songs_end"> МBytes) ?</string>
     <string name="music_delete_songs_string">Изтрий песни!</string>
     <string name="music_songs_rem_title_string">Избери музикалните файлове на кои песни да се изтрият!</string>
     <string name="dialog_songs_delete_start">Да бъдат ли изтрити </string>
     <string name="dialog_songs_delete_end">песни?</string>
     <string name="dialog_songs_delete_one">Да бъде ли изтрита 1 песен?</string>
+    <string name="instr_vocal_string"> &lt;- Вокал </string>
+    <string name="instr_instrumental_string">Инструментал -> </string>
+    <string name="month_jan">Януари</string>
+    <string name="month_feb">Февруари</string>
+    <string name="month_mar">Март</string>
+    <string name="month_apr">Април</string>
+    <string name="month_may">Май</string>
+    <string name="month_jun">Юни</string>
+    <string name="month_jul">Юли</string>
+    <string name="month_aug">Август</string>
+    <string name="month_sep">Септември</string>
+    <string name="month_oct">Октомври</string>
+    <string name="month_nov">Ноември</string>
+    <string name="month_dec">Декември</string>
+    <string name="month_string">Месец</string>
+    <string name="day_string">Ден</string>
 </resources>

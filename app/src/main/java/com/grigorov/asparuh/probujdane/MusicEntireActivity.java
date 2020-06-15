@@ -148,6 +148,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             TextView textInstrumentalPlay;
             View viewVocalPlay;
             View viewInstrumentalPlay;
+            TextView textSongDowqnload;
+            View viewSongDowqnload;
         }
 
         public SongsInfoAdapter (Context context, ArrayList<songInfo> songInfo) {
@@ -161,63 +163,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             final songInfo currentSongInfo = getItem(position);
             // Check if an existing view is being reused, otherwise inflate the view
             MusicEntireActivity.SongsInfoAdapter.ViewHolder viewHolder; // view lookup cache stored in tag
-            if (convertView == null) {
-                // If there's no view to re-use, inflate a brand new view for row
-                viewHolder = new MusicEntireActivity.SongsInfoAdapter.ViewHolder();
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                convertView = inflater.inflate(R.layout.music_songs_list_item, parent, false);
-                viewHolder.songName = convertView.findViewById(R.id.textSongName);
-                viewHolder.textVocalPlay = convertView.findViewById(R.id.textVocalPlay);
-                viewHolder.textInstrumentalPlay = convertView.findViewById(R.id.textInstrumentalPlay);
-                viewHolder.viewVocalPlay = convertView.findViewById(R.id.viewVocalPlay);
-                viewHolder.viewInstrumentalPlay = convertView.findViewById(R.id.viewInstrumentalPlay);
-                // Cache the viewHolder object inside the fresh view
-                convertView.setTag(viewHolder);
-            } else {
-                // View is being recycled, retrieve the viewHolder object from tag
-                viewHolder = (MusicEntireActivity.SongsInfoAdapter.ViewHolder) convertView.getTag();
-            }
-            // Lookup view for data population
-            // Populate the data into the template view using the data object
-            viewHolder.songName.setText(currentSongInfo.getSongName());
-            if (currentSongInfo.isSongVocalPlayble()==false) {
-                viewHolder.textVocalPlay.setText("");
-                viewHolder.viewVocalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
-            } else {
-                viewHolder.textVocalPlay.setText(getResources().getString(R.string.vocal));
-                viewHolder.viewVocalPlay.setBackgroundResource(R.drawable.music_speaker);
-                viewHolder.textVocalPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        startPlayingSingleSong(currentSongInfo.getSongID(),Song.PLAY_VOCAL);
-                    }
-                });
-                viewHolder.viewVocalPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        startPlayingSingleSong(currentSongInfo.getSongID(),Song.PLAY_VOCAL);
-                    }
-                });
-            }
-            if (currentSongInfo.isSongInstrumentalPlayble()==false) {
-                viewHolder.textInstrumentalPlay.setText("");
-                viewHolder.viewInstrumentalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
-            } else {
-                viewHolder.textInstrumentalPlay.setText(getResources().getString(R.string.instrumental));
-                viewHolder.viewInstrumentalPlay.setBackgroundResource(R.drawable.music_speaker);
-                viewHolder.textInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        startPlayingSingleSong(currentSongInfo.getSongID(),Song.PLAY_INSTRUMENTAL);
-                    }
-                });
-                viewHolder.viewInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        startPlayingSingleSong(currentSongInfo.getSongID(),Song.PLAY_INSTRUMENTAL);
-                    }
-                });
-            }
+
+            boolean sreenIsLarge = new Boolean(false);
+            sreenIsLarge = getResources().getString(R.string.selected_screen_configuration).equals("xlarge");
+
+            boolean songIsDownloadable = new Boolean (false);
             if ( (currentSongInfo.isSongVocalPlayble()==false) && (currentSongInfo.isSongInstrumentalPlayble()==false) ) {
                 String currentSongID = currentSongInfo.getSongID();
                 Cursor rs = songsDB.getSongSingle(currentSongID);
@@ -225,26 +175,100 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
                 String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
                 if ( ( currentVocalFileName.equals("")==false) || (currentInstrumentalFileName.equals("")==false) ) {
-                    viewHolder.textVocalPlay.setText("");
-                    viewHolder.viewVocalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
-                    viewHolder.textInstrumentalPlay.setText(getResources().getString(R.string.music_download_string));
-                    viewHolder.viewInstrumentalPlay.setBackgroundResource(R.drawable.download);
-                    viewHolder.textInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View v) {
-                            downloadSingleSong(currentSongInfo.getSongID());
-                        }
-                    });
-                    viewHolder.viewInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View v) {
-                            downloadSingleSong(currentSongInfo.getSongID());
-                        }
-                    });
+                    songIsDownloadable = true;
                 }
                 if (!rs.isClosed())  {
                     rs.close();
                 }
+            }
+
+            //if (convertView == null) {
+                // If there's no view to re-use, inflate a brand new view for row
+                viewHolder = new MusicEntireActivity.SongsInfoAdapter.ViewHolder();
+                LayoutInflater inflater = LayoutInflater.from(getContext());
+                if (songIsDownloadable == true) {
+                    convertView = inflater.inflate(R.layout.music_songs_list_item_download, parent, false);
+                } else {
+                    convertView = inflater.inflate(R.layout.music_songs_list_item, parent, false);
+                }
+                viewHolder.songName = convertView.findViewById(R.id.textSongName);
+                viewHolder.textSongDowqnload = convertView.findViewById(R.id.textSongDownload);
+                viewHolder.viewSongDowqnload = convertView.findViewById(R.id.viewSongDownload);
+                viewHolder.textVocalPlay = convertView.findViewById(R.id.textVocalPlay);
+                viewHolder.textInstrumentalPlay = convertView.findViewById(R.id.textInstrumentalPlay);
+                viewHolder.viewVocalPlay = convertView.findViewById(R.id.viewVocalPlay);
+                viewHolder.viewInstrumentalPlay = convertView.findViewById(R.id.viewInstrumentalPlay);
+                // Cache the viewHolder object inside the fresh view
+                convertView.setTag(viewHolder);
+            //} else {
+            //    // View is being recycled, retrieve the viewHolder object from tag
+            //    viewHolder = (MusicEntireActivity.SongsInfoAdapter.ViewHolder) convertView.getTag();
+            //}
+            // Lookup view for data population
+            // Populate the data into the template view using the data object
+            viewHolder.songName.setText(currentSongInfo.getSongName());
+            if (songIsDownloadable==false) {
+                if (currentSongInfo.isSongVocalPlayble() == false) {
+                    if (sreenIsLarge == true) {
+                        viewHolder.textVocalPlay.setText("");
+                    }
+                    viewHolder.viewVocalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
+                } else {
+                    if (sreenIsLarge == true) {
+                        viewHolder.textVocalPlay.setText(getResources().getString(R.string.vocal));
+                        viewHolder.textVocalPlay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View v) {
+                                startPlayingSingleSong(currentSongInfo.getSongID(), Song.PLAY_VOCAL);
+                            }
+                        });
+                    }
+                    viewHolder.viewVocalPlay.setBackgroundResource(R.drawable.music_speaker);
+                    viewHolder.viewVocalPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            startPlayingSingleSong(currentSongInfo.getSongID(), Song.PLAY_VOCAL);
+                        }
+                    });
+                }
+                if (currentSongInfo.isSongInstrumentalPlayble() == false) {
+                    if (sreenIsLarge == true) {
+                        viewHolder.textInstrumentalPlay.setText("");
+                    }
+                    viewHolder.viewInstrumentalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
+                } else {
+                    if (sreenIsLarge == true) {
+                        viewHolder.textInstrumentalPlay.setText(getResources().getString(R.string.instrumental));
+                        viewHolder.viewInstrumentalPlay.setBackgroundResource(R.drawable.music_speaker);
+                        viewHolder.textInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(final View v) {
+                                startPlayingSingleSong(currentSongInfo.getSongID(), Song.PLAY_INSTRUMENTAL);
+                            }
+                        });
+                    } else {
+                        viewHolder.viewInstrumentalPlay.setBackgroundResource(R.drawable.music_nota);
+                    }
+                    viewHolder.viewInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            startPlayingSingleSong(currentSongInfo.getSongID(), Song.PLAY_INSTRUMENTAL);
+                        }
+                    });
+                }
+            } else {
+                viewHolder.textSongDowqnload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        downloadSingleSong(currentSongInfo.getSongID());
+                    }
+                });
+                viewHolder.viewSongDowqnload.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        downloadSingleSong(currentSongInfo.getSongID());
+                    }
+                });
             }
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
