@@ -22,6 +22,7 @@ public class Playlist {
     public String getPlaylistID () { return playlistID; }
     public String getPlaylistName () { return playlistName; }
     public String getSongsString () { return stringSongs; }
+    public String getStringPlayTypes () { return stringPlayTypes; }
     public boolean isEditable () {
         boolean result = true;
         if (Integer.parseInt(playlistID)<3) {
@@ -37,6 +38,7 @@ public class Playlist {
         playlistID = inputID;
         playlistName = inputName;
         stringSongs = inputStringSongs;
+        stringPlayTypes = inputPlayTypeString;
         // Make the ArrayList
         songsDB = new musicDBHelper(context);
         String[] songsStringSplit = inputStringSongs.split(" ");
@@ -68,7 +70,7 @@ public class Playlist {
         playlistID = inputPlaylist.getPlaylistID();
         playlistName = inputPlaylist.getPlaylistName();
         stringSongs = inputPlaylist.getSongsString();
-        stringPlayTypes = inputPlaylist.getUpdatedSongsString();
+        stringPlayTypes = inputPlaylist.getStringPlayTypes();
         songs = inputPlaylist.getSongsArrayList();
     }
 

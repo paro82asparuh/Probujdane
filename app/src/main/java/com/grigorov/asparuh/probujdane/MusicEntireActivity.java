@@ -15,6 +15,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
@@ -58,7 +59,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     public final static int STATE_MENU =1;
     public final static int STATE_SONGS_LIST =2;
     public final static int STATE_PANEVRITMIA_LIST = 3;
-    public final static int STATE_INSTRUMENTAl_LIST = 4;
+    public final static int STATE_INSTRUMENTAL_LIST = 4;
     public final static int STATE_SONG_SINGLE = 5;
     public final static int STATE_PLAYLISTS_LIST = 6;
     public final static int STATE_PLAYLIST = 7;
@@ -77,6 +78,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private LinearLayout topMusicLinearLayout;
 
     private ArrayList<Playlist> listPlaylists= new ArrayList<Playlist>();
+    private ArrayList<Playlist> listEditablePlaylists= new ArrayList<Playlist>();
 
     private ArrayList<songInfo> listSongsInfo= new ArrayList<songInfo>();
     private ArrayList<PlaylistSongInfo> listPlaylistEditSongsInfo= new ArrayList<PlaylistSongInfo>();
@@ -668,7 +670,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 case STATE_PANEVRITMIA_LIST:
                     startPanevritmiaTask(topMusicLinearLayout);
                     break;
-                case STATE_INSTRUMENTAl_LIST:
+                case STATE_INSTRUMENTAL_LIST:
                     startPanevritmiaInstrumentalTask(topMusicLinearLayout);
                     break;
                 case STATE_SONG_SINGLE:
@@ -841,12 +843,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_MENU;
         // Load music menu on creation
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_menu, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_menu, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_menu, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
         scrollViewSongsListFirstVisiblePosition = 0;
         scrollViewPlaylistsListFirstVisiblePosition = 0;
         scrollViewPlaylistFirstVisiblePosition = 0;
-
     }
 
     public void startSongsListTask (View view) {
@@ -854,7 +856,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_SONGS_LIST;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         Cursor rs = songsDB.getSongsNotDownloaded();
@@ -892,7 +895,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_PANEVRITMIA_LIST;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         View viewAboveDownload = topMusicLinearLayout.findViewById(R.id.viewAboveDownload);
@@ -969,6 +973,28 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
     }
 
+    public void setListEditablePlaylistsList() {
+
+        Cursor rs = playlistsDB.getAll();
+        rs.moveToFirst();
+
+        listEditablePlaylists.clear();
+        listEditablePlaylists.ensureCapacity(rs.getCount());
+
+        for (int i=3; i <=rs.getCount(); i++) {
+            String playlistID = rs.getString(rs.getColumnIndex("ID"));
+            String playlistName = rs.getString(rs.getColumnIndex("Name"));
+            String playlistStringSongs = rs.getString(rs.getColumnIndex("Songs"));
+            String playlistStringPlayTypes = rs.getString(rs.getColumnIndex("PlayType"));
+            listEditablePlaylists.add(new Playlist(playlistID, playlistName, playlistStringSongs, playlistStringPlayTypes, getApplicationContext()));
+            rs.moveToNext();
+        }
+
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
+
     public void startPlaylistsTask (View view) {
 
         setListPlaylistsList();
@@ -977,7 +1003,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_PLAYLISTS_LIST;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         playlistsListAdapter = new MusicEntireActivity.PlaylistsListAdapter(this, listPlaylists);
@@ -1017,7 +1044,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_song, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_song, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_song, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         setSongOnScreen(songID, inputSongPlayType, songPositionInPlaylist);
@@ -1131,7 +1159,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_PLAYLIST;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlist, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlist, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlist, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         setPlaylistOnScreen(playlistID);
@@ -1226,7 +1255,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_PLAYLIST_ADD_SONG;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_add, null, false);
+        //View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_add, null, false);
+        View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_add, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         Cursor rs = songsDB.getSongsInfo();
@@ -1297,7 +1327,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_PLAYLIST_REMOVE_SONG;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_rem, null, false);
+        //View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_rem, null, false);
+        View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_rem, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         listPlaylistEditSongsInfo = playlistOnScreen.getSongsInfoArrayList(getApplicationContext());
@@ -1352,10 +1383,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_PLAYLIST_CREATE_NEW_FROM_SONG;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, null, false);
+        //View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, null, false);
+        View inflatedLayout= getLayoutInflater().inflate(R.layout.music_playlists_list, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
-        playlistsSelectAdapter = new MusicEntireActivity.PlaylistsSelectAdapter(this, listPlaylists);
+        setListEditablePlaylistsList();
+        playlistsSelectAdapter = new MusicEntireActivity.PlaylistsSelectAdapter(this, listEditablePlaylists);
         ListView listView1 = findViewById(R.id.listViewMusicPlaylists);
         listView1.setAdapter(playlistsSelectAdapter);
     }
@@ -1391,6 +1424,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     String newPlaylistName = input.getText().toString();
                     Cursor rs = playlistsDB.getAll();
                     Integer newPlaylistID = rs.getCount()+1;
+                    Integer songPlayType = songOnScreen.getSongPlayType();
                     if (!rs.isClosed())  {
                         rs.close();
                     }
@@ -1398,7 +1432,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                             newPlaylistID.toString(),
                             newPlaylistName,
                             songOnScreen.getSongID(),
-                            songOnScreen.getSongType()
+                            songPlayType.toString()
                     );
                     showPlaylistLayout(newPlaylistID.toString());
                 }
@@ -2021,7 +2055,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicState = STATE_DELETE_SONGS;
 
         topMusicLinearLayout.removeAllViews();
-        View inflatedLayout = getLayoutInflater().inflate(R.layout.music_songs_rem, null, false);
+        //View inflatedLayout = getLayoutInflater().inflate(R.layout.music_songs_rem, null, false);
+        View inflatedLayout = getLayoutInflater().inflate(R.layout.music_songs_rem, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
         Cursor rs = songsDB.getSongsDownloaded("Songs");

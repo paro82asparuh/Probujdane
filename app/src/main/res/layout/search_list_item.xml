@@ -10,25 +10,40 @@
         android:background="@color/colorMain"
         android:orientation="horizontal" >
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/searchTextUpLeft"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
+            android:layout_weight="25"
             android:text="To be overwritten from java code"
             android:textSize="@dimen/text_size_search_result_up_left"
             android:textColor="@color/colorMainText"
             android:background="@color/colorMain" />
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <TextView
             android:id="@+id/searchTextUpRight"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="10"
             android:text="Right"
             android:textSize="@dimen/text_size_search_result_up_right"
             android:textColor="@color/colorMainText"
             android:background="@color/colorMain" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
