@@ -75,12 +75,19 @@ public class musicDBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, ID, Title, Text, Type_, Vocal_File_Name, Instrumental_File_Name, Files_Downloaded " +
                         "FROM table1 WHERE table1 MATCH " +
-                        "'" + query + "' " +
+                        "'" + getSearchMatchString(query) + "' " +
                         "ORDER BY CAST(length(offs) AS int) DESC " +
                         "LIMIT 50" +
                         ";"
                 , null );
         return res;
+    }
+
+    private String getSearchMatchString (String query) {
+        String result = "";
+        result = result + "Title:" + query + " OR ";
+        result = result + "Text:"+ query;
+        return result;
     }
 
     public void updateSongDownloaded (String songID, String newSongDownloaded) {

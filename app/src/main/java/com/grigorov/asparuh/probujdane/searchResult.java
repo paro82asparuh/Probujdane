@@ -44,13 +44,15 @@ public class searchResult {
         textMain = inputTextMain;
         listResultMarkers.clear();
         String[] inputSearchMarkers = inputSearchMarker.split(" "); // Split to " " to read integers
-        for (int marker_loop=0; marker_loop<inputSearchMarkers.length;marker_loop=marker_loop+2) {
-            listResultMarkers.add(
-                    new resultMarker(
-                        Integer.parseInt(inputSearchMarkers[marker_loop]),
-                        Integer.parseInt(inputSearchMarkers[marker_loop+1])
-                    )
-            );
+        if (inputSearchMarkers.length>1) {
+            for (int marker_loop = 0; marker_loop < inputSearchMarkers.length; marker_loop = marker_loop + 2) {
+                listResultMarkers.add(
+                        new resultMarker(
+                                Integer.parseInt(inputSearchMarkers[marker_loop]),
+                                Integer.parseInt(inputSearchMarkers[marker_loop + 1])
+                        )
+                );
+            }
         }
         itemMarkers = inputItemMarkers;
         scrollIndeces = inputScrollIndeces;

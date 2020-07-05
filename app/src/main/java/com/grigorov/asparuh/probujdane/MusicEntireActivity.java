@@ -526,7 +526,14 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             }
             // Lookup view for data population
             // Populate the data into the template view using the data object
-            viewHolder.songName.setText(currentSongInfo.getSongName());
+            String songTitle = currentSongInfo.getSongName();
+            if (currentSongInfo.getSongPlayType()==Song.PLAY_VOCAL) {
+                songTitle = songTitle + " - " + getResources().getString(R.string.vocal);
+            }
+            if (currentSongInfo.getSongPlayType()==Song.PLAY_INSTRUMENTAL) {
+                songTitle = songTitle + " - " + getResources().getString(R.string.instrumental);
+            }
+            viewHolder.songName.setText(songTitle);
             if (listPlaylistEditSongsInfo.get(position).getSongTicked()==true) {
                 viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_checked);
             } else {
@@ -981,6 +988,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         listEditablePlaylists.clear();
         listEditablePlaylists.ensureCapacity(rs.getCount());
 
+        // Skip first two - not editable panaveritmias
+        rs.moveToNext();
+        rs.moveToNext();
         for (int i=3; i <=rs.getCount(); i++) {
             String playlistID = rs.getString(rs.getColumnIndex("ID"));
             String playlistName = rs.getString(rs.getColumnIndex("Name"));
@@ -1118,25 +1128,49 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         textViewSongText.setText(songTextBuilder);
         textViewSongText.setTextSize(songTextSize);
 
-        if (songOnScreen.isSongVocalPlayable()==false) {
-            LinearLayout linearSongPlayOptions = topMusicLinearLayout.findViewById(R.id.linearSongPlayOptions);
-            if (linearSongPlayOptions.getChildCount() > 0) {
-                linearSongPlayOptions.removeAllViews();
+        if (musicState == STATE_SONG_FROM_PLAYLIST) {
+            removeSongVocalPlayLayoutOptions();
+            removeSongInstrumentalPlayLayoutOptions();
+        } else {
+            removeSongFromPlaylistPlayLayoutOptions();
+            if (songOnScreen.isSongVocalPlayable() == false) {
+                removeSongVocalPlayLayoutOptions();
             }
-            ((ViewManager)linearSongPlayOptions.getParent()).removeView(linearSongPlayOptions);
-            View viewBelowSongPlayOptions = topMusicLinearLayout.findViewById(R.id.viewBelowSongPlayOptions);
-            ((ViewManager)viewBelowSongPlayOptions.getParent()).removeView(viewBelowSongPlayOptions);
-        }
-        if (songOnScreen.isSongInstrumentalPlayable()==false) {
-            LinearLayout linearSongInstrumentalOptions = topMusicLinearLayout.findViewById(R.id.linearInstrumentalPlayOptions);
-            if (linearSongInstrumentalOptions.getChildCount() > 0) {
-                linearSongInstrumentalOptions.removeAllViews();
+            if (songOnScreen.isSongInstrumentalPlayable() == false) {
+                removeSongInstrumentalPlayLayoutOptions();
             }
-            ((ViewManager)linearSongInstrumentalOptions.getParent()).removeView(linearSongInstrumentalOptions);
-            View viewBelowSongInstrumentalOptions = topMusicLinearLayout.findViewById(R.id.viewBelowInstrumentalPlayOptions);
-            ((ViewManager)viewBelowSongInstrumentalOptions.getParent()).removeView(viewBelowSongInstrumentalOptions);
         }
 
+    }
+
+    private void removeSongVocalPlayLayoutOptions () {
+        LinearLayout linearSongPlayOptions = topMusicLinearLayout.findViewById(R.id.linearSongPlayOptions);
+        if (linearSongPlayOptions.getChildCount() > 0) {
+            linearSongPlayOptions.removeAllViews();
+        }
+        ((ViewManager) linearSongPlayOptions.getParent()).removeView(linearSongPlayOptions);
+        View viewBelowSongPlayOptions = topMusicLinearLayout.findViewById(R.id.viewBelowSongPlayOptions);
+        ((ViewManager) viewBelowSongPlayOptions.getParent()).removeView(viewBelowSongPlayOptions);
+    }
+
+    private void removeSongInstrumentalPlayLayoutOptions () {
+        LinearLayout linearSongInstrumentalOptions = topMusicLinearLayout.findViewById(R.id.linearInstrumentalPlayOptions);
+        if (linearSongInstrumentalOptions.getChildCount() > 0) {
+            linearSongInstrumentalOptions.removeAllViews();
+        }
+        ((ViewManager) linearSongInstrumentalOptions.getParent()).removeView(linearSongInstrumentalOptions);
+        View viewBelowSongInstrumentalOptions = topMusicLinearLayout.findViewById(R.id.viewBelowInstrumentalPlayOptions);
+        ((ViewManager) viewBelowSongInstrumentalOptions.getParent()).removeView(viewBelowSongInstrumentalOptions);
+    }
+
+    private void removeSongFromPlaylistPlayLayoutOptions () {
+        LinearLayout linearSongFromPlaylistOptions = topMusicLinearLayout.findViewById(R.id.linearFromPlaylistPlayOptions);
+        if (linearSongFromPlaylistOptions.getChildCount() > 0) {
+            linearSongFromPlaylistOptions.removeAllViews();
+        }
+        ((ViewManager) linearSongFromPlaylistOptions.getParent()).removeView(linearSongFromPlaylistOptions);
+        View viewBelowSongFromPlaylistOptions = topMusicLinearLayout.findViewById(R.id.viewBelowFromPlaylistPlayOptions);
+        ((ViewManager) viewBelowSongFromPlaylistOptions.getParent()).removeView(viewBelowSongFromPlaylistOptions);
     }
 
     private void setPlaylistOnScreen (String playlistID) {
@@ -1267,8 +1301,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         for (int i=1; i <=rs.getCount(); i++) {
             String songID = rs.getString(rs.getColumnIndex("ID"));
-            String songTitle;
-            String songTitleBase = rs.getString(rs.getColumnIndex("Title"));
+            String songTitle = rs.getString(rs.getColumnIndex("Title"));
             String songType = rs.getString(rs.getColumnIndex("Type_"));
             boolean songVocalPlayable = true;
             if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals("")) songVocalPlayable=false;
@@ -1279,12 +1312,10 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 songInstrumentalPlayable = false;
             }
             if ( (songVocalPlayable==true) && (playlistOnScreen.isSongInPlaylist(songID,Song.PLAY_VOCAL) == false) ) {
-                songTitle = songTitleBase + " - " + getResources().getString(R.string.vocal);
                 listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
                         true, false, Song.PLAY_VOCAL, false));
             }
             if ( (songInstrumentalPlayable==true) && (playlistOnScreen.isSongInPlaylist(songID,Song.PLAY_INSTRUMENTAL) == false) ) {
-                songTitle = songTitleBase + " - " + getResources().getString(R.string.instrumental);
                 listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
                         false, true, Song.PLAY_INSTRUMENTAL, false));
             }
@@ -1556,21 +1587,17 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonSongVocalPlayPressed (View view) {
-        if (musicState == STATE_SONG_FROM_PLAYLIST) {
-            startPlayingPlaylist(playlistOnScreen.getPlaylistID(),songOnScreen.getSongPositionInPlaylist());
-        } else {
-            songOnScreen.setSongPlayType(Song.PLAY_VOCAL);
-            startPlayingSingleSong(songOnScreen.getSongID(),songOnScreen.getSongPlayType());
-        }
+        songOnScreen.setSongPlayType(Song.PLAY_VOCAL);
+        startPlayingSingleSong(songOnScreen.getSongID(),songOnScreen.getSongPlayType());
     }
 
     public void onButtonSongInstrumentalPlayPressed (View view) {
-        if (musicState == STATE_SONG_FROM_PLAYLIST) {
-            startPlayingPlaylist(playlistOnScreen.getPlaylistID(),songOnScreen.getSongPositionInPlaylist());
-        } else {
-            songOnScreen.setSongPlayType(Song.PLAY_INSTRUMENTAL);
-            startPlayingSingleSong(songOnScreen.getSongID(),songOnScreen.getSongPlayType());
-        }
+        songOnScreen.setSongPlayType(Song.PLAY_INSTRUMENTAL);
+        startPlayingSingleSong(songOnScreen.getSongID(),songOnScreen.getSongPlayType());
+    }
+
+    public void onButtonSongFromPLaylistPlayPressed (View view) {
+        startPlayingPlaylist(playlistOnScreen.getPlaylistID(),songOnScreen.getSongPositionInPlaylist());
     }
 
     public void startPlayingSingleSong (String songID, int songPlayType) {
@@ -1743,11 +1770,19 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonMusicPrevPressed (View view) {
-        musicSrv.playPrev();
+        if (musicBound==true) {
+            if (musicSrv.isPlaying()==true) {
+                musicSrv.playPrev();
+            }
+        }
     }
 
     public void onButtonMusicNextPressed (View view) {
-        musicSrv.playNext();
+        if (musicBound==true) {
+            if (musicSrv.isPlaying() == true) {
+                musicSrv.playNext();
+            }
+        }
     }
 
     public void onButtonMusicPlayPausePressed (View view) {

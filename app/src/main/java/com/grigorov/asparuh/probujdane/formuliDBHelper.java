@@ -44,12 +44,19 @@ public class formuliDBHelper extends SQLiteOpenHelper {
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, ID, Title, Text " +
                         "FROM table1 WHERE table1 MATCH " +
-                        "'" + query + "' " +
+                        "'" + getSearchMatchString(query) + "' " +
                         "ORDER BY CAST(length(offs) AS int) DESC " +
                         "LIMIT 50" +
                         ";"
                 , null );
         return res;
+    }
+
+    private String getSearchMatchString (String query) {
+        String result = "";
+        result = result + "Title:" + query + " OR ";
+        result = result + "Text:"+ query;
+        return result;
     }
 
 }

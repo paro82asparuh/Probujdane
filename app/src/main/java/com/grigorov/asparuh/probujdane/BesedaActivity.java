@@ -109,14 +109,16 @@ public class BesedaActivity extends AppCompatActivity {
         if (besedaMarkers.equals("")==false) {
             String[] inputBesedaMarkers = besedaMarkers.split(" "); // Split to " " to read integers
             // prepare input list of markers
-            for (int marker_loop=0; marker_loop<inputBesedaMarkers.length;marker_loop=marker_loop+3) {
-                listBesedaMarkers.add(
-                        new besedaMarker(
-                                Integer.parseInt(inputBesedaMarkers[marker_loop]),
-                                Integer.parseInt(inputBesedaMarkers[marker_loop+1]),
-                                Integer.parseInt(inputBesedaMarkers[marker_loop+2])
-                        )
-                );
+            if ( inputBesedaMarkers.length > 1) {
+                for (int marker_loop = 0; marker_loop < inputBesedaMarkers.length; marker_loop = marker_loop + 3) {
+                    listBesedaMarkers.add(
+                            new besedaMarker(
+                                    Integer.parseInt(inputBesedaMarkers[marker_loop]),
+                                    Integer.parseInt(inputBesedaMarkers[marker_loop + 1]),
+                                    Integer.parseInt(inputBesedaMarkers[marker_loop + 2])
+                            )
+                    );
+                }
             }
             // combine adjacent markers
             ArrayList<besedaMarker> listBesedaMarkersCopy = new ArrayList<besedaMarker>();
@@ -301,6 +303,7 @@ public class BesedaActivity extends AppCompatActivity {
             imageNameMain = imageNameMain.replace("-", "_dash_");
             imageNameMain = imageNameMain.replace(".", "_dot_");
             imageNameMain = imageNameMain.replace(" ", "_s0p_");
+            imageNameMain = imageNameMain.replace("%20", "_s0p_");
             imageNameMain = imageNameMain.replace("(", "_obrack_");
             imageNameMain = imageNameMain.replace(")", "_cbrack_");
             imageNameMain = imageNameMain.replace("+", "_plus_");
@@ -319,7 +322,9 @@ public class BesedaActivity extends AppCompatActivity {
             Bitmap bmRawImg = BitmapFactory.decodeFile(imageFullPath, options);
             int targetWidth = Integer.parseInt(screenWidthInPixels);
             targetWidth = (int) (((double) targetWidth) * 0.875);
-            int targetHeight = bmRawImg.getHeight() * (targetWidth / bmRawImg.getWidth());
+            float widthRatio = ( (float) targetWidth) / ( (float) bmRawImg.getWidth());
+            float targetHeightFloat = bmRawImg.getHeight() * widthRatio;
+            int targetHeight = Math.round(targetHeightFloat);
             Bitmap bmScaledImg = Bitmap.createScaledBitmap(bmRawImg, targetWidth, targetHeight, true);
             imageViewExtention.setImageBitmap(bmScaledImg);
 

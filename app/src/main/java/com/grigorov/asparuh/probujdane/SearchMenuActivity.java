@@ -502,19 +502,25 @@ public class SearchMenuActivity extends AppCompatActivity {
                 // Get the full column string
                 String newTextMain;
                 String scrollIndeces;
+                String newSearchMarkers;
                 if (offsets.get(posMatch1).getColumnNumber()==6) {
                     // If the result is in the title
                     newTextMainPre = rs.getString(3);
                     newTextMain = prepareTextMain(offsets);
                     scrollIndeces = "1 0";
-                } else {
+                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+                } else if (offsets.get(posMatch1).getColumnNumber()> 13) {
                     newTextMainPre = rs.getString(7 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2));
                     newTextMain = prepareTextMain(offsets);
                     scrollIndeces = (1 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2)) +
                             " " + scrollCharIndex;
+                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+                } else {
+                    newTextMainPre = "";
+                    newTextMain = "";
+                    scrollIndeces = "1 0";
+                    newSearchMarkers = "";
                 }
-
-                String newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
 
                 String newItemMarkers = prepareBesedaMarkers(offsets,rs);
 
@@ -923,7 +929,8 @@ public class SearchMenuActivity extends AppCompatActivity {
                         offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
                         rs.getString(3)
                 );
-            } else {
+                newItemMarkers = newItemMarkers + " ";
+            } else if (offsets.get(m_offs).getColumnNumber()>13) {
                 newItemMarkers = newItemMarkers + (1 + (offsets.get(m_offs).getColumnNumber() - 14) / 2);
                 newItemMarkers = newItemMarkers + " ";
                 newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
@@ -935,8 +942,8 @@ public class SearchMenuActivity extends AppCompatActivity {
                         offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
                         rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
                 );
+                newItemMarkers = newItemMarkers + " ";
             }
-            newItemMarkers = newItemMarkers + " ";
         }
         return newItemMarkers;
     }

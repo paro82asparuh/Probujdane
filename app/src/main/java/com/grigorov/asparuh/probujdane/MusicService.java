@@ -67,7 +67,8 @@ public class MusicService extends Service implements
     public void onCompletion(MediaPlayer mp) {
         songPosn++;
         if(songPosn<songs.size()) {
-            Intent intentToPlayNextSong = new Intent("com.grigorov.asparuh.probujdane.onButtonMusicPlayPausePressed");
+            // ??? Intent intentToPlayNextSong = new Intent("com.grigorov.asparuh.probujdane.onButtonMusicPlayPausePressed");
+            Intent intentToPlayNextSong = new Intent("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong");
             getApplicationContext().sendBroadcast(intentToPlayNextSong);
             playSong();
         } else {
