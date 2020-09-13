@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -29,6 +30,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.play.core.appupdate.AppUpdateInfo;
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
+import com.google.android.play.core.install.model.AppUpdateType;
+import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.core.tasks.Task;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -46,6 +54,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static android.widget.Toast.LENGTH_LONG;
+import static com.google.android.play.core.install.model.AppUpdateType.IMMEDIATE;
 
 public class MainActivity extends AppCompatActivity implements BesediUpdateDialogFragment.BesediUpdateDialogListener {
 
@@ -56,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     public final static int MY_PERMISSIONS_REQUEST_WAKE_LOCK=4;
     public final static int MY_PERMISSIONS_REQUEST_STORAGE=5;
 
+    public final static int MY_UPDATE_REQUEST_CODE = 1;
 
     private int SelectedBesediType;
     public final static int Nedelni_Besedi =1;
@@ -95,14 +105,18 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     private static double SPACE_GB = 1024 * SPACE_MB;
     private static double SPACE_TB = 1024 * SPACE_GB;
 
+    private AppUpdateManager appUpdateManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        handlePermissions();
-
         context = getApplicationContext();
+
+        handlePermissions();
+        checkAppUpdate();
+
         downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         stopMusicDownloads();
         BesediDatabaseOk = checkUpdateBesediDatabase();
@@ -110,6 +124,32 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
         //set filter to only when download is complete and register broadcast receiver
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         registerReceiver(downloadReceiver, filter);
+    }
+
+    // Checks that the update is not stalled during 'onResume()'.
+    // However, you should execute this check at all entry points into the app.
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        appUpdateManager
+                .getAppUpdateInfo()
+                .addOnSuccessListener(
+                        appUpdateInfo -> {
+                            if (appUpdateInfo.updateAvailability()
+                                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                                // If an in-app update is already running, resume the update.
+                                try {
+                                    appUpdateManager.startUpdateFlowForResult(
+                                            appUpdateInfo,
+                                            IMMEDIATE,
+                                            this,
+                                            MY_UPDATE_REQUEST_CODE);
+                                } catch (IntentSender.SendIntentException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
     }
 
     public void startBesediMenuTask (View view) {
@@ -688,6 +728,35 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
         if (!cursor.isClosed())  {
             cursor.close();
         }
+    }
+
+    private void checkAppUpdate () {
+        // Creates instance of the manager.
+        appUpdateManager = AppUpdateManagerFactory.create(context);
+
+        // Returns an intent object that you use to check for an update.
+        Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+
+        // Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask.addOnSuccessListener(appUpdateInfo -> {
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    && appUpdateInfo.isUpdateTypeAllowed(IMMEDIATE)) {
+                // Request the update
+                try {
+                    appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            IMMEDIATE,
+                            this,
+                            // Include a request code to later monitor this update request.
+                            MY_UPDATE_REQUEST_CODE);
+                } catch (IntentSender.SendIntentException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
     }
 
 

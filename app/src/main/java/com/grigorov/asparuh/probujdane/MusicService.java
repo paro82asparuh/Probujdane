@@ -47,6 +47,7 @@ public class MusicService extends Service implements
     private Playlist playedPlaylist;
 
     private boolean playerIsReleased;
+    private boolean playingDeletedFile;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -143,6 +144,7 @@ public class MusicService extends Service implements
         //create player
         player = new MediaPlayer();
         playerIsReleased = true;
+        playingDeletedFile = false;
 
         initMusicPlayer();
     }
@@ -184,18 +186,23 @@ public class MusicService extends Service implements
         // get the file
         File songFile = new File(getApplicationContext().getExternalFilesDir(null)+playedSong.getSongSubPath(),
                 songFileName);
-        //set uri
-        Uri trackUri = Uri.fromFile(songFile);
-        //Uri trackUri = Uri.parse(songFile.toString());
+        if (songFile.exists()==true) {
+            playingDeletedFile = false;
+            //set uri
+            Uri trackUri = Uri.fromFile(songFile);
+            //Uri trackUri = Uri.parse(songFile.toString());
 
-        try{
-            player.setDataSource(getApplicationContext(), trackUri);
-            //player.setDataSource(songFile.getPath());
+            try {
+                player.setDataSource(getApplicationContext(), trackUri);
+                //player.setDataSource(songFile.getPath());
+            } catch (Exception e) {
+                Log.e("MUSIC SERVICE", "Error setting data source", e);
+            }
+            player.prepareAsync();
+         } else {
+            playingDeletedFile = true;
         }
-        catch(Exception e){
-            Log.e("MUSIC SERVICE", "Error setting data source", e);
-        }
-        player.prepareAsync();
+
 
     }
 
@@ -280,4 +287,6 @@ public class MusicService extends Service implements
     public int getSongPosn () { return songPosn; }
 
     public int getSongsSize () { return songs.size(); }
+
+    public boolean isPlayingDeletedFile () { return  playingDeletedFile; }
 }

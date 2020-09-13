@@ -1771,7 +1771,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void onButtonMusicPrevPressed (View view) {
         if (musicBound==true) {
-            if (musicSrv.isPlaying()==true) {
+            if ( (musicSrv.isPlaying() == true) || (musicSrv.isPlayingDeletedFile()==true) || (songIsPaused==true)) {
+                buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 musicSrv.playPrev();
             }
         }
@@ -1779,7 +1780,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void onButtonMusicNextPressed (View view) {
         if (musicBound==true) {
-            if (musicSrv.isPlaying() == true) {
+            if ( (musicSrv.isPlaying() == true) || (musicSrv.isPlayingDeletedFile()==true) || (songIsPaused==true)) {
+                buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 musicSrv.playNext();
             }
         }
