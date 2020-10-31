@@ -39,4 +39,12 @@
     <dimen name="text_size_formula_text">12sp</dimen>
     <dimen name="text_size_beseda_search_controls">16sp</dimen>
     <dimen name="text_size_songslist_play_options">12sp</dimen>
+    <dimen name="text_size_book_search_controls">16sp</dimen>
+    <dimen name="text_size_book_title">16sp</dimen>
+    <dimen name="text_size_book_chapter_title_text">14sp</dimen>
+    <dimen name="text_size_book_chapter_content_text">12sp</dimen>
+    <dimen name="text_size_book_menu_title">20sp</dimen>
+    <dimen name="text_size_book_menu_entire_button">18sp</dimen>
+    <dimen name="text_size_book_menu_chapter_button">16sp</dimen>
+    <dimen name="list_book_chapters_divider_hight">10dp</dimen>
 </resources>

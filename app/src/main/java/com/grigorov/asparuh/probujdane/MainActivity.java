@@ -81,9 +81,15 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     public final static int Izvynredni_Besedi =11;
     public final static int KlasNaDobrodetelite_Besedi =12;
     public final String besediDatabaseName = "besedi_sqlite.db";
+    public final String formuliDatabaseName = "formuli_sqlite.db";
+    public final String molitviDatabaseName = "molitvi_sqlite.db";
+    public final String musicDatabaseName = "music_sqlite.db";
+    public final String naukaVyzDatabaseName = "nauka_vyzpitanie_sqlite.db";
+    public final String zavetDatabaseName = "zavet_sqlite.db";
     public final String besediDatabaseArchiveName = "besedi_sqlite.zip";
     private static Context context;
     private boolean BesediDatabaseOk;
+    private boolean unzipOngoing;
     //private static String BesediDatbaseURL = "https://drive.google.com/file/d/0B7wdOuW-OvnhY2VVQktRM1hZcEE/view?usp=sharing";
     //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
     //private static String BesediDatbaseURL = "https://1fichier.com/?sfl4mtzwbi";
@@ -119,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
         downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         stopMusicDownloads();
+        unzipOngoing = false;
         BesediDatabaseOk = checkUpdateBesediDatabase();
 
         //set filter to only when download is complete and register broadcast receiver
@@ -289,6 +296,16 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
         }
     }
 
+    public void startKnigiMenuTask (View view) {
+        if (BesediDatabaseOk==false) {
+            BesediDatabaseOk = checkUpdateBesediDatabase();
+        }
+        if (BesediDatabaseOk==true) {
+            Intent intent = new Intent(this, KnigiMenuActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
     /* Checks if external storage is available for read and write */
     public boolean isExternalStorageWritable() {
@@ -301,17 +318,44 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
         return Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
+    private boolean checkDatabasesPresent () {
+        File file1 = new File(context.getExternalFilesDir(null), besediDatabaseName);
+        if (file1.exists()==false) {
+            return false;
+        }
+        File file2 = new File(context.getExternalFilesDir(null), formuliDatabaseName);
+        if (file2.exists()==false) {
+            return false;
+        }
+        File file3 = new File(context.getExternalFilesDir(null), molitviDatabaseName);
+        if (file3.exists()==false) {
+            return false;
+        }
+        File file4 = new File(context.getExternalFilesDir(null), musicDatabaseName);
+        if (file4.exists()==false) {
+            return false;
+        }
+        File file5 = new File(context.getExternalFilesDir(null), naukaVyzDatabaseName);
+        if (file5.exists()==false) {
+            return false;
+        }
+        File file6 = new File(context.getExternalFilesDir(null), zavetDatabaseName);
+        return file6.exists() != false;
+    }
 
     private boolean checkUpdateBesediDatabase () {
 
         if (isExternalStorageWritable()==true) {
             File file = new File(context.getExternalFilesDir(null), besediDatabaseName);
-            if (file.exists()==true) {
+            if (checkDatabasesPresent()==true) {
                 return true;
             }
             else {
                 if ( checkDownloadOngoing() == true ) {
                     showErrorMessage(getString(R.string.download_ongoing));
+                    return false;
+                } else if (unzipOngoing==true) {
+                    showErrorMessage(getString(R.string.unzip_ongoing));
                     return false;
                 } else {
                     DialogFragment newFragment = new BesediUpdateDialogFragment();
@@ -321,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
             }
         } else if (isExternalStorageReadOnly()==true) {
             File file = new File(context.getExternalFilesDir(null), besediDatabaseName);
-            if (file.exists()==true) {
+            if (checkDatabasesPresent()==true) {
                 return true;
             }
             else {
@@ -414,6 +458,8 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
             if (downloadReference == referenceId) {
                 showErrorMessage(getString(R.string.download_done));
 
+                unzipOngoing = true;
+
                 // Unzip
                 File zipFile = new File(context.getExternalFilesDir(null), besediDatabaseArchiveName);
                 try {
@@ -422,9 +468,12 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                showErrorMessage(getString(R.string.database_ready));
 
-                BesediDatabaseOk = true;
+                unzipOngoing = false;
+                if (checkDatabasesPresent()==true) {
+                    showErrorMessage(getString(R.string.database_ready));
+                    BesediDatabaseOk = true;
+                }
 
                 // delete the archive file
                 try {

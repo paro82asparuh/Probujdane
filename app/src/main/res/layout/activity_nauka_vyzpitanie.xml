@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    tools:context=".NaukaVyzpitanieActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/colorTopLineBackground"
+            android:layout_weight="2" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:gravity="center"
+            android:background="@color/colorTopLineBackground"
+            android:textColor="@color/colorTopLineText"
+            android:textSize="@dimen/text_size_top_app_name"
+            android:text="@string/probujdane" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/len_1"
+            android:onClick="showSearchControls" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/options_1"
+            android:onClick="startOptionsMenuTask" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_empty_1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_search_controls"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@color/colorMainBackground"
+        android:layout_weight="70">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="25">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/edit_search_text_nauka_vyz_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="19"
+                android:background="@color/colorMainEditTextBackground"
+                android:cursorVisible="true"
+                android:inputType="text"
+                android:textColor="@color/colorMainText"
+                android:textCursorDrawable="@null" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/view_nauka_vyz_arrow_down"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/arrow_down"
+                android:layout_weight="2"
+                android:onClick="goToNextSearchResult" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/view_nauka_vyz_arrow_up"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/arrow_up"
+                android:layout_weight="2"
+                android:onClick="goToPreviousSearchResult" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/view_nauka_vyz_cross_close"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/cross_close"
+                android:layout_weight="2"
+                android:onClick="hideSearchControls" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="25">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/button_search_local"
+                android:layout_weight="19"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/book_local_search_button_string"
+                android:textSize="@dimen/text_size_book_search_controls"
+                android:textColor="@color/colorMainText"
+                android:background="@color/colorMain"
+                android:onClick="startSearchInBook" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/button_search_global"
+                android:layout_weight="8"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/book_global_search_button_string"
+                android:textSize="@dimen/text_size_book_search_controls"
+                android:textColor="@color/colorMainText"
+                android:background="@color/colorMain"
+                android:onClick="startSearchMenuTask" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_empty_2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="horizontal"
+        android:background="@color/colorMainBackground" >
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textBookTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:gravity="center"
+        android:textColor="@color/colorBookTitleText"
+        android:textSize="@dimen/text_size_book_title"
+        android:text="To be overwritten from java code" />
+
+    <ScrollView
+        android:id="@+id/scrollViewBook"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="400"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="horizontal">
+
+           <View
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="3" />
+
+           <LinearLayout
+               android:id="@+id/textBookLinearLayout"
+               android:layout_width="0dp"
+               android:layout_height="fill_parent"
+               android:layout_weight="42"
+               android:orientation="vertical">
+
+           </LinearLayout>
+
+           <View
+               android:layout_width="0dp"
+               android:layout_height="match_parent"
+               android:layout_weight="3" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

@@ -103,4 +103,10 @@
     <color name="colorSongText">#FF0000C0</color>
     <color name="colorFormulaTitleText">#FF0000C0</color>
     <color name="colorFormulaText">#FF0000C0</color>
+    <color name="colorBookTitleText">#FF0000C0</color>
+    <color name="colorNaukaVyzText">#FF0000C0</color>
+    <color name="colorNaukaVyzMenuBackground">#FFFFFFFF</color>
+    <color name="colorNaukaVyzMenuText">#FF0000C0</color>
+    <color name="colorNaukaVyzChapterItem">#FFB0E2FF</color>
+    <color name="colorNaukaVyzButtons">#FFB0E2FF</color>
 </resources>

@@ -54,6 +54,40 @@
                     android:layout_weight="10"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:text="@string/books_string"
+                    android:textSize="@dimen/text_size_main_buttons"
+                    android:textColor="@color/colorMainText"
+                    android:background="@color/colorMain"
+                    android:onClick="startKnigiMenuTask" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:layout_weight="5">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                <Button
+                    android:layout_weight="10"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:text="@string/nedelni_besedi_string"
                     android:textSize="@dimen/text_size_main_buttons"
                     android:textColor="@color/colorMainText"
@@ -127,40 +161,6 @@
                     android:textColor="@color/colorMainText"
                     android:background="@color/colorMain"
                     android:onClick="startMOKBesediTask" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:orientation="horizontal"
-                android:layout_weight="5">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2" />
-
-                <Button
-                    android:layout_weight="10"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:text="@string/utrinni_slova_string"
-                    android:textSize="@dimen/text_size_main_buttons"
-                    android:textColor="@color/colorMainText"
-                    android:background="@color/colorMain"
-                    android:onClick="startUtrinniSlovaBesediTask" />
 
                 <View
                     android:layout_width="0dp"
