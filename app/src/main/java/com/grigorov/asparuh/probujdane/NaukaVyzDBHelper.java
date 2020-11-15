@@ -31,5 +31,25 @@ public class NaukaVyzDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor searchInNaukaVyz(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery(  "SELECT " +
+                        "offsets(table1) AS offs, ID, Chapter_Level, Chapter_Title, Chapter_Content, Chapter_Indentation " +
+                        "FROM table1 WHERE table1 MATCH " +
+                        "'" + getSearchMatchString(query) + "' " +
+                        "ORDER BY CAST(length(offs) AS int) DESC " +
+                        "LIMIT 50" +
+                        ";"
+                , null );
+        return res;
+    }
+
+    private String getSearchMatchString (String query) {
+        String result = "";
+        result = result + "Chapter_Title:" + query + " OR ";
+        result = result + "Chapter_Content:"+ query;
+        return result;
+    }
+
 
 }

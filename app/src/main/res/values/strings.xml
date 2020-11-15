@@ -60,6 +60,7 @@
     <string name="search_option_every_word_near">Търси всички думи в близост</string>
     <string name="search_option_fts">FTS търсене, както в google.com</string>
     <string name="search_option_whole_slovo">Търси в цялото слово</string>
+    <string name="search_option_all_books">Търси във всички книги</string>
     <string name="search_option_all_besedi">Търси във всички беседи</string>
     <string name="search_option_one_beseda">Търси в определена беседа</string>
     <string name="search_option_molitvi">Търси в молитвите</string>

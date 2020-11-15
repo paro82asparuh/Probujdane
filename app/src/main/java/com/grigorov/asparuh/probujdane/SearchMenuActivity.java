@@ -51,11 +51,13 @@ public class SearchMenuActivity extends AppCompatActivity {
     public final static int SEARCH_RESULT_MOLITVI=2;
     public final static int SEARCH_RESULT_FORMULI=3;
     public final static int SEARCH_RESULT_MUSIC=4;
+    public final static int SEARCH_RESULT_NAUKA_VYZ=5;
 
     private besediDBHelper myBesediDB;
     private MolitviDBHelper myMolivtiDB;
     private formuliDBHelper myFormuliDB;
     private musicDBHelper myMusicDB;
+    private NaukaVyzDBHelper myNaukaVyzDB;
 
     private EditText editSearchTextInput;
 
@@ -129,6 +131,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
         optionsSearchWhere = new String[]{
                 getResources().getString(R.string.search_option_whole_slovo),
+                getResources().getString(R.string.search_option_all_books),
                 getResources().getString(R.string.search_option_all_besedi),
                 //getResources().getString(R.string.search_option_one_beseda),
                 getResources().getString(R.string.search_option_molitvi),
@@ -149,14 +152,16 @@ public class SearchMenuActivity extends AppCompatActivity {
         spinnerSearchWhere.setSelection(0,true);
         if (searchSource.equals("SEARCH_SOURCE_GLOBAL")) {
             spinnerSearchWhere.setSelection(0,true);
-        } else if (searchSource.equals("SEARCH_ALL_BESEDI")) {
+        } else if (searchSource.equals("SEARCH_ALL_BOOKS")) {
             spinnerSearchWhere.setSelection(1,true);
-        } else if (searchSource.equals("SEARCH_SOURCE_MUSIC")) {
-            spinnerSearchWhere.setSelection(4,true);
-        } else if (searchSource.equals("SEARCH_SOURCE_MOLITVI")) {
+        } else if (searchSource.equals("SEARCH_ALL_BESEDI")) {
             spinnerSearchWhere.setSelection(2,true);
-        } else if (searchSource.equals("SEARCH_SOURCE_FORMULI")) {
+        } else if (searchSource.equals("SEARCH_SOURCE_MUSIC")) {
+            spinnerSearchWhere.setSelection(5,true);
+        } else if (searchSource.equals("SEARCH_SOURCE_MOLITVI")) {
             spinnerSearchWhere.setSelection(3,true);
+        } else if (searchSource.equals("SEARCH_SOURCE_FORMULI")) {
+            spinnerSearchWhere.setSelection(4,true);
         }
 
         updateBesedaInputVisibility();
@@ -180,6 +185,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         myMolivtiDB = new MolitviDBHelper(this);
         myFormuliDB = new formuliDBHelper(this);
         myMusicDB = new musicDBHelper(this);
+        myNaukaVyzDB = new NaukaVyzDBHelper(this);
 
     }
 
@@ -187,6 +193,9 @@ public class SearchMenuActivity extends AppCompatActivity {
         super.onResume();
         myBesediDB = new besediDBHelper(this);
         myMolivtiDB = new MolitviDBHelper(this);
+        myFormuliDB = new formuliDBHelper(this);
+        myMusicDB = new musicDBHelper(this);
+        myNaukaVyzDB = new NaukaVyzDBHelper(this);
         updateTextSizes();
     }
 
@@ -204,6 +213,9 @@ public class SearchMenuActivity extends AppCompatActivity {
         super.onPause();
         myBesediDB.close();
         myMolivtiDB.close();
+        myFormuliDB.close();
+        myMusicDB.close();
+        myNaukaVyzDB.close();
     }
 
     private void updateBesedaInputVisibility() {
@@ -409,6 +421,20 @@ public class SearchMenuActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+            }  else if (currentSearchResult.getType()==SEARCH_RESULT_NAUKA_VYZ) {
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
+                        Intent intent = new Intent(SearchMenuActivity.this, NaukaVyzpitanieActivity.class);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                        // scrolling in molitva is not used for now
+                        //intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        startActivity(intent);
+                    }
+                });
             }
             // Return the completed view to render on screen
             return convertView;
@@ -450,7 +476,9 @@ public class SearchMenuActivity extends AppCompatActivity {
         searchResultAdapter.clear();
 
         numberSearchResults= new Integer(0);
-        if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_besedi))) {
+        if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_books))) {
+            searchInBooks();
+        } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_besedi))) {
             searchInBesedi();
         } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_molitvi))) {
             searchInMolitvi();
@@ -535,6 +563,80 @@ public class SearchMenuActivity extends AppCompatActivity {
                 rs.moveToNext();
             }
 
+            searchResultAdapter.notifyDataSetChanged();
+            listSearchView.smoothScrollToPosition(0);
+        }
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
+
+    public void searchInBooks() {
+        searchInNaukaVyz();
+    }
+
+    public void searchInNaukaVyz() {
+
+        Cursor rs = myNaukaVyzDB.searchInNaukaVyz(searchQuery);
+        numberSearchResults = numberSearchResults + rs.getCount();
+
+        if (rs.getCount()>0) {
+            rs.moveToFirst();
+            String newItemMarkers = "";
+            int startListResultNaukaVyzIndex = listSearchResult.size();
+            listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
+            for (int i = 0; i < rs.getCount(); i++) {
+                // Name of the chapter
+                String newTextUpleft = rs.getString(rs.getColumnIndex("Chapter_Title"));
+                // Name of the book
+                String newTextUpRight = getResources().getString(R.string.nauka_vyzpitanie_string);
+
+                // Convert the offset output to strings
+                ArrayList<OffsetRes> offsets = getOffsets(rs);
+                int numberMatches = offsets.size();
+
+                prepareMatches(offsets);
+
+                // Get the full column string
+                String newTextMain;
+                String scrollIndeces;
+                String newSearchMarkers;
+
+                if (offsets.get(posMatch1).getColumnNumber()==2) {
+                    // If the result is in the chapter title
+                    newTextMainPre = rs.getString(3);
+                    newTextMain = prepareTextMain(offsets);
+                    scrollIndeces = rs.getString(1) + " 0 1";
+                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+                } else if (offsets.get(posMatch1).getColumnNumber()==3) {
+                    newTextMainPre = rs.getString(4);
+                    newTextMain = prepareTextMain(offsets);
+                    scrollIndeces = rs.getString(1) + " 0 " + scrollCharIndex;
+                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+                } else {
+                    newTextMainPre = "";
+                    newTextMain = "";
+                    scrollIndeces = "1 0";
+                    newSearchMarkers = "";
+                }
+
+                newItemMarkers = newItemMarkers + prepareNaukaVyzMarkers(offsets,rs);
+
+                String chapterID = rs.getString(rs.getColumnIndex("ID"));
+                String chapterLevel = rs.getString(rs.getColumnIndex("Chapter_Level"));
+                String chapterTitle = rs.getString(rs.getColumnIndex("Chapter_Title"));
+                String chapterContent = rs.getString(rs.getColumnIndex("Chapter_Content"));
+                String chapterIndentation = rs.getString(rs.getColumnIndex("Chapter_Indentation"));
+                ChapterNaukaVyz chapterNaukaVyz = new ChapterNaukaVyz(chapterID, chapterLevel, chapterTitle, chapterContent, chapterIndentation);
+
+                listSearchResult.add(new searchResult(SEARCH_RESULT_NAUKA_VYZ, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
+                        newSearchMarkers, newItemMarkers, chapterNaukaVyz, scrollIndeces));
+                rs.moveToNext();
+            }
+            // accumulate the same NaukaVyz markers for all search results.
+            for (int i=startListResultNaukaVyzIndex; i<listSearchResult.size()-1; i++) {
+                listSearchResult.get(i).setItemMarkers(newItemMarkers);
+            }
             searchResultAdapter.notifyDataSetChanged();
             listSearchView.smoothScrollToPosition(0);
         }
@@ -730,8 +832,8 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     public void prepareMatches (ArrayList<OffsetRes> offsets) {
         // Algorithm description
-        // The text extract shall be only one per beseda
-        // The text extract shall be from only one column "TextN"
+        // The text extract shall be only one per beseda / searched item
+        // The text extract shall be from only one column ("TextN" for beseda)
         // If all matches are from different columns,
         //      the match from the smallest column shall be selected (match earliest in text)
         // If there are couple of matches per column(s)
@@ -953,6 +1055,31 @@ public class SearchMenuActivity extends AppCompatActivity {
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
             newItemMarkers = newItemMarkers + offsets.get(m_offs).getColumnNumber();
             newItemMarkers = newItemMarkers + " ";
+            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn(),
+                    rs.getString(1 + (offsets.get(m_offs).getColumnNumber()))
+            );
+            newItemMarkers = newItemMarkers + " ";
+            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
+                    rs.getString(1 + ((offsets.get(m_offs).getColumnNumber())))
+            );
+            newItemMarkers = newItemMarkers + " ";
+        }
+        return newItemMarkers;
+    }
+
+    private String prepareNaukaVyzMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
+        String newItemMarkers = "";
+        for (int m_offs=0; m_offs<offsets.size();m_offs++) {
+            Integer chapterInt = new Integer(Integer.parseInt(rs.getString(1)));
+            chapterInt = chapterInt;
+            newItemMarkers = newItemMarkers + chapterInt.toString() + " ";
+            if (offsets.get(m_offs).getColumnNumber()==2) {
+                newItemMarkers = newItemMarkers + "1 ";
+            } else {
+                newItemMarkers = newItemMarkers + "0 ";
+            }
             newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
                     offsets.get(m_offs).getOffsetInColumn(),
                     rs.getString(1 + (offsets.get(m_offs).getColumnNumber()))

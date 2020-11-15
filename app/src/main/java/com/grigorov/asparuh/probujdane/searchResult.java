@@ -13,6 +13,7 @@ public class searchResult {
     public final static int SEARCH_RESULT_MOLITVI=2;
     public final static int SEARCH_RESULT_FORMULI=3;
     public final static int SEARCH_RESULT_MUSIC=4;
+    public final static int SEARCH_RESULT_NAUKA_VYZ=5;
 
     private int type;
 
@@ -130,6 +131,31 @@ public class searchResult {
         scrollIndeces = inputScrollIndeces;
     }
 
+    public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+                         String inputSearchMarker, String inputItemMarkers,
+                         ChapterNaukaVyz inputChapterNaukaVyz,
+                         String inputScrollIndeces) {
+        type = inputType;
+        numberMatches = inputNumberMatches;
+        textUpLeft = inputTextUpLeft;
+        textUpRight = inputTextUpRight;
+        textMain = inputTextMain;
+        listResultMarkers.clear();
+        String[] inputSearchMarkers = inputSearchMarker.split(" "); // Split to " " to read integers
+        if (inputSearchMarkers.length>1) {
+            for (int marker_loop = 0; marker_loop < inputSearchMarkers.length; marker_loop = marker_loop + 2) {
+                listResultMarkers.add(
+                        new resultMarker(
+                                Integer.parseInt(inputSearchMarkers[marker_loop]),
+                                Integer.parseInt(inputSearchMarkers[marker_loop + 1])
+                        )
+                );
+            }
+        }
+        itemMarkers = inputItemMarkers;
+        scrollIndeces = inputScrollIndeces;
+    }
+
     public String getTextUpLeft() {
         return textUpLeft;
     }
@@ -209,5 +235,7 @@ public class searchResult {
                     (result2.getNumberMatches() == result1.getNumberMatches() ? 0 : 1));
         }
     };
+
+    public void setItemMarkers (String inputItemMarkers) {itemMarkers = inputItemMarkers; }
 
 }
