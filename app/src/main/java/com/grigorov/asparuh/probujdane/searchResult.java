@@ -14,6 +14,7 @@ public class searchResult {
     public final static int SEARCH_RESULT_FORMULI=3;
     public final static int SEARCH_RESULT_MUSIC=4;
     public final static int SEARCH_RESULT_NAUKA_VYZ=5;
+    public final static int SEARCH_RESULT_ZAVET=6;
 
     private int type;
 
@@ -134,6 +135,31 @@ public class searchResult {
     public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
                          String inputSearchMarker, String inputItemMarkers,
                          ChapterNaukaVyz inputChapterNaukaVyz,
+                         String inputScrollIndeces) {
+        type = inputType;
+        numberMatches = inputNumberMatches;
+        textUpLeft = inputTextUpLeft;
+        textUpRight = inputTextUpRight;
+        textMain = inputTextMain;
+        listResultMarkers.clear();
+        String[] inputSearchMarkers = inputSearchMarker.split(" "); // Split to " " to read integers
+        if (inputSearchMarkers.length>1) {
+            for (int marker_loop = 0; marker_loop < inputSearchMarkers.length; marker_loop = marker_loop + 2) {
+                listResultMarkers.add(
+                        new resultMarker(
+                                Integer.parseInt(inputSearchMarkers[marker_loop]),
+                                Integer.parseInt(inputSearchMarkers[marker_loop + 1])
+                        )
+                );
+            }
+        }
+        itemMarkers = inputItemMarkers;
+        scrollIndeces = inputScrollIndeces;
+    }
+
+    public searchResult (int inputType, int inputNumberMatches, String inputTextUpLeft, String inputTextUpRight, String inputTextMain,
+                         String inputSearchMarker, String inputItemMarkers,
+                         ChapterZavet inputChapterZavet,
                          String inputScrollIndeces) {
         type = inputType;
         numberMatches = inputNumberMatches;

@@ -52,7 +52,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
 
     private String searchQuery;
 
-    private ArrayList<BookMarker> listBookMarkers= new ArrayList<BookMarker>();
+    private ArrayList<NaukaVyzBookMarker> listNaukaVyzBookMarkers= new ArrayList<NaukaVyzBookMarker>();
 
     private LinearLayout mLinearLayout;
 
@@ -80,84 +80,84 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         scrollChapterInTitle = Integer.parseInt(bScrollIndeces[1]) != 0;
         scrollChapterIndex = Integer.parseInt(bScrollIndeces[2]);
 
-        listBookMarkers.clear();
-        String bookMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.BookMarkersVar");
+        listNaukaVyzBookMarkers.clear();
+        String bookMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.NaukaVyzBookMarkersVar");
         if (bookMarkers.equals("")==false) {
-            String[] inputBookMarkers = bookMarkers.split(" "); // Split to " " to read integers
+            String[] inputNaukaVyzBookMarkers = bookMarkers.split(" "); // Split to " " to read integers
             // prepare input list of markers
-            if ( inputBookMarkers.length > 1) {
-                for (int marker_loop = 0; marker_loop < inputBookMarkers.length; marker_loop = marker_loop + 4) {
+            if ( inputNaukaVyzBookMarkers.length > 1) {
+                for (int marker_loop = 0; marker_loop < inputNaukaVyzBookMarkers.length; marker_loop = marker_loop + 4) {
                     boolean inTitle;
-                    inTitle = Integer.parseInt(inputBookMarkers[marker_loop + 1]) != 0;
-                    listBookMarkers.add(
-                            new BookMarker(
-                                    Integer.parseInt(inputBookMarkers[marker_loop]),
+                    inTitle = Integer.parseInt(inputNaukaVyzBookMarkers[marker_loop + 1]) != 0;
+                    listNaukaVyzBookMarkers.add(
+                            new NaukaVyzBookMarker(
+                                    Integer.parseInt(inputNaukaVyzBookMarkers[marker_loop]),
                                     inTitle,
-                                    Integer.parseInt(inputBookMarkers[marker_loop + 2]),
-                                    Integer.parseInt(inputBookMarkers[marker_loop + 3])
+                                    Integer.parseInt(inputNaukaVyzBookMarkers[marker_loop + 2]),
+                                    Integer.parseInt(inputNaukaVyzBookMarkers[marker_loop + 3])
                             )
                     );
                 }
             }
-
             // combine adjacent markers
-            ArrayList<BookMarker> listBookMarkersCopy = new ArrayList<BookMarker>();
-            // listBesedaMarkersCopy = listBesedaMarkers;
-            listBookMarkersCopy.clear();
-            for (int marker_loop=0; marker_loop<listBookMarkers.size();marker_loop=marker_loop+1) {
-                listBookMarkersCopy.add(
-                        new BookMarker(
-                                listBookMarkers.get(marker_loop).getChapterIndex(),
-                                listBookMarkers.get(marker_loop).getInTitle(),
-                                listBookMarkers.get(marker_loop).getStartIndex(),
-                                listBookMarkers.get(marker_loop).getEndIndex()
+            ArrayList<NaukaVyzBookMarker> listNaukaVyzBookMarkersCopy = new ArrayList<NaukaVyzBookMarker>();
+            listNaukaVyzBookMarkersCopy.clear();
+            for (int marker_loop=0; marker_loop<listNaukaVyzBookMarkers.size();marker_loop=marker_loop+1) {
+                listNaukaVyzBookMarkersCopy.add(
+                        new NaukaVyzBookMarker(
+                                listNaukaVyzBookMarkers.get(marker_loop).getChapterIndex(),
+                                listNaukaVyzBookMarkers.get(marker_loop).getInTitle(),
+                                listNaukaVyzBookMarkers.get(marker_loop).getStartIndex(),
+                                listNaukaVyzBookMarkers.get(marker_loop).getEndIndex()
                         )
                 );
             }
-            listBookMarkers.clear();
-            listBookMarkers.add(
-                    new BookMarker(
-                            listBookMarkersCopy.get(0).getChapterIndex(),
-                            listBookMarkersCopy.get(0).getInTitle(),
-                            listBookMarkersCopy.get(0).getStartIndex(),
-                            listBookMarkersCopy.get(0).getEndIndex()
+            listNaukaVyzBookMarkers.clear();
+            listNaukaVyzBookMarkers.add(
+                    new NaukaVyzBookMarker(
+                            listNaukaVyzBookMarkersCopy.get(0).getChapterIndex(),
+                            listNaukaVyzBookMarkersCopy.get(0).getInTitle(),
+                            listNaukaVyzBookMarkersCopy.get(0).getStartIndex(),
+                            listNaukaVyzBookMarkersCopy.get(0).getEndIndex()
                     )
             );
             int listIndex = 0;
-            for (int marker_loop=1; marker_loop<listBookMarkersCopy.size();marker_loop=marker_loop+1) {
+            for (int marker_loop=1; marker_loop<listNaukaVyzBookMarkersCopy.size();marker_loop=marker_loop+1) {
                 if (
-                        (listBookMarkers.get(listIndex).getChapterIndex() == listBookMarkersCopy.get(marker_loop).getChapterIndex() ) &&
-                                (listBookMarkers.get(listIndex).getInTitle() == listBookMarkersCopy.get(marker_loop).getInTitle() ) &&
-                                ( (listBookMarkers.get(listIndex).getEndIndex() + 1)== listBookMarkersCopy.get(marker_loop).getStartIndex() )
+                        (listNaukaVyzBookMarkers.get(listIndex).getChapterIndex() == listNaukaVyzBookMarkersCopy.get(marker_loop).getChapterIndex() ) &&
+                                (listNaukaVyzBookMarkers.get(listIndex).getInTitle() == listNaukaVyzBookMarkersCopy.get(marker_loop).getInTitle() ) &&
+                                ( (listNaukaVyzBookMarkers.get(listIndex).getEndIndex() + 1)== listNaukaVyzBookMarkersCopy.get(marker_loop).getStartIndex() )
                 ) {
-                    listBookMarkers.get(listIndex).setEndIndex(listBookMarkersCopy.get(marker_loop).getEndIndex());
+                    listNaukaVyzBookMarkers.get(listIndex).setEndIndex(listNaukaVyzBookMarkersCopy.get(marker_loop).getEndIndex());
                 } else {
-                    listBookMarkers.add(
-                            new BookMarker(
-                                    listBookMarkersCopy.get(marker_loop).getChapterIndex(),
-                                    listBookMarkersCopy.get(marker_loop).getInTitle(),
-                                    listBookMarkersCopy.get(marker_loop).getStartIndex(),
-                                    listBookMarkersCopy.get(marker_loop).getEndIndex()
+                    listNaukaVyzBookMarkers.add(
+                            new NaukaVyzBookMarker(
+                                    listNaukaVyzBookMarkersCopy.get(marker_loop).getChapterIndex(),
+                                    listNaukaVyzBookMarkersCopy.get(marker_loop).getInTitle(),
+                                    listNaukaVyzBookMarkersCopy.get(marker_loop).getStartIndex(),
+                                    listNaukaVyzBookMarkersCopy.get(marker_loop).getEndIndex()
                             )
                     );
                     listIndex++;
                 }
             }
             // find the scrollSearchResultIndex value, so that move next / previous search results are possible
-            for (int marker_loop=0; marker_loop<listBookMarkers.size();marker_loop=marker_loop+1) {
-                if ( (scrollChapterX == listBookMarkers.get(marker_loop).getChapterIndex() ) &&
-                        (scrollChapterInTitle == listBookMarkers.get(marker_loop).getInTitle() ) &&
-                        (scrollChapterIndex == listBookMarkers.get(marker_loop).getStartIndex()) ) {
+            // assume the markers are sorted from beginning (0 item) to the end (last item) of the text
+            for (int marker_loop=listNaukaVyzBookMarkers.size()-1; marker_loop>=0;marker_loop=marker_loop-1) {
+                if ( (scrollChapterX == listNaukaVyzBookMarkers.get(marker_loop).getChapterIndex() ) &&
+                        (scrollChapterInTitle == listNaukaVyzBookMarkers.get(marker_loop).getInTitle() ) &&
+                        (scrollChapterIndex <= listNaukaVyzBookMarkers.get(marker_loop).getStartIndex()) ) {
                     scrollSearchResultIndex = marker_loop;
                 }
             }
             searchControlsShown = true;
-            numberSearchResults = listBookMarkers.size();
+            numberSearchResults = listNaukaVyzBookMarkers.size();
         } else {
             searchControlsShown = false;
             numberSearchResults = 0;
             scrollSearchResultIndex= 0;
         }
+
         searchKeyboardShown = false;
 
         mydb = new NaukaVyzDBHelper(this);
@@ -211,38 +211,11 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         for (int i_loop=0; i_loop < listChapters.size(); i_loop++) {
 
             View layout2 = LayoutInflater.from(this).inflate(R.layout.chapter_nauka_vyz, mLinearLayout, false);
-            //besedaTextView titleTextView = layout2.findViewById(R.id.textChapterTitle);
-            //besedaTextView contentTextView = layout2.findViewById(R.id.textChapterContent);
             TextView titleTextView = layout2.findViewById(R.id.textChapterTitle);
             TextView contentTextView = layout2.findViewById(R.id.textChapterContent);
 
             titleTextView.setTag("title_textview_chapter_"+(new Integer(i_loop)).toString());
             contentTextView.setTag("content_textview_chapter_"+(new Integer(i_loop)).toString());
-
-            /*
-            boolean titleMarked = false;
-            boolean contentMarked = false;
-            for (int markerIndex = 0; markerIndex < listBookMarkers.size(); markerIndex = markerIndex + 1) {
-                if ((listBookMarkers.get(markerIndex).getChapterIndex() == i_loop+1) &&
-                        (listBookMarkers.get(markerIndex).getInTitle() == true) ) {
-                    titleMarked = true;
-                }
-                if ((listBookMarkers.get(markerIndex).getChapterIndex() == i_loop+1) &&
-                        (listBookMarkers.get(markerIndex).getInTitle() == false) ) {
-                    contentMarked = true;
-                }
-            }
-            if (titleMarked==true) {
-                titleTextView.setText(prepareSpannableStringBuilder(i_loop, true));
-            } else {
-                titleTextView.setText(listChapters.get(i_loop).getTitle()+"\n");
-            }
-            if (contentMarked==true) {
-                contentTextView.setText(prepareSpannableStringBuilder(i_loop, false));
-            } else {
-                contentTextView.setText(listChapters.get(i_loop).getContent()+"\n\n");
-            }
-            */
 
             titleTextView.setText(listChapters.get(i_loop).getTitle()+"\n");
             contentTextView.setText(listChapters.get(i_loop).getContent()+"\n\n");
@@ -277,23 +250,23 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         }
 
         int flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
-        for (int markerIndex=0; markerIndex<listBookMarkers.size();markerIndex++) {
+        for (int markerIndex=0; markerIndex<listNaukaVyzBookMarkers.size();markerIndex++) {
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            Integer temp = new Integer(listBookMarkers.get(markerIndex).getChapterIndex());
+            Integer temp = new Integer(listNaukaVyzBookMarkers.get(markerIndex).getChapterIndex());
             temp = temp -1;
             TextView markedTextView;
-            if (listBookMarkers.get(markerIndex).getInTitle() == true) {
+            if (listNaukaVyzBookMarkers.get(markerIndex).getInTitle() == true) {
                 markedTextView = mLinearLayout.findViewWithTag("title_textview_chapter_"+temp.toString());
             } else {
                 markedTextView = mLinearLayout.findViewWithTag("content_textview_chapter_"+temp.toString());
             }
             SpannableString markedString = new SpannableString( markedTextView.getText() );
             markedString.setSpan(new StyleSpan(Typeface.ITALIC),
-                    listBookMarkers.get(markerIndex).getStartIndex(),
-                    listBookMarkers.get(markerIndex).getEndIndex()+1, flag);
+                    listNaukaVyzBookMarkers.get(markerIndex).getStartIndex(),
+                    listNaukaVyzBookMarkers.get(markerIndex).getEndIndex()+1, flag);
             markedString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorSearchResultMarker, null)),
-                    listBookMarkers.get(markerIndex).getStartIndex(),
-                    listBookMarkers.get(markerIndex).getEndIndex()+1, flag);
+                    listNaukaVyzBookMarkers.get(markerIndex).getStartIndex(),
+                    listNaukaVyzBookMarkers.get(markerIndex).getEndIndex()+1, flag);
             spannableStringBuilder.append(markedString);
             markedTextView.setText(spannableStringBuilder);
         }
@@ -319,11 +292,11 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             String c = String.valueOf(inputString.charAt(textIndex));
             SpannableString spannableString = new SpannableString(c);
             boolean marked = false;
-            for (int markerIndex = 0; markerIndex < listBookMarkers.size(); markerIndex = markerIndex + 1) {
-                if ((listBookMarkers.get(markerIndex).getChapterIndex() == i_loop+1) &&
-                        (listBookMarkers.get(markerIndex).getInTitle() == inputInTitle) &&
-                        (listBookMarkers.get(markerIndex).getStartIndex() <= textIndex) &&
-                        (listBookMarkers.get(markerIndex).getEndIndex() >= textIndex)
+            for (int markerIndex = 0; markerIndex < listNaukaVyzBookMarkers.size(); markerIndex = markerIndex + 1) {
+                if ((listNaukaVyzBookMarkers.get(markerIndex).getChapterIndex() == i_loop+1) &&
+                        (listNaukaVyzBookMarkers.get(markerIndex).getInTitle() == inputInTitle) &&
+                        (listNaukaVyzBookMarkers.get(markerIndex).getStartIndex() <= textIndex) &&
+                        (listNaukaVyzBookMarkers.get(markerIndex).getEndIndex() >= textIndex)
                 ) {
                     marked = true;
                 }
@@ -379,9 +352,6 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         }
 
     }
-
-
-
 
     public void hideSearchControls (View view) {
         searchControlsShown = false;
@@ -474,7 +444,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
 
         searchQuery = editSearchTextBookInput.getText().toString();
 
-        listBookMarkers.clear();
+        listNaukaVyzBookMarkers.clear();
 
         for (int i=0; i<listChapters.size(); i++) {
             searchInBookString(listChapters.get(i).getTitle(),i,true);
@@ -485,7 +455,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(),
                     getResources().getString(R.string.search_no_results), LENGTH_LONG);
             toast.show();
-            listBookMarkers.clear();
+            listNaukaVyzBookMarkers.clear();
             scrollChapterX=0;
             scrollChapterIndex = 0;
         } else {
@@ -504,8 +474,8 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             if (markerEndIndex>=inputString.length()) {
                 markerEndIndex = inputString.length()-1;
             }
-            listBookMarkers.add(
-                    new BookMarker(
+            listNaukaVyzBookMarkers.add(
+                    new NaukaVyzBookMarker(
                             inputChapterIndex + 1,
                             inputInTitle,
                             index,
@@ -544,9 +514,9 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
     }
 
     private void updateScrollFromSearch() {
-        scrollChapterX = listBookMarkers.get(scrollSearchResultIndex).getChapterIndex();
-        scrollChapterInTitle = listBookMarkers.get(scrollSearchResultIndex).getInTitle();
-        scrollChapterIndex = listBookMarkers.get(scrollSearchResultIndex).getStartIndex();
+        scrollChapterX = listNaukaVyzBookMarkers.get(scrollSearchResultIndex).getChapterIndex();
+        scrollChapterInTitle = listNaukaVyzBookMarkers.get(scrollSearchResultIndex).getInTitle();
+        scrollChapterIndex = listNaukaVyzBookMarkers.get(scrollSearchResultIndex).getStartIndex();
         Integer temp = new Integer(scrollChapterX);
         temp = temp -1;
         if (scrollChapterInTitle == true) {
@@ -566,14 +536,14 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class BookMarker {
+    private class NaukaVyzBookMarker {
 
         private int chapterIndex;
         private boolean inTitle;
         private int startIndex;
         private int endIndex;
 
-        public BookMarker (int inputChapterIndex, boolean inputInTitle, int inputStartIndex, int inputEndIndex) {
+        public NaukaVyzBookMarker (int inputChapterIndex, boolean inputInTitle, int inputStartIndex, int inputEndIndex) {
             chapterIndex = inputChapterIndex;
             inTitle = inputInTitle;
             startIndex = inputStartIndex;

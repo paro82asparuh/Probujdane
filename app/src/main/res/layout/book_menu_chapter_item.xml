@@ -3,6 +3,7 @@
     android:orientation="horizontal"
     android:clickable="true"
     android:background="@color/colorNaukaVyzChapterItem"
+    android:id="@+id/linearChapterTop"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

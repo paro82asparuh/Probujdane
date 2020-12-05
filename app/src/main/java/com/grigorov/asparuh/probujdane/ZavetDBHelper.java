@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.io.File;
 
-public class NaukaVyzDBHelper extends SQLiteOpenHelper {
+public class ZavetDBHelper extends SQLiteOpenHelper{
 
-    public NaukaVyzDBHelper(Context context) {
-        super(context, new File(context.getExternalFilesDir(null), "nauka_vyzpitanie_sqlite.db").getAbsolutePath() , null, 1);
+    public ZavetDBHelper(Context context) {
+        super(context, new File(context.getExternalFilesDir(null), "zavet_sqlite.db").getAbsolutePath() , null, 1);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class NaukaVyzDBHelper extends SQLiteOpenHelper {
 
     public Cursor getChapters () {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery(  "SELECT ID, Chapter_Level, Chapter_Title, Chapter_Content, Chapter_Indentation FROM table1 " +
+        Cursor res =  db.rawQuery(  "SELECT ID, Level, Color, Left_Text, Center_Text, Right_Text, Center_Bold FROM table1 " +
                         "ORDER BY CAST(ID AS int) ASC" +
                         ";"
                 , null );
@@ -33,7 +33,7 @@ public class NaukaVyzDBHelper extends SQLiteOpenHelper {
     public Cursor searchInNaukaVyz(String query) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT " +
-                        "offsets(table1) AS offs, ID, Chapter_Level, Chapter_Title, Chapter_Content, Chapter_Indentation " +
+                        "offsets(table1) AS offs, ID, Chapter, Level, Color, Left_Text, Center_Text, Right_Text, Center_Bold " +
                         "FROM table1 WHERE table1 MATCH " +
                         "'" + getSearchMatchString(query) + "' " +
                         "ORDER BY CAST(length(offs) AS int) DESC " +
@@ -45,10 +45,10 @@ public class NaukaVyzDBHelper extends SQLiteOpenHelper {
 
     private String getSearchMatchString (String query) {
         String result = "";
-        result = result + "Chapter_Title:" + query + " OR ";
-        result = result + "Chapter_Content:"+ query;
+        result = result + "Left_Text:" + query + " OR ";
+        result = result + "Center_Text:" + query + " OR ";
+        result = result + "Right_Text:"+ query;
         return result;
     }
-
 
 }

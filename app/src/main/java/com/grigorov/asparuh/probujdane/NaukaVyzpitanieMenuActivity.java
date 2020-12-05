@@ -132,7 +132,7 @@ public class NaukaVyzpitanieMenuActivity extends AppCompatActivity {
         intent.putExtra("com.grigorov.asparuh.probujdane.ChapterID", "0");
         intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", "");
         intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
-        intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", "0 0");
+        intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", "0 0 0");
         startActivity(intent);
     }
 

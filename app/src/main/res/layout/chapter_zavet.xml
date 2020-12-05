@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/viewLeftEdge"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </View>
+
+    <TextView
+        android:id="@+id/textChapterLeft"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:textSize="@dimen/text_size_book_chapter_content_text"
+        android:letterSpacing="0.02"
+        android:layout_gravity="left|top"
+        android:justificationMode="inter_word"
+        android:text="" >
+    </TextView>
+
+    <View
+        android:id="@+id/viewLeftToCenter"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </View>
+
+    <TextView
+        android:id="@+id/textChapterCenter"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:textSize="@dimen/text_size_book_chapter_content_text"
+        android:letterSpacing="0.02"
+        android:layout_gravity="left|top"
+        android:justificationMode="inter_word"
+        android:text="" >
+    </TextView>
+
+    <View
+        android:id="@+id/viewCenterToRight"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </View>
+
+    <TextView
+        android:id="@+id/textChapterRight"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:textSize="@dimen/text_size_book_chapter_content_text"
+        android:letterSpacing="0.02"
+        android:layout_gravity="left|top"
+        android:justificationMode="inter_word"
+        android:text="" >
+    </TextView>
+
+    <View
+        android:id="@+id/viewRightEdge"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+    </View>
+
+</LinearLayout>

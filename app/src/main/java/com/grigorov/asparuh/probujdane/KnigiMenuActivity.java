@@ -19,7 +19,8 @@ public class KnigiMenuActivity extends AppCompatActivity {
     }
 
     public void startZavetTask (View view) {
-
+        Intent intent = new Intent(this, ZavetMenuActivity.class);
+        startActivity(intent);
     }
 
 }

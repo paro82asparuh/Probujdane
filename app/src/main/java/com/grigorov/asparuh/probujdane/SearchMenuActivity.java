@@ -52,12 +52,14 @@ public class SearchMenuActivity extends AppCompatActivity {
     public final static int SEARCH_RESULT_FORMULI=3;
     public final static int SEARCH_RESULT_MUSIC=4;
     public final static int SEARCH_RESULT_NAUKA_VYZ=5;
+    public final static int SEARCH_RESULT_ZAVET=6;
 
     private besediDBHelper myBesediDB;
     private MolitviDBHelper myMolivtiDB;
     private formuliDBHelper myFormuliDB;
     private musicDBHelper myMusicDB;
     private NaukaVyzDBHelper myNaukaVyzDB;
+    private ZavetDBHelper myZavetDB;
 
     private EditText editSearchTextInput;
 
@@ -92,6 +94,9 @@ public class SearchMenuActivity extends AppCompatActivity {
     private int posMatch2;
 
     private Integer numberSearchResults;
+
+    private ArrayList<ZavetBookMarker> listZavetMarkers= new ArrayList<ZavetBookMarker>();
+    private ArrayList<NaukaVyzBookMarker> listNaukaVyzMarkers= new ArrayList<NaukaVyzBookMarker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +191,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         myFormuliDB = new formuliDBHelper(this);
         myMusicDB = new musicDBHelper(this);
         myNaukaVyzDB = new NaukaVyzDBHelper(this);
+        myZavetDB = new ZavetDBHelper(this);
 
     }
 
@@ -196,6 +202,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         myFormuliDB = new formuliDBHelper(this);
         myMusicDB = new musicDBHelper(this);
         myNaukaVyzDB = new NaukaVyzDBHelper(this);
+        myZavetDB = new ZavetDBHelper(this);
         updateTextSizes();
     }
 
@@ -216,6 +223,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         myFormuliDB.close();
         myMusicDB.close();
         myNaukaVyzDB.close();
+        myZavetDB.close();
     }
 
     private void updateBesedaInputVisibility() {
@@ -427,7 +435,21 @@ public class SearchMenuActivity extends AppCompatActivity {
                     public void onClick(final View v) {
                         screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
                         Intent intent = new Intent(SearchMenuActivity.this, NaukaVyzpitanieActivity.class);
-                        intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.NaukaVyzBookMarkersVar", currentSearchResult.getItemMarkers());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
+                        // scrolling in molitva is not used for now
+                        //intent.putExtra("com.grigorov.asparuh.probujdane.MolitvaScrollIndecesVar", currentSearchResult.getScrollIndeces());
+                        startActivity(intent);
+                    }
+                });
+            } else if (currentSearchResult.getType()==SEARCH_RESULT_ZAVET) {
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        screenWidthInPixels = ((Integer) (findViewById(R.id.search_lenear_layout_scroll_view).getWidth())).toString();
+                        Intent intent = new Intent(SearchMenuActivity.this, ZavetActivity.class);
+                        intent.putExtra("com.grigorov.asparuh.probujdane.ZavetBookMarkersVar", currentSearchResult.getItemMarkers());
                         intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", currentSearchResult.getScrollIndeces());
                         intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
                         // scrolling in molitva is not used for now
@@ -573,6 +595,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     public void searchInBooks() {
         searchInNaukaVyz();
+        searchInZavet();
     }
 
     public void searchInNaukaVyz() {
@@ -583,13 +606,14 @@ public class SearchMenuActivity extends AppCompatActivity {
         if (rs.getCount()>0) {
             rs.moveToFirst();
             String newItemMarkers = "";
+            listNaukaVyzMarkers.clear();
             int startListResultNaukaVyzIndex = listSearchResult.size();
             listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
             for (int i = 0; i < rs.getCount(); i++) {
                 // Name of the chapter
-                String newTextUpleft = rs.getString(rs.getColumnIndex("Chapter_Title"));
+                String newTextUpRight = rs.getString(rs.getColumnIndex("Chapter_Title"));
                 // Name of the book
-                String newTextUpRight = getResources().getString(R.string.nauka_vyzpitanie_string);
+                String newTextUpleft = getResources().getString(R.string.nauka_vyzpitanie_string);
 
                 // Convert the offset output to strings
                 ArrayList<OffsetRes> offsets = getOffsets(rs);
@@ -620,7 +644,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                     newSearchMarkers = "";
                 }
 
-                newItemMarkers = newItemMarkers + prepareNaukaVyzMarkers(offsets,rs);
+                addNaukaVyzMarkers(offsets,rs);
 
                 String chapterID = rs.getString(rs.getColumnIndex("ID"));
                 String chapterLevel = rs.getString(rs.getColumnIndex("Chapter_Level"));
@@ -633,8 +657,20 @@ public class SearchMenuActivity extends AppCompatActivity {
                         newSearchMarkers, newItemMarkers, chapterNaukaVyz, scrollIndeces));
                 rs.moveToNext();
             }
-            // accumulate the same NaukaVyz markers for all search results.
-            for (int i=startListResultNaukaVyzIndex; i<listSearchResult.size()-1; i++) {
+            // accumulate the markers for all search results.
+            for (int i=0; i<listNaukaVyzMarkers.size(); i++){
+                newItemMarkers = newItemMarkers +
+                        listNaukaVyzMarkers.get(i).getChapterIndex() + " ";
+                if (listNaukaVyzMarkers.get(i).getInTitle()==true) {
+                    newItemMarkers = newItemMarkers + "1 ";
+                } else {
+                    newItemMarkers = newItemMarkers + "0 ";
+                }
+                newItemMarkers = newItemMarkers +
+                        listNaukaVyzMarkers.get(i).getStartIndex() + " " +
+                        listNaukaVyzMarkers.get(i).getEndIndex() + " ";
+            }
+            for (int i=startListResultNaukaVyzIndex; i<listSearchResult.size(); i++) {
                 listSearchResult.get(i).setItemMarkers(newItemMarkers);
             }
             searchResultAdapter.notifyDataSetChanged();
@@ -645,6 +681,82 @@ public class SearchMenuActivity extends AppCompatActivity {
         }
     }
 
+    public void searchInZavet() {
+
+        Cursor rs = myZavetDB.searchInNaukaVyz(searchQuery);
+        numberSearchResults = numberSearchResults + rs.getCount();
+
+        if (rs.getCount()>0) {
+            rs.moveToFirst();
+            String newItemMarkers = "";
+            listZavetMarkers.clear();
+            int startListResultZavetIndex = listSearchResult.size();
+            listSearchResult.ensureCapacity(listSearchResult.size()+rs.getCount());
+            for (int i = 0; i < rs.getCount(); i++) {
+                // Name of the chapter
+                String newTextUpRight = rs.getString(rs.getColumnIndex("Right_Text"));
+                // Name of the book
+                String newTextUpleft = getResources().getString(R.string.zavet_string);
+
+                // Convert the offset output to strings
+                ArrayList<OffsetRes> offsets = getOffsets(rs);
+                int numberMatches = offsets.size();
+
+                prepareMatches(offsets);
+
+                // Get the full column string
+                String newTextMain;
+                String scrollIndeces;
+                String newSearchMarkers;
+
+                int columnNumber = offsets.get(posMatch1).getColumnNumber();
+
+                if ( (columnNumber>=4) || (columnNumber<=6) ) {
+                    // If the result is in the chapter title
+                    newTextMainPre = rs.getString(columnNumber+1);
+                    newTextMain = prepareTextMain(offsets);
+                    scrollIndeces = rs.getString(rs.getColumnIndex("ID"));
+                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
+                } else {
+                    newTextMainPre = "";
+                    newTextMain = "";
+                    scrollIndeces = "1 0";
+                    newSearchMarkers = "";
+                }
+
+                addZavetMarkers(offsets,rs);
+
+                ChapterZavet chapterZavet = new ChapterZavet(rs.getString(rs.getColumnIndex("ID")),
+                        rs.getString(rs.getColumnIndex("Level")),
+                        rs.getString(rs.getColumnIndex("Color")),
+                        rs.getString(rs.getColumnIndex("Left_Text")),
+                        rs.getString(rs.getColumnIndex("Center_Text")),
+                        rs.getString(rs.getColumnIndex("Right_Text")),
+                        rs.getString(rs.getColumnIndex("Center_Bold"))
+                );
+
+                listSearchResult.add(new searchResult(SEARCH_RESULT_ZAVET, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
+                        newSearchMarkers, newItemMarkers, chapterZavet, scrollIndeces));
+                rs.moveToNext();
+            }
+            // accumulate the markers for all search results.
+            for (int i=0; i<listZavetMarkers.size(); i++){
+                newItemMarkers = newItemMarkers +
+                        listZavetMarkers.get(i).getChapterIndex() + " " +
+                        listZavetMarkers.get(i).getTextSide() + " " +
+                        listZavetMarkers.get(i).getStartIndex() + " " +
+                        listZavetMarkers.get(i).getEndIndex() + " ";
+            }
+            for (int i=startListResultZavetIndex; i<listSearchResult.size(); i++) {
+                listSearchResult.get(i).setItemMarkers(newItemMarkers);
+            }
+            searchResultAdapter.notifyDataSetChanged();
+            listSearchView.smoothScrollToPosition(0);
+        }
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+    }
 
     public void searchInMolitvi () {
 
@@ -1069,30 +1181,90 @@ public class SearchMenuActivity extends AppCompatActivity {
         return newItemMarkers;
     }
 
-    private String prepareNaukaVyzMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
-        String newItemMarkers = "";
+    private void addNaukaVyzMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
             Integer chapterInt = new Integer(Integer.parseInt(rs.getString(1)));
-            chapterInt = chapterInt;
-            newItemMarkers = newItemMarkers + chapterInt.toString() + " ";
-            if (offsets.get(m_offs).getColumnNumber()==2) {
-                newItemMarkers = newItemMarkers + "1 ";
-            } else {
-                newItemMarkers = newItemMarkers + "0 ";
-            }
-            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+            Boolean inputInTitle;
+            inputInTitle = offsets.get(m_offs).getColumnNumber() == 2;
+            Integer startIndex = characterOffsetForByteOffsetInUTF8String(
                     offsets.get(m_offs).getOffsetInColumn(),
                     rs.getString(1 + (offsets.get(m_offs).getColumnNumber()))
             );
-            newItemMarkers = newItemMarkers + " ";
-            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+            Integer endIndex = characterOffsetForByteOffsetInUTF8String(
                     offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
                     rs.getString(1 + ((offsets.get(m_offs).getColumnNumber())))
             );
-            newItemMarkers = newItemMarkers + " ";
+            listNaukaVyzMarkers.add(
+                    new NaukaVyzBookMarker(
+                            chapterInt,
+                            inputInTitle,
+                            startIndex,
+                            endIndex
+                    )
+            );
+            // make sure the arraylist is sorted in order:
+            // 1. of chapters
+            // 2. title
+            // 3. start position
+            Integer sizeList = listNaukaVyzMarkers.size();
+            if (sizeList>1) {
+                for (int i=2; i<=sizeList; i++) {
+                    NaukaVyzBookMarker markerA = listNaukaVyzMarkers.get(sizeList - i);
+                    NaukaVyzBookMarker markerB = listNaukaVyzMarkers.get(sizeList - i+1);
+                    Boolean swapNeeded = false;
+                    if (markerB.getChapterIndex() < markerA.getChapterIndex()) {
+                        swapNeeded=true;
+                    } else if (markerB.getChapterIndex() == markerA.getChapterIndex()) {
+                        if ( (markerB.getInTitle()==true) && (markerA.getInTitle()==false) ) {
+                            swapNeeded=true;
+                        } else if (markerB.getInTitle()==markerA.getInTitle()) {
+                            if (markerB.getStartIndex()<markerA.getStartIndex()) {
+                                swapNeeded=true;
+                            }
+                        }
+                    }
+                    if (swapNeeded==true) {
+                        Collections.swap(listNaukaVyzMarkers, sizeList - i, sizeList - i+1);
+                    }
+                }
+            }
         }
-        return newItemMarkers;
     }
+
+
+    private void addZavetMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
+        for (int m_offs=0; m_offs<offsets.size();m_offs++) {
+            Integer chapterInt = new Integer(Integer.parseInt(rs.getString(rs.getColumnIndex("ID"))));
+            Integer columnNumber = offsets.get(m_offs).getColumnNumber();
+            columnNumber = columnNumber - 4;
+            Integer startIndex = characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn(),
+                    rs.getString(1 + (offsets.get(m_offs).getColumnNumber()))
+            );
+            Integer endIndex = characterOffsetForByteOffsetInUTF8String(
+                    offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
+                    rs.getString(1 + ((offsets.get(m_offs).getColumnNumber())))
+            );
+            listZavetMarkers.add(
+                    new ZavetBookMarker(
+                            chapterInt,
+                            columnNumber,
+                            startIndex,
+                            endIndex
+                    )
+            );
+            // make sure the arraylist is sorted in order of chapters
+            Integer sizeList = listZavetMarkers.size();
+            if (sizeList>1) {
+                for (int i=2; i<=sizeList; i++) {
+                    if (listZavetMarkers.get(sizeList - i + 1).getChapterIndex() < listZavetMarkers.get(sizeList - i).getChapterIndex()) {
+                        Collections.swap(listZavetMarkers, sizeList - i, sizeList - i+1);
+                    }
+                }
+            }
+        }
+    }
+
     
     public class OffsetRes {
         private int columnNumber;
