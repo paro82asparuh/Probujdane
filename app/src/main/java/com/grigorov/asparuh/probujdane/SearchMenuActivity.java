@@ -98,6 +98,7 @@ public class SearchMenuActivity extends AppCompatActivity {
     private ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
     private ArrayList<ZavetBookMarker> listZavetMarkers= new ArrayList<ZavetBookMarker>();
     private ArrayList<NaukaVyzBookMarker> listNaukaVyzMarkers= new ArrayList<NaukaVyzBookMarker>();
+    private ArrayList<MolitvaMarker> listMolitvaMarkers= new ArrayList<MolitvaMarker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1214,19 +1215,49 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private String prepareMolitvaMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
         String newItemMarkers = "";
+        listMolitvaMarkers.clear();
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
-            newItemMarkers = newItemMarkers + offsets.get(m_offs).getColumnNumber();
-            newItemMarkers = newItemMarkers + " ";
-            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+            Integer columnIndex;
+            Integer starIndex;
+            Integer endIndex;
+            columnIndex = offsets.get(m_offs).getColumnNumber();
+            starIndex = characterOffsetForByteOffsetInUTF8String(
                     offsets.get(m_offs).getOffsetInColumn(),
                     rs.getString(1 + (offsets.get(m_offs).getColumnNumber()))
             );
-            newItemMarkers = newItemMarkers + " ";
-            newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+            endIndex = characterOffsetForByteOffsetInUTF8String(
                     offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
                     rs.getString(1 + ((offsets.get(m_offs).getColumnNumber())))
             );
-            newItemMarkers = newItemMarkers + " ";
+            listMolitvaMarkers.add(new MolitvaMarker(columnIndex, starIndex, endIndex));
+            // make sure the arraylist is sorted in order:
+            // 1. columnIndex
+            // 2. start position
+            Integer sizeList = listMolitvaMarkers.size();
+            if (sizeList>1) {
+                for (int i=2; i<=sizeList; i++) {
+                    MolitvaMarker markerA = listMolitvaMarkers.get(sizeList - i);
+                    MolitvaMarker markerB = listMolitvaMarkers.get(sizeList - i+1);
+                    Boolean swapNeeded = false;
+                    if (markerB.getColumnIndex() < markerA.getColumnIndex()) {
+                        swapNeeded=true;
+                    } else if (markerB.getColumnIndex() == markerA.getColumnIndex()) {
+                        if (markerB.getStartIndex()<markerA.getStartIndex()) {
+                            swapNeeded=true;
+                        }
+                    }
+                    if (swapNeeded==true) {
+                        Collections.swap(listMolitvaMarkers, sizeList - i, sizeList - i+1);
+                    }
+                }
+            }
+        }
+        // accumulate the markers for all search results.
+        for (int i=0; i<listMolitvaMarkers.size(); i++){
+            newItemMarkers = newItemMarkers +
+                    listMolitvaMarkers.get(i).getColumnIndex() + " " +
+                    listMolitvaMarkers.get(i).getStartIndex() + " " +
+                    listMolitvaMarkers.get(i).getEndIndex() + " ";
         }
         return newItemMarkers;
     }

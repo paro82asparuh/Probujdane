@@ -60,7 +60,7 @@ public class FormulaActivity extends AppCompatActivity {
             String[] inputFormulaMarkers = formulaMarkers.split(" "); // Split to " " to read integers
             for (int marker_loop=0; marker_loop<inputFormulaMarkers.length;marker_loop=marker_loop+3) {
                 listFormulaMarkers.add(
-                        new FormulaActivity.FormulaMarker(
+                        new FormulaMarker(
                                 Integer.parseInt(inputFormulaMarkers[marker_loop]),
                                 Integer.parseInt(inputFormulaMarkers[marker_loop+1]),
                                 Integer.parseInt(inputFormulaMarkers[marker_loop+2])
@@ -160,27 +160,4 @@ public class FormulaActivity extends AppCompatActivity {
         startActivity(intent);
     }
     
-    private class FormulaMarker {
-        private int columnIndex;
-        private int startIndex;
-        private int endIndex;
-
-        public FormulaMarker (int inputColumnIndex, int inputStartIndex, int inputEndIndex) {
-            columnIndex = inputColumnIndex;
-            startIndex = inputStartIndex;
-            endIndex = inputEndIndex;
-        }
-
-        public int getColumnIndex() {
-            return columnIndex;
-        }
-
-        public int getStartIndex() {
-            return startIndex;
-        }
-
-        public int getEndIndex() {
-            return endIndex;
-        }
-    }
 }
