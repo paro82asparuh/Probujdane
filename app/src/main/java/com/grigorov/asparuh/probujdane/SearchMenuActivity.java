@@ -95,6 +95,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private Integer numberSearchResults;
 
+    private ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
     private ArrayList<ZavetBookMarker> listZavetMarkers= new ArrayList<ZavetBookMarker>();
     private ArrayList<NaukaVyzBookMarker> listNaukaVyzMarkers= new ArrayList<NaukaVyzBookMarker>();
 
@@ -534,54 +535,71 @@ public class SearchMenuActivity extends AppCompatActivity {
 
             for (int i = 0; i < rs.getCount(); i++) {
 
-                // Name of the beseda
-                String newTextUpleft = rs.getString(rs.getColumnIndex("Name"));
-                // Date of the beseda
-                String besedaDateYear = rs.getString(rs.getColumnIndex("Year_"));
-                String besedaDateMonth = rs.getString(rs.getColumnIndex("Month_"));
-                String besedaDateDay = rs.getString(rs.getColumnIndex("Day_of_Month"));
-                String newTextUpRight = getResources().getString(R.string.beseda) + " " +
-                        besedaDateDay + "." + besedaDateMonth + "." + besedaDateYear;
-
                 // Convert the offset output to strings
                 ArrayList<OffsetRes> offsets = getOffsets(rs);
                 int numberMatches = offsets.size();
 
-                prepareMatches(offsets);
-
-                // Get the full column string
-                String newTextMain;
-                String scrollIndeces;
-                String newSearchMarkers;
-                if (offsets.get(posMatch1).getColumnNumber()==6) {
-                    // If the result is in the title
-                    newTextMainPre = rs.getString(3);
-                    newTextMain = prepareTextMain(offsets);
-                    scrollIndeces = "1 0";
-                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
-                } else if (offsets.get(posMatch1).getColumnNumber()> 13) {
-                    newTextMainPre = rs.getString(7 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2));
-                    newTextMain = prepareTextMain(offsets);
-                    scrollIndeces = (1 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2)) +
-                            " " + scrollCharIndex;
-                    newSearchMarkers = prepareSearchMarkers(offsets,newTextMainPre);
-                } else {
-                    newTextMainPre = "";
-                    newTextMain = "";
-                    scrollIndeces = "1 0";
-                    newSearchMarkers = "";
+                // Process results only in besada name or in the beseda texts
+                for (int offset_loop=offsets.size()-1; offset_loop>=0; offset_loop--) {
+                    Integer currentDBcolumn = offsets.get(offset_loop).getColumnNumber();
+                    Boolean offsetToBeSkipepd = false;
+                    if ( (currentDBcolumn<14) && ( currentDBcolumn!=6) ) {
+                        offsetToBeSkipepd = true;
+                    }
+                    if ( (currentDBcolumn>=14) && ((currentDBcolumn%2)!=0) ) {
+                        offsetToBeSkipepd = true;
+                    }
+                    if (offsetToBeSkipepd==true) {
+                        offsets.remove(offset_loop);
+                    }
                 }
 
-                String newItemMarkers = prepareBesedaMarkers(offsets,rs);
+                if (offsets.size()>0) {
+                    // Name of the beseda
+                    String newTextUpleft = rs.getString(rs.getColumnIndex("Name"));
+                    // Date of the beseda
+                    String besedaDateYear = rs.getString(rs.getColumnIndex("Year_"));
+                    String besedaDateMonth = rs.getString(rs.getColumnIndex("Month_"));
+                    String besedaDateDay = rs.getString(rs.getColumnIndex("Day_of_Month"));
+                    String newTextUpRight = getResources().getString(R.string.beseda) + " " +
+                            besedaDateDay + "." + besedaDateMonth + "." + besedaDateYear;
 
-                Integer besedaID = 0;
-                String besedaName = rs.getString(rs.getColumnIndex("Name"));
-                String besedaLink = rs.getString(rs.getColumnIndex("Link"));
-                String besedaVariant = rs.getString(rs.getColumnIndex("Variant"));
-                besedaInfo bInfo = new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink);
+                    prepareMatches(offsets);
 
-                listSearchResult.add(new searchResult(SEARCH_RESULT_BESEDI, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
-                        newSearchMarkers, newItemMarkers, bInfo, besedaVariant, scrollIndeces));
+                    // Get the full column string
+                    String newTextMain;
+                    String scrollIndeces;
+                    String newSearchMarkers;
+                    if (offsets.get(posMatch1).getColumnNumber() == 6) {
+                        // If the result is in the title
+                        newTextMainPre = rs.getString(3);
+                        newTextMain = prepareTextMain(offsets);
+                        scrollIndeces = "1 0";
+                        newSearchMarkers = prepareSearchMarkers(offsets, newTextMainPre);
+                    } else if (offsets.get(posMatch1).getColumnNumber() > 13) {
+                        newTextMainPre = rs.getString(7 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2));
+                        newTextMain = prepareTextMain(offsets);
+                        scrollIndeces = (1 + ((offsets.get(posMatch1).getColumnNumber() - 14) / 2)) +
+                                " " + scrollCharIndex;
+                        newSearchMarkers = prepareSearchMarkers(offsets, newTextMainPre);
+                    } else {
+                        newTextMainPre = "";
+                        newTextMain = "";
+                        scrollIndeces = "1 0";
+                        newSearchMarkers = "";
+                    }
+
+                    String newItemMarkers = prepareBesedaMarkers(offsets, rs);
+
+                    Integer besedaID = 0;
+                    String besedaName = rs.getString(rs.getColumnIndex("Name"));
+                    String besedaLink = rs.getString(rs.getColumnIndex("Link"));
+                    String besedaVariant = rs.getString(rs.getColumnIndex("Variant"));
+                    besedaInfo bInfo = new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink);
+
+                    listSearchResult.add(new searchResult(SEARCH_RESULT_BESEDI, numberMatches, newTextUpleft, newTextUpRight, newTextMain,
+                            newSearchMarkers, newItemMarkers, bInfo, besedaVariant, scrollIndeces));
+                }
                 rs.moveToNext();
             }
 
@@ -1131,33 +1149,65 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private String prepareBesedaMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
         String newItemMarkers = "";
+        listBesedaMarkers.clear();
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
+            Integer textIndex =0;
+            Integer startIndex=0;
+            Integer endIndex=0;
             if (offsets.get(m_offs).getColumnNumber()==6) {
-                newItemMarkers = newItemMarkers + "0 ";
-                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                textIndex = 0;
+                startIndex = characterOffsetForByteOffsetInUTF8String(
                         offsets.get(m_offs).getOffsetInColumn(),
                         rs.getString(3)
                 );
-                newItemMarkers = newItemMarkers + " ";
-                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                endIndex = characterOffsetForByteOffsetInUTF8String(
                         offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
                         rs.getString(3)
                 );
-                newItemMarkers = newItemMarkers + " ";
             } else if (offsets.get(m_offs).getColumnNumber()>13) {
-                newItemMarkers = newItemMarkers + (1 + (offsets.get(m_offs).getColumnNumber() - 14) / 2);
-                newItemMarkers = newItemMarkers + " ";
-                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                textIndex = (1 + (offsets.get(m_offs).getColumnNumber() - 14) / 2);
+                startIndex = characterOffsetForByteOffsetInUTF8String(
                         offsets.get(m_offs).getOffsetInColumn(),
                         rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
                 );
-                newItemMarkers = newItemMarkers + " ";
-                newItemMarkers = newItemMarkers + characterOffsetForByteOffsetInUTF8String(
+                endIndex = characterOffsetForByteOffsetInUTF8String(
                         offsets.get(m_offs).getOffsetInColumn() + offsets.get(m_offs).getTermLenght(),
                         rs.getString(7 + ((offsets.get(m_offs).getColumnNumber() - 14) / 2))
                 );
-                newItemMarkers = newItemMarkers + " ";
             }
+            listBesedaMarkers.add ( new BesedaMarker(
+                    textIndex,
+                    startIndex,
+                    endIndex
+            ));
+            // make sure the arraylist is sorted in order:
+            // 1. of textIndex
+            // 2. start position
+            Integer sizeList = listBesedaMarkers.size();
+            if (sizeList>1) {
+                for (int i=2; i<=sizeList; i++) {
+                    BesedaMarker markerA = listBesedaMarkers.get(sizeList - i);
+                    BesedaMarker markerB = listBesedaMarkers.get(sizeList - i+1);
+                    Boolean swapNeeded = false;
+                    if (markerB.getTextIndex() < markerA.getTextIndex()) {
+                        swapNeeded=true;
+                    } else if (markerB.getTextIndex() == markerA.getTextIndex()) {
+                        if (markerB.getStartIndex()<markerA.getStartIndex()) {
+                            swapNeeded=true;
+                        }
+                    }
+                    if (swapNeeded==true) {
+                        Collections.swap(listBesedaMarkers, sizeList - i, sizeList - i+1);
+                    }
+                }
+            }
+        }
+        // accumulate the markers for all search results.
+        for (int i=0; i<listBesedaMarkers.size(); i++){
+            newItemMarkers = newItemMarkers +
+                    listBesedaMarkers.get(i).getTextIndex() + " " +
+                    listBesedaMarkers.get(i).getStartIndex() + " " +
+                    listBesedaMarkers.get(i).getEndIndex() + " ";
         }
         return newItemMarkers;
     }

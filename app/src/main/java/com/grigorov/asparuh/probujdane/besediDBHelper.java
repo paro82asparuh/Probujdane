@@ -166,27 +166,13 @@ public class besediDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-//    public Cursor searchInBesedi (String query) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        Cursor res =  db.rawQuery(  "SELECT " +
-//                        "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
-//                        getAllTextColumnIDs() +
-//                        "FROM table1 WHERE table1 MATCH " +
-//                        "'" + query + "' " +
-//                        "ORDER BY CAST(length(offs) AS int) DESC " +
-//                        "LIMIT 50" +
-//                        ";"
-//                , null );
-//        return res;
-//    }
-
     public Cursor searchInBesedi (String query) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
                         getAllTextColumnIDs() +
                         "FROM table1 WHERE table1 MATCH " +
-                        "'" + getSearchMatchString(query) + "' " +
+                        "'" + query + "' " +
                         "ORDER BY CAST(length(offs) AS int) DESC " +
                         "LIMIT 50" +
                         ";"
@@ -194,15 +180,29 @@ public class besediDBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    private String getSearchMatchString (String query) {
-        String result = "";
-        result = result + "Name:" + query + " OR ";
-        for (Integer i= new Integer(0);i<68;i++) {
-            result = result + "Text" + i.toString() +":"+ query + " OR ";
-        }
-        result = result + "Text68:"+ query;
-        return result;
-    }
+//    public Cursor searchInBesedi (String query) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        Cursor res =  db.rawQuery(  "SELECT " +
+//                        "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
+//                        getAllTextColumnIDs() +
+//                        "FROM table1 WHERE table1 MATCH " +
+//                        "'" + getSearchMatchString(query) + "' " +
+//                        "ORDER BY CAST(length(offs) AS int) DESC " +
+//                        "LIMIT 50" +
+//                        ";"
+//                , null );
+//        return res;
+//    }
+
+//    private String getSearchMatchString (String query) {
+//        String result = "";
+//        result = result + "Name:" + query + " OR ";
+//        for (Integer i= new Integer(0);i<68;i++) {
+//            result = result + "Text" + i.toString() +":"+ query + " OR ";
+//        }
+//        result = result + "Text68:"+ query;
+//        return result;
+//    }
 
     public Cursor searchInBeseda (String query, String besedaLink, String besedaDateYear,
                                   String besedaDateMonth, String besedaDateDay, String besedaVariant) {
@@ -222,7 +222,8 @@ public class besediDBHelper extends SQLiteOpenHelper {
                         "Variant='"+besedaVariant+"' " +
                         "And " +
                         "table1 MATCH " +
-                        "'" + getSearchMatchString(query) + "' " +
+                        //"'" + getSearchMatchString(query) + "' " +
+                        "'" + query + "' " +
                         "ORDER BY CAST(length(offs) AS int) DESC " +
                         "LIMIT 50" +
                         ";"

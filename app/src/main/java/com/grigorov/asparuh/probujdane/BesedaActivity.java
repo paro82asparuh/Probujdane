@@ -71,7 +71,7 @@ public class BesedaActivity extends AppCompatActivity {
     private ScrollView scrollViewBeseda;
     private besedaTextView scrollTextView;
 
-    private ArrayList<besedaMarker> listBesedaMarkers= new ArrayList<besedaMarker>();
+    private ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
     private ArrayList<String> listBesedaTexts= new ArrayList<String>();
 
     private LinearLayout linearLayoutSearchControls;
@@ -112,7 +112,7 @@ public class BesedaActivity extends AppCompatActivity {
             if ( inputBesedaMarkers.length > 1) {
                 for (int marker_loop = 0; marker_loop < inputBesedaMarkers.length; marker_loop = marker_loop + 3) {
                     listBesedaMarkers.add(
-                            new besedaMarker(
+                            new BesedaMarker(
                                     Integer.parseInt(inputBesedaMarkers[marker_loop]),
                                     Integer.parseInt(inputBesedaMarkers[marker_loop + 1]),
                                     Integer.parseInt(inputBesedaMarkers[marker_loop + 2])
@@ -121,12 +121,12 @@ public class BesedaActivity extends AppCompatActivity {
                 }
             }
             // combine adjacent markers
-            ArrayList<besedaMarker> listBesedaMarkersCopy = new ArrayList<besedaMarker>();
+            ArrayList<BesedaMarker> listBesedaMarkersCopy = new ArrayList<BesedaMarker>();
             // listBesedaMarkersCopy = listBesedaMarkers;
             listBesedaMarkersCopy.clear();
             for (int marker_loop=0; marker_loop<listBesedaMarkers.size();marker_loop=marker_loop+1) {
                 listBesedaMarkersCopy.add(
-                        new besedaMarker(
+                        new BesedaMarker(
                                 listBesedaMarkers.get(marker_loop).getTextIndex(),
                                 listBesedaMarkers.get(marker_loop).getStartIndex(),
                                 listBesedaMarkers.get(marker_loop).getEndIndex()
@@ -135,7 +135,7 @@ public class BesedaActivity extends AppCompatActivity {
             }
             listBesedaMarkers.clear();
             listBesedaMarkers.add(
-                    new besedaMarker(
+                    new BesedaMarker(
                             listBesedaMarkersCopy.get(0).getTextIndex(),
                             listBesedaMarkersCopy.get(0).getStartIndex(),
                             listBesedaMarkersCopy.get(0).getEndIndex()
@@ -150,7 +150,7 @@ public class BesedaActivity extends AppCompatActivity {
                     listBesedaMarkers.get(listIndex).setEndIndex(listBesedaMarkersCopy.get(marker_loop).getEndIndex());
                 } else {
                     listBesedaMarkers.add(
-                            new besedaMarker(
+                            new BesedaMarker(
                                     listBesedaMarkersCopy.get(marker_loop).getTextIndex(),
                                     listBesedaMarkersCopy.get(marker_loop).getStartIndex(),
                                     listBesedaMarkersCopy.get(marker_loop).getEndIndex()
@@ -160,9 +160,9 @@ public class BesedaActivity extends AppCompatActivity {
                 }
             }
             // find the scrollSearchResultIndex value, so that move next / previous search results are possible
-            for (int marker_loop=0; marker_loop<listBesedaMarkers.size();marker_loop=marker_loop+1) {
+            for (int marker_loop=listBesedaMarkers.size()-1; marker_loop>=0;marker_loop=marker_loop-1) {
                 if ( (srollTextX == listBesedaMarkers.get(marker_loop).getTextIndex() ) &&
-                (srollTextIndex == listBesedaMarkers.get(marker_loop).getStartIndex()) ) {
+                (srollTextIndex <= listBesedaMarkers.get(marker_loop).getStartIndex()) ) {
                     scrollSearchResultIndex = marker_loop;
                 }
             }
@@ -636,7 +636,7 @@ public class BesedaActivity extends AppCompatActivity {
                     markerEndIndex = listBesedaTexts.get(i).length()-1;
                 }
                 listBesedaMarkers.add(
-                        new besedaMarker(
+                        new BesedaMarker(
                                 i+1,
                                 index,
                                 markerEndIndex
