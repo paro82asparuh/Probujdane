@@ -57,7 +57,7 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/viewBelowDownload"
+        android:id="@+id/viewAboveDeleteSongs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
@@ -95,6 +95,106 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@drawable/delete"
+            android:onClick="onDeleteSongsPressed"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewAbovePanevritmyPlaylistOption"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/linearPanevritmyPlaylistOption"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorMain"
+        android:orientation="horizontal"
+        android:layout_weight="4" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/textPanevritmyPlaylistOption"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_panevritmy_playlist_string"
+            android:onClick="onPanevritmyPlaylistOptionPressed" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/music_play"
+            android:onClick="onDeleteSongsPressed"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewAbovePanevritmyInstrumentalPlaylistOption"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/linearPanevritmyInstrumentalPlaylistOption"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorMain"
+        android:orientation="horizontal"
+        android:layout_weight="4" >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/textPanevritmyInstrumentalPlaylistOption"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_list_song_name"
+            android:text="@string/music_panevritmy_instrumental_playlist_string"
+            android:onClick="onPanevritmyInstrumentalPlaylistOptionPressed" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/music_play"
             android:onClick="onDeleteSongsPressed"
             android:layout_weight="1" />
 

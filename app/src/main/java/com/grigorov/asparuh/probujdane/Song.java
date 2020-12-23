@@ -23,6 +23,9 @@ public class Song {
     private String songSubPath;
     private boolean songVocalPlayable;
     private boolean songInstrumentalPlayable;
+    private boolean songVocalDownloadable;
+    private boolean songInstrumentalDownloadable;
+    private boolean songDownloadable;
     private Integer songPositionInPlaylist;
     private int songPlayType;
 
@@ -37,6 +40,9 @@ public class Song {
         songInstrumentalFileName = inputSongInstrumentalFileName;
         songVocalPlayable = (inputSongVocalFileName.equals("") == false) && (Integer.parseInt(inputFilesDownloaded) == Song.FILES_DOWNLOADED);
         songInstrumentalPlayable = (inputSongInstrumentalFileName.equals("") == false) && (Integer.parseInt(inputFilesDownloaded) == Song.FILES_DOWNLOADED);
+        songVocalDownloadable = (inputSongVocalFileName.equals("") == false);
+        songInstrumentalDownloadable = (inputSongInstrumentalFileName.equals("") == false);
+        songDownloadable = songVocalDownloadable | songInstrumentalDownloadable;
         if (songType.equals("Songs")) {
             songSubPath = "/Pesni" ;
         } else {
@@ -90,6 +96,12 @@ public class Song {
     public boolean isSongVocalPlayable () { return this.songVocalPlayable; }
 
     public boolean isSongInstrumentalPlayable () { return this.songInstrumentalPlayable; }
+
+    public boolean isSongVocalDownloadable() { return this.songVocalDownloadable; }
+
+    public boolean isSongInstrumentalDownloadable() { return this.songInstrumentalDownloadable; }
+
+    public boolean isSongDownloadable() { return this.songDownloadable; }
 
     public Integer getSongPositionInPlaylist() { return songPositionInPlaylist; }
 

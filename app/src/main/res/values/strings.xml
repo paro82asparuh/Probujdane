@@ -78,6 +78,9 @@
     <string name="music_listen_string">Слушай!</string>
     <string name="music_listen_vocal_string">Слушай\nВокал!</string>
     <string name="music_listen_instrumental_string">Слушай\nИнструментал!</string>
+    <string name="music_download_vocal_string">Свали\nВокал!</string>
+    <string name="music_download_instrumental_string">Свали\nИнструментал!</string>
+    <string name="music_download_song_string">Свали\nПесента!</string>
     <string name="no_music_selected_string">Избери песен или плейлист!</string>
     <string name="music_add2playlist_string">Добави към плейлист!</string>
     <string name="music_vocal_add2playlist_string">Добави вокал към плейлист!</string>
@@ -107,6 +110,8 @@
     <string name="dialog_download_songs_end"> МBytes) ?</string>
     <string name="music_delete_songs_string">Изтрий песни!</string>
     <string name="music_songs_rem_title_string">Избери музикалните файлове на кои песни да се изтрият!</string>
+    <string name="music_panevritmy_playlist_string">Слушай цялата паневритмия!</string>
+    <string name="music_panevritmy_instrumental_playlist_string">Слушай цялата паневритмия - инструментал!</string>
     <string name="dialog_songs_delete_start">Да бъдат ли изтрити </string>
     <string name="dialog_songs_delete_end">песни?</string>
     <string name="dialog_songs_delete_one">Да бъде ли изтрита 1 песен?</string>

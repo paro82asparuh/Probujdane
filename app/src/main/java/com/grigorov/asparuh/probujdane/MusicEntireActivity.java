@@ -867,14 +867,22 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         View inflatedLayout= getLayoutInflater().inflate(R.layout.music_songs_list, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
+        View viewAbovePanevritmyPlaylistOption = topMusicLinearLayout.findViewById(R.id.viewAbovePanevritmyPlaylistOption);
+        ((ViewManager)viewAbovePanevritmyPlaylistOption.getParent()).removeView(viewAbovePanevritmyPlaylistOption);
+        LinearLayout linearPanevritmyPlaylistOption = topMusicLinearLayout.findViewById(R.id.linearPanevritmyPlaylistOption);
+        ((ViewManager)linearPanevritmyPlaylistOption.getParent()).removeView(linearPanevritmyPlaylistOption);
+        View viewAbovePanevritmyInstrumentalPlaylistOption = topMusicLinearLayout.findViewById(R.id.viewAbovePanevritmyInstrumentalPlaylistOption);
+        ((ViewManager)viewAbovePanevritmyInstrumentalPlaylistOption.getParent()).removeView(viewAbovePanevritmyInstrumentalPlaylistOption);
+        LinearLayout linearPanevritmyInstrumentalPlaylistOption = topMusicLinearLayout.findViewById(R.id.linearPanevritmyInstrumentalPlaylistOption);
+        ((ViewManager)linearPanevritmyInstrumentalPlaylistOption.getParent()).removeView(linearPanevritmyInstrumentalPlaylistOption);
+
+
         Cursor rs = songsDB.getSongsNotDownloaded();
         if (rs.getCount()==0) {
             View viewAboveDownload = topMusicLinearLayout.findViewById(R.id.viewAboveDownload);
             ((ViewManager)viewAboveDownload.getParent()).removeView(viewAboveDownload);
             LinearLayout linearDownload = topMusicLinearLayout.findViewById(R.id.linearDownload);
             ((ViewManager)linearDownload.getParent()).removeView(linearDownload);
-            View viewBelowDownload = topMusicLinearLayout.findViewById(R.id.viewBelowDownload);
-            ((ViewManager)viewBelowDownload.getParent()).removeView(viewBelowDownload);
         }
         if (!rs.isClosed())  {
             rs.close();
@@ -883,8 +891,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         if (rs.getCount()==0) {
             LinearLayout linearDeleteSongs = topMusicLinearLayout.findViewById(R.id.linearDeleteSongs);
             ((ViewManager)linearDeleteSongs.getParent()).removeView(linearDeleteSongs);
-            View viewBelowDeleteSongs = topMusicLinearLayout.findViewById(R.id.viewBelowDeleteSongs);
-            ((ViewManager)viewBelowDeleteSongs.getParent()).removeView(viewBelowDeleteSongs);
+            View viewAboveDeleteSongs = topMusicLinearLayout.findViewById(R.id.viewAboveDeleteSongs);
+            ((ViewManager)viewAboveDeleteSongs.getParent()).removeView(viewAboveDeleteSongs);
         }
         if (!rs.isClosed())  {
             rs.close();
@@ -910,12 +918,10 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         ((ViewManager)viewAboveDownload.getParent()).removeView(viewAboveDownload);
         LinearLayout linearDownload = topMusicLinearLayout.findViewById(R.id.linearDownload);
         ((ViewManager)linearDownload.getParent()).removeView(linearDownload);
-        View viewBelowDownload = topMusicLinearLayout.findViewById(R.id.viewBelowDownload);
-        ((ViewManager)viewBelowDownload.getParent()).removeView(viewBelowDownload);
         LinearLayout linearDeleteSongs = topMusicLinearLayout.findViewById(R.id.linearDeleteSongs);
         ((ViewManager)linearDeleteSongs.getParent()).removeView(linearDeleteSongs);
-        View viewBelowDeleteSongs = topMusicLinearLayout.findViewById(R.id.viewBelowDeleteSongs);
-        ((ViewManager)viewBelowDeleteSongs.getParent()).removeView(viewBelowDeleteSongs);
+        View viewAboveDeleteSongs = topMusicLinearLayout.findViewById(R.id.viewAboveDeleteSongs);
+        ((ViewManager)viewAboveDeleteSongs.getParent()).removeView(viewAboveDeleteSongs);
 
         songsType = "Panevrtimia";
         setListSongs();
@@ -1128,17 +1134,28 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         textViewSongText.setText(songTextBuilder);
         textViewSongText.setTextSize(songTextSize);
 
+        Boolean songDownloadable = false;
         if (musicState == STATE_SONG_FROM_PLAYLIST) {
             removeSongVocalPlayLayoutOptions();
             removeSongInstrumentalPlayLayoutOptions();
+            removeSongDownloadLayoutOptions();
         } else {
             removeSongFromPlaylistPlayLayoutOptions();
             if (songOnScreen.isSongVocalPlayable() == false) {
                 removeSongVocalPlayLayoutOptions();
+                if (songOnScreen.isSongVocalDownloadable()==true) {
+                    songDownloadable = true;
+                }
             }
             if (songOnScreen.isSongInstrumentalPlayable() == false) {
                 removeSongInstrumentalPlayLayoutOptions();
+                if (songOnScreen.isSongInstrumentalDownloadable()==true) {
+                    songDownloadable = true;
+                }
             }
+             if ( songDownloadable==false) {
+                 removeSongDownloadLayoutOptions();
+             }
         }
 
     }
@@ -1161,6 +1178,16 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         ((ViewManager) linearSongInstrumentalOptions.getParent()).removeView(linearSongInstrumentalOptions);
         View viewBelowSongInstrumentalOptions = topMusicLinearLayout.findViewById(R.id.viewBelowInstrumentalPlayOptions);
         ((ViewManager) viewBelowSongInstrumentalOptions.getParent()).removeView(viewBelowSongInstrumentalOptions);
+    }
+
+    private void removeSongDownloadLayoutOptions () {
+        LinearLayout linearDownloadOptions = topMusicLinearLayout.findViewById(R.id.linearDownloadOptions);
+        if (linearDownloadOptions.getChildCount() > 0) {
+            linearDownloadOptions.removeAllViews();
+        }
+        ((ViewManager) linearDownloadOptions.getParent()).removeView(linearDownloadOptions);
+        View viewBelowDownloadOptions = topMusicLinearLayout.findViewById(R.id.viewBelowDownloadOptions);
+        ((ViewManager) viewBelowDownloadOptions.getParent()).removeView(viewBelowDownloadOptions);
     }
 
     private void removeSongFromPlaylistPlayLayoutOptions () {
@@ -1881,6 +1908,10 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         startActivity(intent);
     }
 
+    public void onButtonSongDownload(View view) {
+        downloadSingleSong(songOnScreen.getSongID());
+    }
+
     private void downloadSingleSong (String downloadSongID) {
         Cursor rs = songsDB.getSongSingle(downloadSongID);
         rs.moveToFirst();
@@ -1963,6 +1994,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     scrollViewSongsListFirstVisiblePosition = listView1.getFirstVisiblePosition();
                     setListSongs();
                     showListSongs();
+                } else if ( (musicState == STATE_SONG_SINGLE) || (musicState == STATE_SONG_FROM_SEARCH) ) {
+                    showSongLayout(songOnScreen.getSongID(),false, -1, musicStateOld, Song.PLAY_UNDEFINED);
                 }
             }
         }
@@ -2085,6 +2118,14 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void onDeleteSongsPressed (View view) {
         showDeleteSongs();
+    }
+
+    public void onPanevritmyPlaylistOptionPressed (View view) {
+        startPlayingPlaylist("1",0);
+    }
+
+    public void onPanevritmyInstrumentalPlaylistOptionPressed (View view) {
+        startPlayingPlaylist("2",0);
     }
 
     private void showDeleteSongs() {
