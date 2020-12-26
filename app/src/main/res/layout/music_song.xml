@@ -70,7 +70,7 @@
                 android:textColor="@color/colorSongTitleText"
                 android:textSize="@dimen/text_size_song_text"
                 android:text="@string/music_vocal_add2playlist_string"
-                android:onClick="onButtonSongAdd2PlaylistPressed" />
+                android:onClick="onButtonSongVocalAdd2PlaylistPressed" />
 
             <View
                 android:id="@+id/viewSongAdd2Playlist"
@@ -78,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/add2_playlist_wb"
                 android:layout_weight="1"
-                android:onClick="onButtonSongAdd2PlaylistPressed" />
+                android:onClick="onButtonSongVocalAdd2PlaylistPressed" />
 
         </LinearLayout>
 
@@ -155,7 +155,7 @@
                 android:textColor="@color/colorSongTitleText"
                 android:textSize="@dimen/text_size_song_text"
                 android:text="@string/music_instrumental_add2playlist_string"
-                android:onClick="onButtonSongAdd2PlaylistPressed" />
+                android:onClick="onButtonSongInstrumentalAdd2PlaylistPressed" />
 
             <View
                 android:id="@+id/viewInstrumentalAdd2Playlist"
@@ -163,7 +163,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/add2_playlist_wb"
                 android:layout_weight="1"
-                android:onClick="onButtonSongAdd2PlaylistPressed" />
+                android:onClick="onButtonSongInstrumentalAdd2PlaylistPressed" />
 
         </LinearLayout>
 

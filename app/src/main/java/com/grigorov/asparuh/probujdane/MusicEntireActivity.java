@@ -120,6 +120,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     private String activitySource;
 
+    private Integer song2PlaylistType;
+
     private ArrayList<Song> listDownloadSongs = new ArrayList<Song>();
     private boolean downloadingVocalFile;
     private long downloadReference;
@@ -744,7 +746,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     showPlaylistRemoveSongLayout();
                     break;
                 case STATE_PLAYLIST_CREATE_NEW_FROM_SONG:
-                    onButtonSongAdd2PlaylistPressed(topMusicLinearLayout);
+                    onButtonSongAdd2PlaylistPressed();
                     break;
                 case STATE_SONG_FROM_SEARCH:
                     showSongLayout(songOnScreen.getSongID(), false, -1, musicStateOld, Song.PLAY_UNDEFINED);
@@ -767,6 +769,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     unbindService(musicConnection);
                     musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
                     seekbarMusic.setProgress(0);
+                    buttonMusicPlayPause.setBackgroundResource(R.drawable.music_play);
                     handlerUpdateSeekbar.removeCallbacks(runnableUpdateSeekbar);
                 }
             }
@@ -1436,7 +1439,17 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         startPlaylistsTask(topMusicLinearLayout);
     }
 
-    public void onButtonSongAdd2PlaylistPressed(View view) {
+    public void onButtonSongVocalAdd2PlaylistPressed(View view) {
+        song2PlaylistType = Song.PLAY_VOCAL;
+        onButtonSongAdd2PlaylistPressed();
+    }
+
+    public void onButtonSongInstrumentalAdd2PlaylistPressed(View view) {
+        song2PlaylistType = Song.PLAY_INSTRUMENTAL;
+        onButtonSongAdd2PlaylistPressed();
+    }
+
+    public void onButtonSongAdd2PlaylistPressed() {
         musicStateOld = musicState;
         musicState = STATE_PLAYLIST_CREATE_NEW_FROM_SONG;
 
@@ -1465,7 +1478,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
 
         if (musicState==STATE_PLAYLIST_CREATE_NEW_FROM_SONG) {
-            playlistSelected.addSong(Integer.parseInt(songOnScreen.getSongID()),songOnScreen.getSongPlayType(),getApplicationContext());
+            playlistSelected.addSong(Integer.parseInt(songOnScreen.getSongID()),song2PlaylistType,getApplicationContext());
             showPlaylistLayout(selectedPlaylistID);
         }
     }
@@ -1482,7 +1495,6 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     String newPlaylistName = input.getText().toString();
                     Cursor rs = playlistsDB.getAll();
                     Integer newPlaylistID = rs.getCount()+1;
-                    Integer songPlayType = songOnScreen.getSongPlayType();
                     if (!rs.isClosed())  {
                         rs.close();
                     }
@@ -1490,7 +1502,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                             newPlaylistID.toString(),
                             newPlaylistName,
                             songOnScreen.getSongID(),
-                            songPlayType.toString()
+                            song2PlaylistType.toString()
                     );
                     showPlaylistLayout(newPlaylistID.toString());
                 }
