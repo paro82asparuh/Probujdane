@@ -70,9 +70,9 @@ public class NaukaVyzpitanieMenuActivity extends AppCompatActivity {
                 public void onClick(final View v) {
                     screenWidthInPixels = ((Integer) (findViewById(R.id.listViewNaukaVyzChapters).getWidth())).toString();
                     Intent intent = new Intent(NaukaVyzpitanieMenuActivity.this, NaukaVyzpitanieActivity.class);
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", "");
+                    intent.putExtra("com.grigorov.asparuh.probujdane.NaukaVyzBookMarkersVar", "");
                     intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", currentChapterNaukaVyz.getID() + " 0 1");
+                    intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", currentChapterNaukaVyz.getID() + " 1 1");
                     startActivity(intent);
                 }
             });
@@ -130,9 +130,9 @@ public class NaukaVyzpitanieMenuActivity extends AppCompatActivity {
         screenWidthInPixels = ((Integer) (findViewById(R.id.listViewNaukaVyzChapters).getWidth())).toString();
         Intent intent = new Intent(NaukaVyzpitanieMenuActivity.this, NaukaVyzpitanieActivity.class);
         intent.putExtra("com.grigorov.asparuh.probujdane.ChapterID", "0");
-        intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", "");
+        intent.putExtra("com.grigorov.asparuh.probujdane.NaukaVyzBookMarkersVar", "");
         intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
-        intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", "0 0 0");
+        intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", "0 1 0");
         startActivity(intent);
     }
 

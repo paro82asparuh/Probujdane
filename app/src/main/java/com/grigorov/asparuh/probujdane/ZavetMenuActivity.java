@@ -105,7 +105,7 @@ public class ZavetMenuActivity extends AppCompatActivity {
                 public void onClick(final View v) {
                     screenWidthInPixels = ((Integer) (findViewById(R.id.listViewZavetChapters).getWidth())).toString();
                     Intent intent = new Intent(ZavetMenuActivity.this, ZavetActivity.class);
-                    intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", "");
+                    intent.putExtra("com.grigorov.asparuh.probujdane.ZavetBookMarkersVar", "");
                     intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
                     intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", currentChapterZavet.getID() );
                     startActivity(intent);
@@ -169,7 +169,7 @@ public class ZavetMenuActivity extends AppCompatActivity {
     public void startEntireZavetBook (View view) {
         screenWidthInPixels = ((Integer) (findViewById(R.id.listViewZavetChapters).getWidth())).toString();
         Intent intent = new Intent(ZavetMenuActivity.this, ZavetActivity.class);
-        intent.putExtra("com.grigorov.asparuh.probujdane.BookMarkersVar", "");
+        intent.putExtra("com.grigorov.asparuh.probujdane.ZavetBookMarkersVar", "");
         intent.putExtra("com.grigorov.asparuh.probujdane.screenWidthInPixels", screenWidthInPixels);
         intent.putExtra("com.grigorov.asparuh.probujdane.BookScrollIndecesVar", "0");
         startActivity(intent);

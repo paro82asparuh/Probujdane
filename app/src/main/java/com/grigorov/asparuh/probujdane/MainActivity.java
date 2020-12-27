@@ -808,5 +808,11 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(downloadReceiver);
+        super.onDestroy();
+    }
+
 
 }
