@@ -511,6 +511,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_music))) {
             searchInMusic();
         } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo))) {
+            searchInBooks();
             searchInBesedi();
             searchInMolitvi();
             searchInFormuli();
