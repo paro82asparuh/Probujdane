@@ -81,12 +81,12 @@ public class FormuliMenuActivity extends AppCompatActivity {
         mydb = new formuliDBHelper(this);
         setListFormuli();
 
-        updateTextSize();
-
         formulaAdapter = new FormulaAdapter(this, listFormuli);
         ListView listView1 = findViewById(R.id.listViewFormuli);
         listView1.setAdapter(formulaAdapter);
-    
+
+        updateTextSize();
+
     }
 
     public void onResume () {
@@ -144,6 +144,8 @@ public class FormuliMenuActivity extends AppCompatActivity {
 
         TextView textViewTitle = findViewById(R.id.textFormuliTitle);
         textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, formulaTitleSize);
+
+        formulaAdapter.notifyDataSetChanged();
 
     }
 
