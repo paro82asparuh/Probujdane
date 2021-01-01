@@ -42,6 +42,11 @@ public class DrugiBesediMenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startUtrinniSlovaBesediTask(View view) {
+        SelectedBesediType = Utrinni_Slova_Besedi;
+        startBesediListTask(view);
+    }
+
     public void startSyborniBesediTask(View view) {
         SelectedBesediType = Syborni_Besedi;
         startBesediListTask(view);

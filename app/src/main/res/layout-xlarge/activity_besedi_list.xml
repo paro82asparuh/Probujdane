@@ -53,7 +53,7 @@
         android:gravity="center"
         android:background="@color/colorListBesediListBackground"
         android:textColor="@color/colorListBesediTypeText"
-        android:textSize="@dimen/text_size_not_ready"
+        android:textSize="@dimen/text_size_besedi_list_title"
         android:text="To be overwritten from java code" />
 
     <View

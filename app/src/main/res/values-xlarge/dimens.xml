@@ -8,15 +8,15 @@
     <dimen name="text_size_drugi_besedi_menu_buttons">18sp</dimen>
     <dimen name="text_size_drugi_besedi_menu_buttons_xlarge">22sp</dimen>
     <dimen name="text_size_not_ready">40sp</dimen>
-    <dimen name="text_size_list_beseda_name">16sp</dimen>
-    <dimen name="text_size_list_beseda_date">16sp</dimen>
-    <dimen name="text_size_beseda_name">16sp</dimen>
-    <dimen name="text_size_beseda_date">14sp</dimen>
-    <dimen name="text_size_beseda_text">12sp</dimen>
+    <dimen name="text_size_list_beseda_name">22sp</dimen>
+    <dimen name="text_size_list_beseda_date">22sp</dimen>
+    <dimen name="text_size_beseda_name">22sp</dimen>
+    <dimen name="text_size_beseda_date">20sp</dimen>
+    <dimen name="text_size_beseda_text">18sp</dimen>
     <dimen name="list_beseda_divider_hight">10dp</dimen>
-    <dimen name="text_size_list_filtering">18sp</dimen>
-    <dimen name="text_size_beseda_variants">14sp</dimen>
-    <dimen name="text_size_beseda_link">14sp</dimen>
+    <dimen name="text_size_list_filtering">22sp</dimen>
+    <dimen name="text_size_beseda_variants">20sp</dimen>
+    <dimen name="text_size_beseda_link">20sp</dimen>
     <dimen name="text_size_search_buttons">24sp</dimen>
     <dimen name="text_size_search_spinner">18sp</dimen>
     <dimen name="list_search_divider_hight">10dp</dimen>
@@ -34,5 +34,11 @@
     <dimen name="text_size_song_title">16sp</dimen>
     <dimen name="text_size_song_text">12sp</dimen>
     <dimen name="list_music_playlists_divider_hight">10dp</dimen>
-    <dimen name="text_size_beseda_search_controls">16sp</dimen>
+    <dimen name="text_size_beseda_search_controls">22sp</dimen>
+    <dimen name="text_size_book_menu_title">26sp</dimen>
+    <dimen name="text_size_book_menu_entire_button">24sp</dimen>
+    <dimen name="text_size_book_menu_chapter_button">22sp</dimen>
+    <dimen name="text_size_book_title">22sp</dimen>
+    <dimen name="text_size_book_search_controls">22sp</dimen>
+    <dimen name="text_size_besedi_list_title">24sp</dimen>
 </resources>

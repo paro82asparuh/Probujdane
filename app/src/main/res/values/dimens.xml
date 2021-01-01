@@ -8,6 +8,7 @@
     <dimen name="text_size_drugi_besedi_menu_buttons">18sp</dimen>
     <dimen name="text_size_drugi_besedi_menu_buttons_xlarge">22sp</dimen>
     <dimen name="text_size_not_ready">20sp</dimen>
+    <dimen name="text_size_besedi_list_title">20sp</dimen>
     <dimen name="text_size_list_beseda_name">16sp</dimen>
     <dimen name="text_size_list_beseda_date">16sp</dimen>
     <dimen name="text_size_beseda_name">16sp</dimen>
