@@ -1377,7 +1377,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             if (currentSongInfo.getSongTicked()==true) {
                 playlistOnScreen.addSong(Integer.parseInt(currentSongInfo.getSongID()),currentSongInfo.getSongPlayType(), getApplicationContext());
                 listPlaylistsSongs = playlistOnScreen.getSongsArrayList();
-                playlistAdapter.notifyDataSetChanged();
+                if (playlistAdapter!=null) {
+                    playlistAdapter.notifyDataSetChanged();
+                }
                 updateMusicServicePlaylistAfterPositionChange();
             }
         }

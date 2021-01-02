@@ -18,7 +18,7 @@
     <dimen name="text_size_beseda_variants">20sp</dimen>
     <dimen name="text_size_beseda_link">20sp</dimen>
     <dimen name="text_size_search_buttons">24sp</dimen>
-    <dimen name="text_size_search_spinner">18sp</dimen>
+    <dimen name="text_size_search_spinner">26sp</dimen>
     <dimen name="list_search_divider_hight">10dp</dimen>
     <dimen name="text_size_search_result_up_left">18sp</dimen>
     <dimen name="text_size_search_result_up_right">18sp</dimen>
@@ -27,12 +27,13 @@
     <dimen name="text_size_molitva_title">22sp</dimen>
     <dimen name="text_size_molitva_text">18sp</dimen>
     <dimen name="text_size_top_app_name">16sp</dimen>
-    <dimen name="text_size_music_info">16sp</dimen>
+    <dimen name="text_size_music_info">24sp</dimen>
     <dimen name="list_music_songs_divider_hight">10dp</dimen>
-    <dimen name="text_size_list_song_name">16sp</dimen>
-    <dimen name="text_size_list_song_date">16sp</dimen>
-    <dimen name="text_size_song_title">16sp</dimen>
-    <dimen name="text_size_song_text">12sp</dimen>
+    <dimen name="text_size_list_song_name">22sp</dimen>
+    <dimen name="text_size_playlist_name">26sp</dimen>
+    <dimen name="text_size_list_song_date">22sp</dimen>
+    <dimen name="text_size_song_title">24sp</dimen>
+    <dimen name="text_size_song_text">20sp</dimen>
     <dimen name="list_music_playlists_divider_hight">10dp</dimen>
     <dimen name="text_size_beseda_search_controls">22sp</dimen>
     <dimen name="text_size_book_menu_title">26sp</dimen>
@@ -46,4 +47,6 @@
     <dimen name="text_size_formuli_list_title">26sp</dimen>
     <dimen name="text_size_formula_title">22sp</dimen>
     <dimen name="text_size_formula_text">18sp</dimen>
+    <dimen name="text_size_music_menu_buttons">28sp</dimen>
+    <dimen name="text_size_songslist_play_options">18sp</dimen>
 </resources>

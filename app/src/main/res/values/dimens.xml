@@ -32,6 +32,7 @@
     <dimen name="text_size_music_info">16sp</dimen>
     <dimen name="list_music_songs_divider_hight">10dp</dimen>
     <dimen name="text_size_list_song_name">16sp</dimen>
+    <dimen name="text_size_playlist_name">20sp</dimen>
     <dimen name="text_size_list_song_date">16sp</dimen>
     <dimen name="text_size_song_title">16sp</dimen>
     <dimen name="text_size_song_text">12sp</dimen>
@@ -50,4 +51,5 @@
     <dimen name="list_book_chapters_divider_hight">10dp</dimen>
     <dimen name="text_size_moitvi_list_title">20sp</dimen>
     <dimen name="text_size_formuli_list_title">20sp</dimen>
+    <dimen name="text_size_music_menu_buttons">22sp</dimen>
 </resources>

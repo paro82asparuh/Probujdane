@@ -27,7 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="@string/songs_string"
-                android:textSize="@dimen/text_size_besedi_menu_buttons"
+                android:textSize="@dimen/text_size_music_menu_buttons"
                 android:textColor="@color/colorMainText"
                 android:background="@color/colorMain"
                 android:onClick="startSongsListTask" />
@@ -61,7 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="@string/panevritmia_string"
-                android:textSize="@dimen/text_size_besedi_menu_buttons"
+                android:textSize="@dimen/text_size_music_menu_buttons"
                 android:textColor="@color/colorMainText"
                 android:background="@color/colorMain"
                 android:onClick="startPanevritmiaTask" />
@@ -95,7 +95,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="@string/playlists_string"
-                android:textSize="@dimen/text_size_besedi_menu_buttons"
+                android:textSize="@dimen/text_size_music_menu_buttons"
                 android:textColor="@color/colorMainText"
                 android:background="@color/colorMain"
                 android:onClick="startPlaylistsTask" />
@@ -128,7 +128,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:text="@string/search_string"
-                android:textSize="@dimen/text_size_besedi_menu_buttons"
+                android:textSize="@dimen/text_size_music_menu_buttons"
                 android:textColor="@color/colorMainText"
                 android:background="@color/colorMain"
                 android:onClick="startSearchMenuTask" />

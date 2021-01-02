@@ -32,7 +32,7 @@
             android:layout_weight="20"
             android:gravity="center"
             android:textColor="@color/colorMainText"
-            android:textSize="@dimen/text_size_list_song_name"
+            android:textSize="@dimen/text_size_playlist_name"
             android:text="" />
 
         <View

@@ -34,6 +34,7 @@
             android:textCursorDrawable="@null"
             android:cursorVisible="true"
             android:textColor="@color/colorMainText"
+            android:textSize="@dimen/text_size_main_buttons"
             android:inputType="text" />
 
         <View

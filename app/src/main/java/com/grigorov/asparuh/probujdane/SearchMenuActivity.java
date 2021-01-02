@@ -214,8 +214,9 @@ public class SearchMenuActivity extends AppCompatActivity {
         searchItemTextSize = Integer.parseInt(besedaTextSizeString);
         searchOptionsTextSize = searchItemTextSize + 2;
         searchButtonTextSize = searchItemTextSize + 4;
-        Button searchButton = findViewById(R.id.search_button);
-        searchButton.setTextSize(searchButtonTextSize);
+        // not used
+        //Button searchButton = findViewById(R.id.search_button);
+        //searchButton.setTextSize(searchButtonTextSize);
     }
 
     public void onPause () {
@@ -285,7 +286,8 @@ public class SearchMenuActivity extends AppCompatActivity {
             View row = inflater.inflate(R.layout.spinner_search_top, parent, false);
             TextView textView1        = row.findViewById(R.id.textViewSpinnerSearchTop);
             textView1.setText(data[position]);
-            textView1.setTextSize(searchOptionsTextSize);
+            // not used
+            // textView1.setTextSize(searchOptionsTextSize);
             return row;
         }
 
@@ -296,7 +298,8 @@ public class SearchMenuActivity extends AppCompatActivity {
             View row = inflater.inflate(R.layout.spinner_search_item, parent, false);
             TextView textView1        = row.findViewById(R.id.textViewSpinnerSearch);
             textView1.setText(data[position]);
-            textView1.setTextSize(searchOptionsTextSize);
+            // not used
+            // textView1.setTextSize(searchOptionsTextSize);
             return row;
         }
     }
