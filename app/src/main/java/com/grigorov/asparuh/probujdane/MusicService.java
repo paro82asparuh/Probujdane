@@ -278,7 +278,9 @@ public class MusicService extends Service implements
     @Override
     public void onDestroy() {
         stopForeground(true);
-        player.stop();
+        if (playerIsReleased==false) {
+            player.stop();
+        }
         player.reset();
         player.release();
         playerIsReleased = true;

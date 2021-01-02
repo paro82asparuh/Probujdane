@@ -52,7 +52,7 @@
         android:gravity="center"
         android:background="@color/colorListFormuliBackground"
         android:textColor="@color/colorListFormuliTitleText"
-        android:textSize="@dimen/text_size_not_ready"
+        android:textSize="@dimen/text_size_moitvi_list_title"
         android:text="@string/title_molitvi" />
 
     <ListView

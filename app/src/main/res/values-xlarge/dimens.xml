@@ -24,8 +24,8 @@
     <dimen name="text_size_search_result_up_right">18sp</dimen>
     <dimen name="text_size_search_result_main">18sp</dimen>
     <dimen name="text_size_default">24sp</dimen>
-    <dimen name="text_size_molitva_title">16sp</dimen>
-    <dimen name="text_size_molitva_text">12sp</dimen>
+    <dimen name="text_size_molitva_title">22sp</dimen>
+    <dimen name="text_size_molitva_text">18sp</dimen>
     <dimen name="text_size_top_app_name">16sp</dimen>
     <dimen name="text_size_music_info">16sp</dimen>
     <dimen name="list_music_songs_divider_hight">10dp</dimen>
@@ -41,4 +41,9 @@
     <dimen name="text_size_book_title">22sp</dimen>
     <dimen name="text_size_book_search_controls">22sp</dimen>
     <dimen name="text_size_besedi_list_title">24sp</dimen>
+    <dimen name="text_size_moitvi_list_title">26sp</dimen>
+    <dimen name="text_size_list_molitva_title">22sp</dimen>
+    <dimen name="text_size_formuli_list_title">26sp</dimen>
+    <dimen name="text_size_formula_title">22sp</dimen>
+    <dimen name="text_size_formula_text">18sp</dimen>
 </resources>

@@ -48,4 +48,6 @@
     <dimen name="text_size_book_menu_entire_button">18sp</dimen>
     <dimen name="text_size_book_menu_chapter_button">16sp</dimen>
     <dimen name="list_book_chapters_divider_hight">10dp</dimen>
+    <dimen name="text_size_moitvi_list_title">20sp</dimen>
+    <dimen name="text_size_formuli_list_title">20sp</dimen>
 </resources>
