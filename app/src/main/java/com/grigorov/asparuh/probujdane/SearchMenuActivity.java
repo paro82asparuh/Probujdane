@@ -199,12 +199,6 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     public void onResume () {
         super.onResume();
-        myBesediDB = new besediDBHelper(this);
-        myMolivtiDB = new MolitviDBHelper(this);
-        myFormuliDB = new formuliDBHelper(this);
-        myMusicDB = new musicDBHelper(this);
-        myNaukaVyzDB = new NaukaVyzDBHelper(this);
-        myZavetDB = new ZavetDBHelper(this);
         updateTextSizes();
     }
 
@@ -219,8 +213,8 @@ public class SearchMenuActivity extends AppCompatActivity {
         //searchButton.setTextSize(searchButtonTextSize);
     }
 
-    public void onPause () {
-        super.onPause();
+    public void onDestroy () {
+        super.onDestroy();
         myBesediDB.close();
         myMolivtiDB.close();
         myFormuliDB.close();

@@ -176,6 +176,10 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             rs.moveToNext();
         }
 
+        if (!rs.isClosed())  {
+            rs.close();
+        }
+
         searchQuery = "";
 
         updateFullLayout ();
@@ -421,12 +425,11 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
 
     public void onResume () {
         super.onResume();
-        mydb = new NaukaVyzDBHelper(this);
         updateTextSize();
     }
 
-    public void onPause () {
-        super.onPause();
+    public void onDestroy () {
+        super.onDestroy();
         mydb.close();
     }
 

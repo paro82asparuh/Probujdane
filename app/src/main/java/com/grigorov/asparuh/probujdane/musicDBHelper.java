@@ -14,8 +14,11 @@ import java.io.File;
 
 public class musicDBHelper extends SQLiteOpenHelper {
 
+    private SQLiteDatabase db;
+
     public musicDBHelper(Context context) {
         super(context, new File(context.getExternalFilesDir(null), "music_sqlite.db").getAbsolutePath() , null, 1);
+        db = this.getReadableDatabase();
     }
 
     @Override
@@ -29,7 +32,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getPathsPanevritmiaTRaks () {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Vocal_File_Name, Instrumental_File_Name, Files_Downloaded FROM table1 " +
                         "WHERE Type_='Panevrtimia' " +
                         "ORDER BY CAST(ID AS int) ASC" +
@@ -39,7 +41,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSongsInfo (String inputType) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT ID, Title, Vocal_File_Name, Instrumental_File_Name, Files_Downloaded " +
                         "FROM table1 WHERE " +
                         "Type_='"+inputType+"' " +
@@ -50,7 +51,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSongsInfo () {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT ID, Title, Type_, Vocal_File_Name, Instrumental_File_Name, Files_Downloaded " +
                         "FROM table1 " +
                         "ORDER BY CAST(ID AS int) ASC" +
@@ -60,7 +60,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSongSingle (String songID) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Title, Text, Type_, Vocal_File_Name, Instrumental_File_Name, Files_Downloaded, Vocal_File_Link, Instrumental_File_Link " +
                         "FROM table1 WHERE " +
                         "ID='"+songID+"' " +
@@ -71,7 +70,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor searchInMusic (String query) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, ID, Title, Text, Type_, Vocal_File_Name, Instrumental_File_Name, Files_Downloaded " +
                         "FROM table1 WHERE table1 MATCH " +
@@ -90,16 +88,7 @@ public class musicDBHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public void updateSongDownloaded (String songID, String newSongDownloaded) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("UPDATE table1 SET " +
-                "Files_Downloaded = '" + newSongDownloaded + "' " +
-                "WHERE ID='"+ songID +"' ;"
-        );
-    }
-
     public Cursor getSongsNotDownloaded () {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT ID, Title, Text, Type_, Vocal_File_Name, Instrumental_File_Name, Vocal_File_Link, Instrumental_File_Link " +
                         "FROM table1 WHERE " +
                         "Files_Downloaded='0' " +
@@ -111,7 +100,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSongsDownloaded () {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT ID, Title, Text, Type_, Vocal_File_Name, Instrumental_File_Name, Vocal_File_Link, Instrumental_File_Link " +
                         "FROM table1 WHERE " +
                         "Files_Downloaded='1' " +
@@ -122,7 +110,6 @@ public class musicDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getSongsDownloaded (String inputType) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT ID, Title, Text, Type_, Vocal_File_Name, Instrumental_File_Name, Vocal_File_Link, Instrumental_File_Link " +
                         "FROM table1 WHERE " +
                         "Files_Downloaded='1' AND " +
@@ -131,6 +118,14 @@ public class musicDBHelper extends SQLiteOpenHelper {
                         ";"
                 , null );
         return res;
+    }
+
+    @Override
+    public synchronized void close () {
+        super.close();
+        if (db != null) {
+            db.close();
+        }
     }
 
 }

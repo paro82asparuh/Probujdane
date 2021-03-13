@@ -85,18 +85,13 @@ public class MolitviMenuActivity extends AppCompatActivity {
         setListMolitvi();
 
         molitvaAdapter = new MolitviMenuActivity.MolitvaAdapter(this, listMolitvi);
-        ListView listView1 = (ListView) findViewById(R.id.listViewMolitvi);
+        ListView listView1 = findViewById(R.id.listViewMolitvi);
         listView1.setAdapter(molitvaAdapter);
 
     }
 
-    public void onResume () {
-        super.onResume();
-        mydb = new MolitviDBHelper(this);
-    }
-
-    public void onPause () {
-        super.onPause();
+    public void onDestroy () {
+        super.onDestroy();
         mydb.close();
     }
 

@@ -14,10 +14,12 @@ import java.io.File;
 public class besediDBHelper extends SQLiteOpenHelper {
 
     public final String besediDatabaseName = "besedi_sqlite.db";
+    private SQLiteDatabase db;
 
     public besediDBHelper(Context context) {
         //super(context, getDBpath() , null, 1);
         super(context, new File(context.getExternalFilesDir(null), "besedi_sqlite.db").getAbsolutePath() , null, 1);
+        db = this.getReadableDatabase();
     }
 
     @Override
@@ -31,7 +33,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getbesediInfo (String besediType) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                                     "FROM table1 WHERE Variant='1' " +
                                     "And " +
@@ -46,7 +47,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getbesediInfoFiltered (String besediType, Integer selectedFromYears, Integer selectedToYears) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                         "FROM table1 WHERE Variant='1' " +
                         "And " +
@@ -65,7 +65,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getbesediInfoFromYears (String besediType, Integer selectedFromYears, Integer selectedToYears) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                         "FROM table1 WHERE Variant='1' " +
                         "And " +
@@ -84,7 +83,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getbesediInfoFromYearsDay (String besediType, Integer selectedFromYears, Integer selectedToYears, Integer selectedDayInDate) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                         "FROM table1 WHERE Variant='1' " +
                         "And " +
@@ -105,7 +103,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getbesediInfoFromYearsMonth (String besediType, Integer selectedFromYears, Integer selectedToYears, Integer selectedMonth) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                         "FROM table1 WHERE Variant='1' " +
                         "And " +
@@ -127,7 +124,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
 
     public Cursor getbesediInfoFromYearsMonthDay (String besediType, Integer selectedFromYears, Integer selectedToYears,
                                                   Integer selectedMonth, Integer selectedDayInDate) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT Link, Name, Day_of_Month, Month_, Year_ " +
                         "FROM table1 WHERE Variant='1' " +
                         "And " +
@@ -150,7 +146,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getbeseda (String besedaLink, String besedaDateYear, String besedaDateMonth, String besedaDateDay) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT * " +
                         "FROM table1 WHERE " +
                         "Link='"+besedaLink+"' " +
@@ -167,7 +162,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor searchInBesedi (String query) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
                         getAllTextColumnIDs() +
@@ -206,7 +200,6 @@ public class besediDBHelper extends SQLiteOpenHelper {
 
     public Cursor searchInBeseda (String query, String besedaLink, String besedaDateYear,
                                   String besedaDateMonth, String besedaDateDay, String besedaVariant) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, Link, Variant, Name, Day_of_Month, Month_, Year_, " +
                         getAllTextColumnIDs() +
@@ -241,6 +234,14 @@ public class besediDBHelper extends SQLiteOpenHelper {
                 "Text51, Text52, Text53, Text54, Text55, Text56, Text57, Text58, Text59, Text60, " +
                 "Text61, Text62, Text63, Text64, Text65, Text66, Text67, Text68 ";
         return result;
+    }
+
+    @Override
+    public synchronized void close () {
+        super.close();
+        if (db != null) {
+            db.close();
+        }
     }
 
 }

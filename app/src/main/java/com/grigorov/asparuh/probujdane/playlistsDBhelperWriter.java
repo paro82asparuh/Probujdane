@@ -1,7 +1,5 @@
 package com.grigorov.asparuh.probujdane;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -11,20 +9,16 @@ import android.util.Log;
 
 import java.io.File;
 
-/**
- * Created by agr on 30/11/2019.
- */
-
-public class playlistsDBhelper extends SQLiteOpenHelper {
+public class playlistsDBhelperWriter extends SQLiteOpenHelper {
 
     private static Context contextFromConstructor;
 
     SQLiteDatabase db;
 
-    public playlistsDBhelper(Context context) {
+    public playlistsDBhelperWriter(Context context) {
         super(context, new File(context.getExternalFilesDir(null), "playlists_sqlite.db").getAbsolutePath() , null, 1);
         contextFromConstructor = context;
-        db = this.getReadableDatabase();
+        db = this.getWritableDatabase();
     }
 
     @Override
@@ -66,27 +60,57 @@ public class playlistsDBhelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor getAll () {
-        Cursor res=null;
+    public void initializePlaylistsDB (Context context) {
         try {
-            res = db.rawQuery("SELECT ID, Name, Songs, PlayType FROM table1 " +
-                            "ORDER BY CAST(ID AS int) ASC" +
-                            ";"
-                    , null);
+            db.execSQL("DROP TABLE IF EXISTS table1;");
         } catch (SQLException mSQLException) {
             Log.e("Loginerror", "getproductData >>" + mSQLException.toString());
         }
-        return res;
+        //db.execSQL("CREATE VIRTUAL TABLE table1 USING fts4 ( " +
+        //        " ID VARCHAR(32000), Name VARCHAR(32000), Songs VARCHAR(32000), " +
+        //        " tokenize=unicode61 );"
+        //);
     }
 
-    public Cursor getPlaylist (String playlistID) {
-        Cursor res =  db.rawQuery(  "SELECT Name, Songs, PlayType " +
-                        "FROM table1 WHERE " +
-                        "ID='"+playlistID+"' " +
-                        //"ORDER BY CAST(ID AS int) ASC" +
-                        ";"
-                , null );
-        return res;
+    public void updatePlaylistFull (String playlistID, String playlistName, String playlistSongsString, String playlistPlayTypeString) {
+        db.execSQL("UPDATE table1 SET" +
+                "Name = '" + playlistName + "'," +
+                "Songs = '" + playlistSongsString + "' " +
+                "PlayType = '" + playlistPlayTypeString + "' " +
+                "WHERE ID='"+ playlistID +"' ;"
+        );
+    }
+
+    public void updatePlaylistName (String playlistID, String playlistName) {
+        db.execSQL("UPDATE table1 SET" +
+                "Name = '" + playlistName + "' " +
+                "WHERE ID='"+ playlistID +"' ;"
+        );
+    }
+
+    public void updatePlaylistSongs (String playlistID, String playlistSongsString, String playlistPlayTypeString) {
+        db.execSQL("UPDATE table1 SET " +
+                "Songs = '" + playlistSongsString + "', " +
+                "PlayType = '" + playlistPlayTypeString + "' " +
+                "WHERE ID='"+ playlistID +"' ;"
+        );
+    }
+
+    public void deletePlaylist (String playlistID) {
+        db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM table1 " +
+                "WHERE ID='"+ playlistID +"' ;"
+        );
+    }
+
+    public void insertPlaylist (String playlistID, String playlistName, String playlistSongsString, String playlistPlayTypeString) {
+        db.execSQL("INSERT INTO table1 (ID, Name, Songs, PlayType) VALUES(" +
+                "'" + playlistID + "', " +
+                "'" + playlistName + "', " +
+                "'" + playlistSongsString + "', " +
+                "'" + playlistPlayTypeString +
+                "');"
+        );
     }
 
     @Override

@@ -51,8 +51,13 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public final static long SONGS_FOLDER_SIZE_IN_BYTES = 743751680;
 
-    private musicDBHelper songsDB;
-    private playlistsDBhelper playlistsDB;
+    // not needed any more to have common database instances
+    // idea is to create DB objetcs only where it is needed
+    // note the music DBs are the only ones in the app which may alter!
+    //private musicDBHelper songsDB;
+    //private musicDBHelperWriter songsDBwriter;
+    //private playlistsDBhelper playlistsDB;
+    //private playlistsDBhelperWriter playlistsDBwriter;
 
     private Integer musicState;
     private Integer musicStateOld;
@@ -174,15 +179,21 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             boolean songIsDownloadable = new Boolean (false);
             if ( (currentSongInfo.isSongVocalPlayble()==false) && (currentSongInfo.isSongInstrumentalPlayble()==false) ) {
                 String currentSongID = currentSongInfo.getSongID();
-                Cursor rs = songsDB.getSongSingle(currentSongID);
-                rs.moveToFirst();
-                String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
-                String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
-                if ( ( currentVocalFileName.equals("")==false) || (currentInstrumentalFileName.equals("")==false) ) {
-                    songIsDownloadable = true;
-                }
-                if (!rs.isClosed())  {
-                    rs.close();
+                musicDBHelper songsDB = new musicDBHelper(getApplicationContext());
+                Cursor rs = null;
+                try {
+                    rs = songsDB.getSongSingle(currentSongID);
+                    rs.moveToFirst();
+                    String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
+                    String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
+                    if ((currentVocalFileName.equals("") == false) || (currentInstrumentalFileName.equals("") == false)) {
+                        songIsDownloadable = true;
+                    }
+                } finally {
+                    if (!rs.isClosed()) {
+                        rs.close();
+                    }
+                    songsDB.close();
                 }
             }
 
@@ -574,9 +585,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         topMusicLinearLayout = findViewById(R.id.topMusicLinearLayout);
 
-        // Initialize the databases
-        songsDB = new musicDBHelper(this);
-        playlistsDB = new playlistsDBhelper(this);
+        // Initialize the databases - not needed any more -> done whereas needed!
+        // songsDB = new musicDBHelper(this);
+        // songsDBwriter = new musicDBHelperWriter(this);
+        // playlistsDB = new playlistsDBhelper(this);
+        // playlistsDBwriter = new playlistsDBhelperWriter (this);
 
         listDownloadSongs.clear();
         downloadingVocalFile = false;
@@ -879,28 +892,37 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         LinearLayout linearPanevritmyInstrumentalPlaylistOption = topMusicLinearLayout.findViewById(R.id.linearPanevritmyInstrumentalPlaylistOption);
         ((ViewManager)linearPanevritmyInstrumentalPlaylistOption.getParent()).removeView(linearPanevritmyInstrumentalPlaylistOption);
 
-
-        Cursor rs = songsDB.getSongsNotDownloaded();
-        if (rs.getCount()==0) {
-            View viewAboveDownload = topMusicLinearLayout.findViewById(R.id.viewAboveDownload);
-            ((ViewManager)viewAboveDownload.getParent()).removeView(viewAboveDownload);
-            LinearLayout linearDownload = topMusicLinearLayout.findViewById(R.id.linearDownload);
-            ((ViewManager)linearDownload.getParent()).removeView(linearDownload);
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs=null;
+        try {
+            rs = songsDB.getSongsNotDownloaded();
+            if (rs.getCount() == 0) {
+                View viewAboveDownload = topMusicLinearLayout.findViewById(R.id.viewAboveDownload);
+                ((ViewManager) viewAboveDownload.getParent()).removeView(viewAboveDownload);
+                LinearLayout linearDownload = topMusicLinearLayout.findViewById(R.id.linearDownload);
+                ((ViewManager) linearDownload.getParent()).removeView(linearDownload);
+            }
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
         }
-        if (!rs.isClosed())  {
-            rs.close();
+        musicDBHelper songsDB2 = new musicDBHelper(this);
+        Cursor rs2=null;
+        try {
+            rs2 = songsDB2.getSongsDownloaded("Songs");
+            if (rs2.getCount() == 0) {
+                LinearLayout linearDeleteSongs = topMusicLinearLayout.findViewById(R.id.linearDeleteSongs);
+                ((ViewManager) linearDeleteSongs.getParent()).removeView(linearDeleteSongs);
+                View viewAboveDeleteSongs = topMusicLinearLayout.findViewById(R.id.viewAboveDeleteSongs);
+                ((ViewManager) viewAboveDeleteSongs.getParent()).removeView(viewAboveDeleteSongs);
+            }
+        } finally {
+        if (!rs2.isClosed())  {
+            rs2.close();
         }
-        rs = songsDB.getSongsDownloaded("Songs");
-        if (rs.getCount()==0) {
-            LinearLayout linearDeleteSongs = topMusicLinearLayout.findViewById(R.id.linearDeleteSongs);
-            ((ViewManager)linearDeleteSongs.getParent()).removeView(linearDeleteSongs);
-            View viewAboveDeleteSongs = topMusicLinearLayout.findViewById(R.id.viewAboveDeleteSongs);
-            ((ViewManager)viewAboveDeleteSongs.getParent()).removeView(viewAboveDeleteSongs);
+        songsDB2.close();
         }
-        if (!rs.isClosed())  {
-            rs.close();
-        }
-
 
         songsType = "Songs";
         setListSongs();
@@ -934,29 +956,36 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void setListSongs() {
 
-        Cursor rs = songsDB.getSongsInfo(songsType);
-        rs.moveToFirst();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
+        try {
+            rs = songsDB.getSongsInfo(songsType);
+            rs.moveToFirst();
 
-        listSongsInfo.clear();
-        listSongsInfo.ensureCapacity(rs.getCount());
+            listSongsInfo.clear();
+            listSongsInfo.ensureCapacity(rs.getCount());
 
-        for (int i=1; i <=rs.getCount(); i++) {
-            String songID = rs.getString(rs.getColumnIndex("ID"));
-            String songTitle = rs.getString(rs.getColumnIndex("Title"));
-            boolean songVocalPlayable = true;
-            if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals("")) songVocalPlayable=false;
-            boolean songInstrumentalPlayable = true;
-            if (rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals("")) songInstrumentalPlayable=false;
-            if ( Integer.parseInt(rs.getString(rs.getColumnIndex("Files_Downloaded"))) == Song.FILES_NOT_DOWNLOADED ) {
-                songVocalPlayable = false;
-                songInstrumentalPlayable = false;
+            for (int i = 1; i <= rs.getCount(); i++) {
+                String songID = rs.getString(rs.getColumnIndex("ID"));
+                String songTitle = rs.getString(rs.getColumnIndex("Title"));
+                boolean songVocalPlayable = true;
+                if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals(""))
+                    songVocalPlayable = false;
+                boolean songInstrumentalPlayable = true;
+                if (rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals(""))
+                    songInstrumentalPlayable = false;
+                if (Integer.parseInt(rs.getString(rs.getColumnIndex("Files_Downloaded"))) == Song.FILES_NOT_DOWNLOADED) {
+                    songVocalPlayable = false;
+                    songInstrumentalPlayable = false;
+                }
+                listSongsInfo.add(new songInfo(songID, songTitle, songVocalPlayable, songInstrumentalPlayable));
+                rs.moveToNext();
             }
-            listSongsInfo.add(new songInfo(songID, songTitle, songVocalPlayable, songInstrumentalPlayable));
-            rs.moveToNext();
-        }
-
-        if (!rs.isClosed())  {
-            rs.close();
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
     }
 
@@ -969,48 +998,58 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void setListPlaylistsList() {
 
-        Cursor rs = playlistsDB.getAll();
-        rs.moveToFirst();
+        playlistsDBhelper playlistsDB = new playlistsDBhelper(this);
+        Cursor rs = null;
+        try {
+            rs = playlistsDB.getAll();
+            rs.moveToFirst();
 
-        listPlaylists.clear();
-        listPlaylists.ensureCapacity(rs.getCount());
+            listPlaylists.clear();
+            listPlaylists.ensureCapacity(rs.getCount());
 
-        for (int i=1; i <=rs.getCount(); i++) {
-            String playlistID = rs.getString(rs.getColumnIndex("ID"));
-            String playlistName = rs.getString(rs.getColumnIndex("Name"));
-            String playlistStringSongs = rs.getString(rs.getColumnIndex("Songs"));
-            String playlistStringPlayTypes = rs.getString(rs.getColumnIndex("PlayType"));
-            listPlaylists.add(new Playlist(playlistID, playlistName, playlistStringSongs, playlistStringPlayTypes, getApplicationContext()));
-            rs.moveToNext();
-        }
-
-        if (!rs.isClosed())  {
-            rs.close();
+            for (int i = 1; i <= rs.getCount(); i++) {
+                String playlistID = rs.getString(rs.getColumnIndex("ID"));
+                String playlistName = rs.getString(rs.getColumnIndex("Name"));
+                String playlistStringSongs = rs.getString(rs.getColumnIndex("Songs"));
+                String playlistStringPlayTypes = rs.getString(rs.getColumnIndex("PlayType"));
+                listPlaylists.add(new Playlist(playlistID, playlistName, playlistStringSongs, playlistStringPlayTypes, getApplicationContext()));
+                rs.moveToNext();
+            }
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            playlistsDB.close();
         }
     }
 
     public void setListEditablePlaylistsList() {
 
-        Cursor rs = playlistsDB.getAll();
-        rs.moveToFirst();
+        playlistsDBhelper playlistsDB = new playlistsDBhelper(this);
+        Cursor rs = null;
+        try {
+            rs = playlistsDB.getAll();
+            rs.moveToFirst();
 
-        listEditablePlaylists.clear();
-        listEditablePlaylists.ensureCapacity(rs.getCount());
+            listEditablePlaylists.clear();
+            listEditablePlaylists.ensureCapacity(rs.getCount());
 
-        // Skip first two - not editable panaveritmias
-        rs.moveToNext();
-        rs.moveToNext();
-        for (int i=3; i <=rs.getCount(); i++) {
-            String playlistID = rs.getString(rs.getColumnIndex("ID"));
-            String playlistName = rs.getString(rs.getColumnIndex("Name"));
-            String playlistStringSongs = rs.getString(rs.getColumnIndex("Songs"));
-            String playlistStringPlayTypes = rs.getString(rs.getColumnIndex("PlayType"));
-            listEditablePlaylists.add(new Playlist(playlistID, playlistName, playlistStringSongs, playlistStringPlayTypes, getApplicationContext()));
+            // Skip first two - not editable panaveritmias
             rs.moveToNext();
-        }
-
-        if (!rs.isClosed())  {
-            rs.close();
+            rs.moveToNext();
+            for (int i = 3; i <= rs.getCount(); i++) {
+                String playlistID = rs.getString(rs.getColumnIndex("ID"));
+                String playlistName = rs.getString(rs.getColumnIndex("Name"));
+                String playlistStringSongs = rs.getString(rs.getColumnIndex("Songs"));
+                String playlistStringPlayTypes = rs.getString(rs.getColumnIndex("PlayType"));
+                listEditablePlaylists.add(new Playlist(playlistID, playlistName, playlistStringSongs, playlistStringPlayTypes, getApplicationContext()));
+                rs.moveToNext();
+            }
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            playlistsDB.close();
         }
     }
 
@@ -1033,22 +1072,28 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void setSongOnScreen (String songID, int inputSongPlayType, Integer songPositionInPlaylist) {
-        Cursor rs = songsDB.getSongSingle(songID);
-        rs.moveToFirst();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
 
-        songOnScreen = new Song (songID,
-                rs.getString(rs.getColumnIndex("Title")),
-                rs.getString(rs.getColumnIndex("Text")),
-                rs.getString(rs.getColumnIndex("Type_")),
-                rs.getString(rs.getColumnIndex("Vocal_File_Name")),
-                rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
-                rs.getString(rs.getColumnIndex("Files_Downloaded")),
-                inputSongPlayType,
-                songPositionInPlaylist
-        );
+        try {
+            rs = songsDB.getSongSingle(songID);
+            rs.moveToFirst();
 
-        if (!rs.isClosed())  {
-            rs.close();
+            songOnScreen = new Song(songID,
+                    rs.getString(rs.getColumnIndex("Title")),
+                    rs.getString(rs.getColumnIndex("Text")),
+                    rs.getString(rs.getColumnIndex("Type_")),
+                    rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                    rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                    rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                    inputSongPlayType,
+                    songPositionInPlaylist
+            );
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
     }
 
@@ -1204,18 +1249,23 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void setPlaylistOnScreen (String playlistID) {
-        Cursor rs = playlistsDB.getPlaylist(playlistID);
-        rs.moveToFirst();
+        playlistsDBhelper playlistsDB = new playlistsDBhelper(this);
+        Cursor rs  = null;
+        try {
+            rs = playlistsDB.getPlaylist(playlistID);
+            rs.moveToFirst();
 
-        playlistOnScreen = new Playlist (playlistID,
-                rs.getString(rs.getColumnIndex("Name")),
-                rs.getString(rs.getColumnIndex("Songs")),
-                rs.getString(rs.getColumnIndex("PlayType")),
-                getApplicationContext()
-        );
-
-        if (!rs.isClosed())  {
-            rs.close();
+            playlistOnScreen = new Playlist(playlistID,
+                    rs.getString(rs.getColumnIndex("Name")),
+                    rs.getString(rs.getColumnIndex("Songs")),
+                    rs.getString(rs.getColumnIndex("PlayType")),
+                    getApplicationContext()
+            );
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            playlistsDB.close();
         }
     }
 
@@ -1323,37 +1373,45 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         View inflatedLayout = getLayoutInflater().inflate(R.layout.music_playlist_add, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
-        Cursor rs = songsDB.getSongsInfo();
-        rs.moveToFirst();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
 
-        listPlaylistEditSongsInfo.clear();
-        listPlaylistEditSongsInfo.ensureCapacity(rs.getCount());
+        try {
+            rs = songsDB.getSongsInfo();
+            rs.moveToFirst();
 
-        for (int i=1; i <=rs.getCount(); i++) {
-            String songID = rs.getString(rs.getColumnIndex("ID"));
-            String songTitle = rs.getString(rs.getColumnIndex("Title"));
-            String songType = rs.getString(rs.getColumnIndex("Type_"));
-            boolean songVocalPlayable = true;
-            if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals("")) songVocalPlayable=false;
-            boolean songInstrumentalPlayable = true;
-            if (rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals("")) songInstrumentalPlayable=false;
-            if ( Integer.parseInt(rs.getString(rs.getColumnIndex("Files_Downloaded"))) == Song.FILES_NOT_DOWNLOADED ) {
-                songVocalPlayable = false;
-                songInstrumentalPlayable = false;
-            }
-            if ( (songVocalPlayable==true) && (playlistOnScreen.isSongInPlaylist(songID,Song.PLAY_VOCAL) == false) ) {
-                listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
-                        true, false, Song.PLAY_VOCAL, false));
-            }
-            if ( (songInstrumentalPlayable==true) && (playlistOnScreen.isSongInPlaylist(songID,Song.PLAY_INSTRUMENTAL) == false) ) {
-                listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
-                        false, true, Song.PLAY_INSTRUMENTAL, false));
-            }
-            rs.moveToNext();
-        }
+            listPlaylistEditSongsInfo.clear();
+            listPlaylistEditSongsInfo.ensureCapacity(rs.getCount());
 
-        if (!rs.isClosed())  {
-            rs.close();
+            for (int i = 1; i <= rs.getCount(); i++) {
+                String songID = rs.getString(rs.getColumnIndex("ID"));
+                String songTitle = rs.getString(rs.getColumnIndex("Title"));
+                String songType = rs.getString(rs.getColumnIndex("Type_"));
+                boolean songVocalPlayable = true;
+                if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals(""))
+                    songVocalPlayable = false;
+                boolean songInstrumentalPlayable = true;
+                if (rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals(""))
+                    songInstrumentalPlayable = false;
+                if (Integer.parseInt(rs.getString(rs.getColumnIndex("Files_Downloaded"))) == Song.FILES_NOT_DOWNLOADED) {
+                    songVocalPlayable = false;
+                    songInstrumentalPlayable = false;
+                }
+                if ((songVocalPlayable == true) && (playlistOnScreen.isSongInPlaylist(songID, Song.PLAY_VOCAL) == false)) {
+                    listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
+                            true, false, Song.PLAY_VOCAL, false));
+                }
+                if ((songInstrumentalPlayable == true) && (playlistOnScreen.isSongInPlaylist(songID, Song.PLAY_INSTRUMENTAL) == false)) {
+                    listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
+                            false, true, Song.PLAY_INSTRUMENTAL, false));
+                }
+                rs.moveToNext();
+            }
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
 
         playlistEditSongsInfoAdapter = new MusicEntireActivity.PlaylistEditSongsInfoAdapter(this, listPlaylistEditSongsInfo);
@@ -1437,7 +1495,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     @Override
     public void onPlaylistDeleteDialogPositiveClick(DialogFragment dialog) {
-        playlistsDB.deletePlaylist(playlistOnScreen.getPlaylistID());
+        playlistsDBhelperWriter playlistsDBwriter = new playlistsDBhelperWriter (this);
+        try {
+            playlistsDBwriter.deletePlaylist(playlistOnScreen.getPlaylistID());
+        } finally {
+            playlistsDBwriter.close();
+        }
         startPlaylistsTask(topMusicLinearLayout);
     }
 
@@ -1467,16 +1530,22 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void setPlaylistSelection(String selectedPlaylistID) {
-        Cursor rs = playlistsDB.getPlaylist(selectedPlaylistID);
-        rs.moveToFirst();
-        playlistSelected = new Playlist (selectedPlaylistID,
-                rs.getString(rs.getColumnIndex("Name")),
-                rs.getString(rs.getColumnIndex("Songs")),
-                rs.getString(rs.getColumnIndex("PlayType")),
-                getApplicationContext()
-        );
-        if (!rs.isClosed())  {
-            rs.close();
+        playlistsDBhelper playlistsDB = new playlistsDBhelper(this);
+        Cursor rs = null;
+        try {
+            rs = playlistsDB.getPlaylist(selectedPlaylistID);
+            rs.moveToFirst();
+            playlistSelected = new Playlist(selectedPlaylistID,
+                    rs.getString(rs.getColumnIndex("Name")),
+                    rs.getString(rs.getColumnIndex("Songs")),
+                    rs.getString(rs.getColumnIndex("PlayType")),
+                    getApplicationContext()
+            );
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            playlistsDB.close();
         }
 
         if (musicState==STATE_PLAYLIST_CREATE_NEW_FROM_SONG) {
@@ -1495,17 +1564,29 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String newPlaylistName = input.getText().toString();
-                    Cursor rs = playlistsDB.getAll();
-                    Integer newPlaylistID = rs.getCount()+1;
-                    if (!rs.isClosed())  {
-                        rs.close();
+                    playlistsDBhelper playlistsDB = new playlistsDBhelper(getApplicationContext());
+                    Cursor rs = null;
+                    Integer newPlaylistID;
+                    try {
+                        rs = playlistsDB.getAll();
+                        newPlaylistID = rs.getCount() + 1;
+                    } finally {
+                        if (!rs.isClosed()) {
+                            rs.close();
+                        }
+                        playlistsDB.close();
                     }
-                    playlistsDB.insertPlaylist(
-                            newPlaylistID.toString(),
-                            newPlaylistName,
-                            songOnScreen.getSongID(),
-                            song2PlaylistType.toString()
-                    );
+                    playlistsDBhelperWriter playlistsDBwriter = new playlistsDBhelperWriter (getApplicationContext());
+                    try {
+                        playlistsDBwriter.insertPlaylist(
+                                newPlaylistID.toString(),
+                                newPlaylistName,
+                                songOnScreen.getSongID(),
+                                song2PlaylistType.toString()
+                        );
+                    } finally {
+                        playlistsDBwriter.close();
+                    }
                     showPlaylistLayout(newPlaylistID.toString());
                 }
             });
@@ -1525,17 +1606,29 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String newPlaylistName = input.getText().toString();
-                    Cursor rs = playlistsDB.getAll();
-                    Integer newPlaylistID = rs.getCount() + 1;
-                    if (!rs.isClosed())  {
-                        rs.close();
+                    playlistsDBhelper playlistsDB = new playlistsDBhelper(getApplicationContext());
+                    Cursor rs = null;
+                    Integer newPlaylistID;
+                    try {
+                        rs = playlistsDB.getAll();
+                        newPlaylistID = rs.getCount() + 1;
+                    } finally {
+                        if (!rs.isClosed()) {
+                            rs.close();
+                        }
+                        playlistsDB.close();
                     }
-                    playlistsDB.insertPlaylist(
-                            newPlaylistID.toString(),
-                            newPlaylistName,
-                            "",
-                            ""
-                    );
+                    playlistsDBhelperWriter playlistsDBwriter = new playlistsDBhelperWriter (getApplicationContext());
+                    try {
+                        playlistsDBwriter.insertPlaylist(
+                                newPlaylistID.toString(),
+                                newPlaylistName,
+                                "",
+                                ""
+                        );
+                    } finally {
+                        playlistsDBwriter.close();
+                    }
                     playlistOnScreen = new Playlist (newPlaylistID.toString(),
                             newPlaylistName,
                             "",
@@ -1644,29 +1737,35 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     public void startPlayingSingleSong (String songID, int songPlayType) {
 
         startSongNumber = 0;
-        Cursor rs = songsDB.getSongSingle(songID);
-        rs.moveToFirst();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
 
-        songSinlgePlayed = new Song (songID,
-                rs.getString(rs.getColumnIndex("Title")),
-                rs.getString(rs.getColumnIndex("Text")),
-                rs.getString(rs.getColumnIndex("Type_")),
-                rs.getString(rs.getColumnIndex("Vocal_File_Name")),
-                rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
-                rs.getString(rs.getColumnIndex("Files_Downloaded")),
-                songPlayType
-        );
+        try {
+            rs = songsDB.getSongSingle(songID);
+            rs.moveToFirst();
 
-        // dummy
-        playlistPlayed = new Playlist ("0",
-                "dummy",
-                songID,
-                (new Integer(songPlayType)).toString(),
-                getApplicationContext()
-        );
+            songSinlgePlayed = new Song(songID,
+                    rs.getString(rs.getColumnIndex("Title")),
+                    rs.getString(rs.getColumnIndex("Text")),
+                    rs.getString(rs.getColumnIndex("Type_")),
+                    rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                    rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                    rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                    songPlayType
+            );
 
-        if (!rs.isClosed())  {
-            rs.close();
+            // dummy
+            playlistPlayed = new Playlist("0",
+                    "dummy",
+                    songID,
+                    (new Integer(songPlayType)).toString(),
+                    getApplicationContext()
+            );
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
 
         String musicInfoTextString = songSinlgePlayed.getSongName();
@@ -1698,18 +1797,23 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     public void startPlayingPlaylist (String playlistID, int inputStartSongNumber) {
         startSongNumber = inputStartSongNumber;
-        Cursor rs = playlistsDB.getPlaylist(playlistID);
-        rs.moveToFirst();
+        playlistsDBhelper playlistsDB = new playlistsDBhelper(this);
+        Cursor rs = null;
+        try {
+            rs = playlistsDB.getPlaylist(playlistID);
+            rs.moveToFirst();
 
-        playlistPlayed = new Playlist (playlistID,
-                rs.getString(rs.getColumnIndex("Name")),
-                rs.getString(rs.getColumnIndex("Songs")),
-                rs.getString(rs.getColumnIndex("PlayType")),
-                getApplicationContext()
-        );
-
-        if (!rs.isClosed())  {
-            rs.close();
+            playlistPlayed = new Playlist(playlistID,
+                    rs.getString(rs.getColumnIndex("Name")),
+                    rs.getString(rs.getColumnIndex("Songs")),
+                    rs.getString(rs.getColumnIndex("PlayType")),
+                    getApplicationContext()
+            );
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            playlistsDB.close();
         }
 
         songList = new ArrayList<Song>(playlistPlayed.getSongsArrayList());
@@ -1762,6 +1866,29 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         unregisterReceiver(broadcastReceiverEndMusicPlay);
         unregisterReceiver(broadcastReceiverPlayAnotherSong);
         unregisterReceiver(downloadReceiver);
+
+//        // Clear downloads
+//        if (downloadManager!=null) {
+//            Cursor cursor = null;
+//            try {
+//                DownloadManager.Query query = new DownloadManager.Query();
+//                query.setFilterByStatus(DownloadManager.STATUS_PAUSED |
+//                        DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING);
+//                cursor = downloadManager.query(query);
+//                for (int i = 0; i < cursor.getCount(); i++) {
+//                    cursor.moveToPosition(i);
+//                    String downloadID = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+//                    downloadManager.remove(Long.parseLong(downloadID));
+//                }
+//            } finally {
+//                if  (cursor!=null) {
+//                    if (!cursor.isClosed()) {
+//                        cursor.close();
+//                    }
+//                }
+//            }
+//        }
+
         super.onDestroy();
     }
 
@@ -1927,21 +2054,27 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void downloadSingleSong (String downloadSongID) {
-        Cursor rs = songsDB.getSongSingle(downloadSongID);
-        rs.moveToFirst();
-        listDownloadSongs.add (new Song (downloadSongID,
-                rs.getString(rs.getColumnIndex("Title")),
-                rs.getString(rs.getColumnIndex("Text")),
-                rs.getString(rs.getColumnIndex("Type_")),
-                rs.getString(rs.getColumnIndex("Vocal_File_Name")),
-                rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
-                rs.getString(rs.getColumnIndex("Files_Downloaded")),
-                rs.getString(rs.getColumnIndex("Vocal_File_Link")),
-                rs.getString(rs.getColumnIndex("Instrumental_File_Link"))
-            )
-        );
-        if (!rs.isClosed())  {
-            rs.close();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
+        try {
+            rs = songsDB.getSongSingle(downloadSongID);
+            rs.moveToFirst();
+            listDownloadSongs.add(new Song(downloadSongID,
+                            rs.getString(rs.getColumnIndex("Title")),
+                            rs.getString(rs.getColumnIndex("Text")),
+                            rs.getString(rs.getColumnIndex("Type_")),
+                            rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                            rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                            rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                            rs.getString(rs.getColumnIndex("Vocal_File_Link")),
+                            rs.getString(rs.getColumnIndex("Instrumental_File_Link"))
+                    )
+            );
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
         tryNewDownloadStrart();
     }
@@ -1997,7 +2130,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     downloadingVocalFile = false;
                     startSongFileDownload(listDownloadSongs.get(0).getSongInstrumentalFileLink(), listDownloadSongs.get(0).getSongInstrumentalFileName());
                 } else {
-                    songsDB.updateSongDownloaded(listDownloadSongs.get(0).getSongID(),"1");
+                    musicDBHelperWriter songsDBwriter = new musicDBHelperWriter(getApplicationContext());
+                    try {
+                        songsDBwriter.updateSongDownloaded(listDownloadSongs.get(0).getSongID(), "1");
+                    } finally {
+                        songsDBwriter.close();
+                    }
                     listDownloadSongs.remove(0);
                     if (listDownloadSongs.size()>0) {
                         startNextSongDownload();
@@ -2033,48 +2171,60 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onDownloadAllPressed(View view) {
-        Cursor rs = songsDB.getSongsNotDownloaded();
-        rs.moveToFirst();
-        if (rs.getCount()>0) {
-            long songsSizeToDownloadInMB = (SONGS_FOLDER_SIZE_IN_BYTES -
-                    getFolderSize(new File(getApplicationContext().getExternalFilesDir(null)+ "/Pesni")) ) / (1024*1024) ;
-            SongsDownloadDialogFragment newFragment = new SongsDownloadDialogFragment();
-            newFragment.setDownloadSizeInMB(songsSizeToDownloadInMB);
-            newFragment.show(getSupportFragmentManager(), "songsDownloadDialog");
-        }
-        if (!rs.isClosed())  {
-            rs.close();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
+        try {
+            rs = songsDB.getSongsNotDownloaded();
+            rs.moveToFirst();
+            if (rs.getCount() > 0) {
+                long songsSizeToDownloadInMB = (SONGS_FOLDER_SIZE_IN_BYTES -
+                        getFolderSize(new File(getApplicationContext().getExternalFilesDir(null) + "/Pesni"))) / (1024 * 1024);
+                SongsDownloadDialogFragment newFragment = new SongsDownloadDialogFragment();
+                newFragment.setDownloadSizeInMB(songsSizeToDownloadInMB);
+                newFragment.show(getSupportFragmentManager(), "songsDownloadDialog");
+            }
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
     }
 
     @Override
     public void onSongsDownloadDialogPositiveClick(DialogFragment dialog) {
-        Cursor rs = songsDB.getSongsNotDownloaded();
-        if (rs.getCount()>0) {
-            rs.moveToFirst();
-            for (int i = 1; i <= rs.getCount(); i++) {
-                Song currentSongToBeDownloaded = new Song(rs.getString(rs.getColumnIndex("ID")),
-                        rs.getString(rs.getColumnIndex("Title")),
-                        rs.getString(rs.getColumnIndex("Text")),
-                        rs.getString(rs.getColumnIndex("Type_")),
-                        rs.getString(rs.getColumnIndex("Vocal_File_Name")),
-                        rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
-                        "1",
-                        rs.getString(rs.getColumnIndex("Vocal_File_Link")),
-                        rs.getString(rs.getColumnIndex("Instrumental_File_Link"))
-                );
-                if ( (currentSongToBeDownloaded.getSongVocalFileName().equals("")==false) ||
-                        (currentSongToBeDownloaded.getSongInstrumentalFileName().equals("")==false) ) {
-                    listDownloadSongs.add(currentSongToBeDownloaded);
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
+        try {
+            rs = songsDB.getSongsNotDownloaded();
+            if (rs.getCount() > 0) {
+                rs.moveToFirst();
+                for (int i = 1; i <= rs.getCount(); i++) {
+                    Song currentSongToBeDownloaded = new Song(rs.getString(rs.getColumnIndex("ID")),
+                            rs.getString(rs.getColumnIndex("Title")),
+                            rs.getString(rs.getColumnIndex("Text")),
+                            rs.getString(rs.getColumnIndex("Type_")),
+                            rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                            rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                            "1",
+                            rs.getString(rs.getColumnIndex("Vocal_File_Link")),
+                            rs.getString(rs.getColumnIndex("Instrumental_File_Link"))
+                    );
+                    if ((currentSongToBeDownloaded.getSongVocalFileName().equals("") == false) ||
+                            (currentSongToBeDownloaded.getSongInstrumentalFileName().equals("") == false)) {
+                        listDownloadSongs.add(currentSongToBeDownloaded);
+                    }
+                    rs.moveToNext();
                 }
-                rs.moveToNext();
+                if (listDownloadSongs.size() > 0) {
+                    tryNewDownloadStrart();
+                }
             }
-            if (listDownloadSongs.size()>0) {
-                tryNewDownloadStrart();
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
             }
-        }
-        if (!rs.isClosed())  {
-            rs.close();
+            songsDB.close();
         }
     }
 
@@ -2096,37 +2246,43 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void updateSongsDownloadedStatus () {
-        Cursor rs = songsDB.getSongsInfo();
-        rs.moveToFirst();
-        for (int i=1; i <=rs.getCount(); i++) {
-            String currentID = rs.getString(rs.getColumnIndex("ID"));
-            String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
-            String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
-            String currentType = rs.getString(rs.getColumnIndex("Type_"));
-            String subDirectory;
-            if (currentType.equals("Songs")) {
-                subDirectory = "/Pesni/";
-            } else {
-                subDirectory = "/Panevritmia/";
-            }
-            File currentVocalFile = new File(getApplicationContext().getExternalFilesDir(null)+ subDirectory +currentVocalFileName);
-            File currentInstrumentalFile =  new File(getApplicationContext().getExternalFilesDir(null)+ subDirectory +currentInstrumentalFileName);
-            String filesDownloaded = "1";
-            if (currentVocalFileName.equals("") && currentInstrumentalFileName.equals("")) {
-                filesDownloaded = "0";
-            } else {
-                if ( (currentVocalFileName.equals("")==false) && (currentVocalFile.exists()==false) ) {
-                    filesDownloaded = "0";
+        musicDBHelperWriter songsDBwriter = new musicDBHelperWriter(this);
+        Cursor rs = null;
+        try {
+            rs = songsDBwriter.getSongsInfo();
+            rs.moveToFirst();
+            for (int i = 1; i <= rs.getCount(); i++) {
+                String currentID = rs.getString(rs.getColumnIndex("ID"));
+                String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
+                String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
+                String currentType = rs.getString(rs.getColumnIndex("Type_"));
+                String subDirectory;
+                if (currentType.equals("Songs")) {
+                    subDirectory = "/Pesni/";
+                } else {
+                    subDirectory = "/Panevritmia/";
                 }
-                if ( (currentInstrumentalFileName.equals("")==false) && (currentInstrumentalFile.exists()==false) ) {
+                File currentVocalFile = new File(getApplicationContext().getExternalFilesDir(null) + subDirectory + currentVocalFileName);
+                File currentInstrumentalFile = new File(getApplicationContext().getExternalFilesDir(null) + subDirectory + currentInstrumentalFileName);
+                String filesDownloaded = "1";
+                if (currentVocalFileName.equals("") && currentInstrumentalFileName.equals("")) {
                     filesDownloaded = "0";
+                } else {
+                    if ((currentVocalFileName.equals("") == false) && (currentVocalFile.exists() == false)) {
+                        filesDownloaded = "0";
+                    }
+                    if ((currentInstrumentalFileName.equals("") == false) && (currentInstrumentalFile.exists() == false)) {
+                        filesDownloaded = "0";
+                    }
                 }
+                songsDBwriter.updateSongDownloaded(currentID, filesDownloaded);
+                rs.moveToNext();
             }
-            songsDB.updateSongDownloaded(currentID,filesDownloaded);
-            rs.moveToNext();
-        }
-        if (!rs.isClosed())  {
-            rs.close();
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDBwriter.close();
         }
     }
 
@@ -2151,23 +2307,30 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         View inflatedLayout = getLayoutInflater().inflate(R.layout.music_songs_rem, topMusicLinearLayout, false);
         topMusicLinearLayout.addView(inflatedLayout);
 
-        Cursor rs = songsDB.getSongsDownloaded("Songs");
-        rs.moveToFirst();
+        musicDBHelper songsDB = new musicDBHelper(this);
+        Cursor rs = null;
 
-        listPlaylistEditSongsInfo.clear();
-        listPlaylistEditSongsInfo.ensureCapacity(rs.getCount());
+        try {
+            rs = songsDB.getSongsDownloaded("Songs");
+            rs.moveToFirst();
 
-        for (int i=1; i <=rs.getCount(); i++) {
-            String songID = rs.getString(rs.getColumnIndex("ID"));
-            String songTitle = rs.getString(rs.getColumnIndex("Title"));
-            String songType = rs.getString(rs.getColumnIndex("Type_"));
-            listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
+            listPlaylistEditSongsInfo.clear();
+            listPlaylistEditSongsInfo.ensureCapacity(rs.getCount());
+
+            for (int i = 1; i <= rs.getCount(); i++) {
+                String songID = rs.getString(rs.getColumnIndex("ID"));
+                String songTitle = rs.getString(rs.getColumnIndex("Title"));
+                String songType = rs.getString(rs.getColumnIndex("Type_"));
+                listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
                         true, false, Song.PLAY_UNDEFINED, false));
-            rs.moveToNext();
-        }
+                rs.moveToNext();
+            }
+        } finally {
 
-        if (!rs.isClosed())  {
-            rs.close();
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
 
         playlistEditSongsInfoAdapter = new MusicEntireActivity.PlaylistEditSongsInfoAdapter(this, listPlaylistEditSongsInfo);
@@ -2208,26 +2371,35 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     @Override
     public void onSongsDeleteDialogPositiveClick(DialogFragment dialog) {
-        for (int i=listPlaylistEditSongsInfo.size()-1; i>=0; i--) {
-            PlaylistSongInfo currentSongInfo = listPlaylistEditSongsInfo.get(i);
-            if (currentSongInfo.getSongTicked()==true) {
-                Cursor rs = songsDB.getSongSingle(currentSongInfo.getSongID());
-                rs.moveToFirst();
-                String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
-                String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
-                if (currentVocalFileName.equals("")==false) {
-                    File currentVocalFile = new File(getApplicationContext().getExternalFilesDir(null)+ "/Pesni/"+currentVocalFileName);
-                    currentVocalFile.delete();
-                }
-                if (currentInstrumentalFileName.equals("")==false) {
-                    File currentInstrumentalFile = new File(getApplicationContext().getExternalFilesDir(null)+ "/Pesni/"+currentInstrumentalFileName);
-                    currentInstrumentalFile.delete();
-                }
-                if (!rs.isClosed())  {
-                    rs.close();
-                }
+        musicDBHelper songsDB = new musicDBHelper(this);
+        try {
+            for (int i = listPlaylistEditSongsInfo.size() - 1; i >= 0; i--) {
+                PlaylistSongInfo currentSongInfo = listPlaylistEditSongsInfo.get(i);
+                if (currentSongInfo.getSongTicked() == true) {
+                    Cursor rs = null;
+                    try {
+                        rs = songsDB.getSongSingle(currentSongInfo.getSongID());
+                        rs.moveToFirst();
+                        String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
+                        String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
+                        if (currentVocalFileName.equals("") == false) {
+                            File currentVocalFile = new File(getApplicationContext().getExternalFilesDir(null) + "/Pesni/" + currentVocalFileName);
+                            currentVocalFile.delete();
+                        }
+                        if (currentInstrumentalFileName.equals("") == false) {
+                            File currentInstrumentalFile = new File(getApplicationContext().getExternalFilesDir(null) + "/Pesni/" + currentInstrumentalFileName);
+                            currentInstrumentalFile.delete();
+                        }
+                    } finally {
+                        if (!rs.isClosed()) {
+                            rs.close();
+                        }
+                    }
 
+                }
             }
+        } finally {
+            songsDB.close();
         }
         updateSongsDownloadedStatus();
         onBackPressed();

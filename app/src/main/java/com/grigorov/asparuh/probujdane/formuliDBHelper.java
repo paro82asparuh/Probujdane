@@ -15,9 +15,12 @@ public class formuliDBHelper extends SQLiteOpenHelper {
 
     public final String besediDatabaseName = "formuli_sqlite.db";
 
+    private  SQLiteDatabase db;
+
     public formuliDBHelper(Context context) {
         //super(context, getDBpath() , null, 1);
         super(context, new File(context.getExternalFilesDir(null), "formuli_sqlite.db").getAbsolutePath() , null, 1);
+        db = this.getReadableDatabase();
     }
 
     @Override
@@ -31,7 +34,6 @@ public class formuliDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor getFormuli () {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT ID, Title, Text FROM table1 " +
                         "ORDER BY CAST(ID AS int) ASC" +
                         ";"
@@ -40,7 +42,6 @@ public class formuliDBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor searchInFormuli (String query) {
-        SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery(  "SELECT " +
                         "offsets(table1) AS offs, ID, Title, Text " +
                         "FROM table1 WHERE table1 MATCH " +
@@ -57,6 +58,14 @@ public class formuliDBHelper extends SQLiteOpenHelper {
         result = result + "Title:" + query + " OR ";
         result = result + "Text:"+ query;
         return result;
+    }
+
+    @Override
+    public synchronized void close () {
+        super.close();
+        if (db != null) {
+            db.close();
+        }
     }
 
 }

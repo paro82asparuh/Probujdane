@@ -410,13 +410,12 @@ public class BesedaActivity extends AppCompatActivity {
 
     public void onResume () {
         super.onResume();
-        mydb = new besediDBHelper(this);
         updateTextSize ();
         //scrollDirectToTarget();
     }
 
-    public void onPause () {
-        super.onPause();
+    public void onDestroy () {
+        super.onDestroy();
         mydb.close();
     }
 

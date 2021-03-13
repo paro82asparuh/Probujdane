@@ -31,8 +31,10 @@ public class Playlist {
         return result;
     }
 
-    private musicDBHelper songsDB;
-    private playlistsDBhelper playlistsDB;
+    // not needed, objects create only locally
+    // private musicDBHelper songsDB;
+    //private playlistsDBhelper playlistsDB;
+    //private playlistsDBhelperWriter playlistsDBwriter;
 
     public Playlist (String inputID, String inputName, String inputStringSongs, String inputPlayTypeString, Context context) {
         playlistID = inputID;
@@ -40,30 +42,37 @@ public class Playlist {
         stringSongs = inputStringSongs;
         stringPlayTypes = inputPlayTypeString;
         // Make the ArrayList
-        songsDB = new musicDBHelper(context);
+        musicDBHelper songsDB = new musicDBHelper(context);
         String[] songsStringSplit = inputStringSongs.split(" ");
         String[] playTypeStringSplit = inputPlayTypeString.split(" ");
         songs.clear();
         songs.ensureCapacity(songsStringSplit.length);
+        Cursor rs = null;
         //List<String> songsStringSplit = inputStringSongs.split(" ");
-        for (int i=0; i<songsStringSplit.length; i++) {
-            Cursor rs = songsDB.getSongSingle(songsStringSplit[i]);
-            if (rs.getCount()>0) {
-                rs.moveToFirst();
-                songs.add(new Song(
-                        songsStringSplit[i],
-                        rs.getString(rs.getColumnIndex("Title")),
-                        rs.getString(rs.getColumnIndex("Text")),
-                        rs.getString(rs.getColumnIndex("Type_")),
-                        rs.getString(rs.getColumnIndex("Vocal_File_Name")),
-                        rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
-                        rs.getString(rs.getColumnIndex("Files_Downloaded")),
-                        Integer.parseInt(playTypeStringSplit[i]),
-                        i
-                ));
+        try {
+            for (int i = 0; i < songsStringSplit.length; i++) {
+                rs = songsDB.getSongSingle(songsStringSplit[i]);
+                if (rs.getCount() > 0) {
+                    rs.moveToFirst();
+                    songs.add(new Song(
+                            songsStringSplit[i],
+                            rs.getString(rs.getColumnIndex("Title")),
+                            rs.getString(rs.getColumnIndex("Text")),
+                            rs.getString(rs.getColumnIndex("Type_")),
+                            rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                            rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                            rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                            Integer.parseInt(playTypeStringSplit[i]),
+                            i
+                    ));
+                }
             }
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
         }
-        songsDB.close();
     }
 
     public Playlist (Playlist inputPlaylist) {
@@ -80,34 +89,41 @@ public class Playlist {
 
     public ArrayList<PlaylistSongInfo> getSongsInfoArrayList (Context context) {
         ArrayList<PlaylistSongInfo> songsInfo = new ArrayList<PlaylistSongInfo>();
-        songsDB = new musicDBHelper(context);
+        musicDBHelper songsDB = new musicDBHelper(context);
         String[] songsStringSplit = stringSongs.split(" ");
         String[] songsStringPlayTypesSplit = stringPlayTypes.split(" ");
         songsInfo.clear();
         songsInfo.ensureCapacity(songsStringSplit.length);
+        Cursor rs = null;
         //List<String> songsStringSplit = inputStringSongs.split(" ");
-        for (int i=0; i<songsStringSplit.length; i++) {
-            Cursor rs = songsDB.getSongSingle(songsStringSplit[i]);
-            rs.moveToFirst();
-            boolean songVocalPlayable = false;
-            if (Integer.parseInt(songsStringPlayTypesSplit[i])==Song.PLAY_VOCAL) {
-                songVocalPlayable = true;
+        try {
+            for (int i = 0; i < songsStringSplit.length; i++) {
+                rs = songsDB.getSongSingle(songsStringSplit[i]);
+                rs.moveToFirst();
+                boolean songVocalPlayable = false;
+                if (Integer.parseInt(songsStringPlayTypesSplit[i]) == Song.PLAY_VOCAL) {
+                    songVocalPlayable = true;
+                }
+                boolean songInstrumentalPlayable = false;
+                if (Integer.parseInt(songsStringPlayTypesSplit[i]) == Song.PLAY_INSTRUMENTAL) {
+                    songInstrumentalPlayable = true;
+                }
+                songsInfo.add(new PlaylistSongInfo(
+                        songsStringSplit[i],
+                        rs.getString(rs.getColumnIndex("Title")),
+                        songVocalPlayable,
+                        songInstrumentalPlayable,
+                        Integer.parseInt(songsStringPlayTypesSplit[i]),
+                        false,
+                        i
+                ));
             }
-            boolean songInstrumentalPlayable = false;
-            if (Integer.parseInt(songsStringPlayTypesSplit[i])==Song.PLAY_INSTRUMENTAL) {
-                songInstrumentalPlayable = true;
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
             }
-            songsInfo.add( new PlaylistSongInfo (
-                    songsStringSplit[i],
-                    rs.getString(rs.getColumnIndex("Title")),
-                    songVocalPlayable,
-                    songInstrumentalPlayable,
-                    Integer.parseInt(songsStringPlayTypesSplit[i]),
-                    false,
-                    i
-            ));
+            songsDB.close();
         }
-        songsDB.close();
         return songsInfo;
     }
 
@@ -138,8 +154,12 @@ public class Playlist {
     }
 
     private void updateDBsongsString (Context context) {
-        playlistsDB = new playlistsDBhelper(context);
-        playlistsDB.updatePlaylistSongs(playlistID, getUpdatedSongsString(), getUpdatedPlayTypesString());
+        playlistsDBhelperWriter playlistsDBwriter = new playlistsDBhelperWriter(context);
+        try {
+            playlistsDBwriter.updatePlaylistSongs(playlistID, getUpdatedSongsString(), getUpdatedPlayTypesString());
+        } finally {
+            playlistsDBwriter.close();
+        }
     }
 
     public void moveSongUp (Integer songCurrentPosition, Context context) {
@@ -173,20 +193,28 @@ public class Playlist {
     }
 
     public void addSong (Integer songID, int playType, Context context) {
-        songsDB = new musicDBHelper(context);
-        Cursor rs = songsDB.getSongSingle(songID.toString());
-        rs.moveToFirst();
-        songs.add( new Song (
-                songID.toString(),
-                rs.getString(rs.getColumnIndex("Title")),
-                rs.getString(rs.getColumnIndex("Text")),
-                rs.getString(rs.getColumnIndex("Type_")),
-                rs.getString(rs.getColumnIndex("Vocal_File_Name")),
-                rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
-                rs.getString(rs.getColumnIndex("Files_Downloaded")),
-                playType,
-                songs.size()
-        ));
+        musicDBHelper songsDB = new musicDBHelper(context);
+        Cursor rs = null;
+        try {
+            rs = songsDB.getSongSingle(songID.toString());
+            rs.moveToFirst();
+            songs.add(new Song(
+                    songID.toString(),
+                    rs.getString(rs.getColumnIndex("Title")),
+                    rs.getString(rs.getColumnIndex("Text")),
+                    rs.getString(rs.getColumnIndex("Type_")),
+                    rs.getString(rs.getColumnIndex("Vocal_File_Name")),
+                    rs.getString(rs.getColumnIndex("Instrumental_File_Name")),
+                    rs.getString(rs.getColumnIndex("Files_Downloaded")),
+                    playType,
+                    songs.size()
+            ));
+        } finally {
+            if (!rs.isClosed()) {
+                rs.close();
+            }
+            songsDB.close();
+        }
         updateDBsongsString(context);
     }
 

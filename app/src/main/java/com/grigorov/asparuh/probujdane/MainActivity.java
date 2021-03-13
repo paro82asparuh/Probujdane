@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     private static String BesediDatbaseURL = "https://dl.dropboxusercontent.com/s/qfaxecicfvf1y34/besedi_sqlite.zip?dl=0";
     ProgressDialog mProgressDialog;
     private DownloadManager downloadManager;
-    private DownloadManager downloadManagerChecker;
     private long downloadReference;
 
     private static double SPACE_KB = 1024;
@@ -811,6 +810,28 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
     @Override
     protected void onDestroy() {
         unregisterReceiver(downloadReceiver);
+
+//        // Clear downloads
+//        if (downloadManager!=null) {
+//            Cursor cursor = null;
+//            try {
+//                DownloadManager.Query query = new DownloadManager.Query();
+//                query.setFilterByStatus(DownloadManager.STATUS_PAUSED |
+//                        DownloadManager.STATUS_RUNNING | DownloadManager.STATUS_PENDING);
+//                cursor = downloadManager.query(query);
+//                for (int i = 0; i < cursor.getCount(); i++) {
+//                    cursor.moveToPosition(i);
+//                    String downloadID = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+//                    downloadManager.remove(Long.parseLong(downloadID));
+//                }
+//            } finally {
+//                if  (cursor!=null) {
+//                    if (!cursor.isClosed()) {
+//                        cursor.close();
+//                    }
+//                }
+//            }
+//        }
         super.onDestroy();
     }
 

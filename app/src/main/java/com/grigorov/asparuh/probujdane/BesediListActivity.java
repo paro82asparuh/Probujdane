@@ -167,13 +167,8 @@ public class BesediListActivity extends AppCompatActivity {
         listView1.setAdapter(besediInfoAdapter);
     }
 
-    public void onResume () {
-        super.onResume();
-        mydb = new besediDBHelper(this);
-    }
-
-    public void onPause () {
-        super.onPause();
+    public void onDestroy () {
+        super.onDestroy();
         mydb.close();
     }
 

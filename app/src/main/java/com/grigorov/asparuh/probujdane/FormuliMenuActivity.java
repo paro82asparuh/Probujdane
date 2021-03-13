@@ -91,12 +91,11 @@ public class FormuliMenuActivity extends AppCompatActivity {
 
     public void onResume () {
         super.onResume();
-        mydb = new formuliDBHelper(this);
         updateTextSize();
     }
 
-    public void onPause () {
-        super.onPause();
+    public void onDestroy () {
+        super.onDestroy();
         mydb.close();
     }
 
