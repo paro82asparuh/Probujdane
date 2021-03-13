@@ -190,16 +190,6 @@ public class BesedaActivity extends AppCompatActivity {
         linearLayoutSearchControls = findViewById(R.id.linear_layout_search_controls);
         linearLayoutEmpty1 = findViewById(R.id.linear_layout_empty_1);
         linearLayoutEmpty2 = findViewById(R.id.linear_layout_empty_2);
-        if (searchControlsShown==false) {
-            hideSearchControls(linearLayoutSearchControls);
-        } else {
-            //showSearchControls(linearLayoutSearchControls);
-        }
-        if (searchKeyboardShown==true) {
-            showSearchKeyboard();
-        } else {
-            hideSearchkeyboard();
-        }
 
         scrollViewBeseda = findViewById(R.id.scrollViewBeseda);
         scrollTextViewCounter = 0;
@@ -353,6 +343,17 @@ public class BesedaActivity extends AppCompatActivity {
 
         if (!rs.isClosed())  {
             rs.close();
+        }
+
+        if (searchControlsShown==false) {
+            hideSearchControls(linearLayoutSearchControls);
+        } else {
+            //showSearchControls(linearLayoutSearchControls);
+        }
+        if (searchKeyboardShown==true) {
+            showSearchKeyboard();
+        } else {
+            hideSearchkeyboard();
         }
 
     }
@@ -524,7 +525,7 @@ public class BesedaActivity extends AppCompatActivity {
 
     public void hideSearchControls (View view) {
         searchControlsShown = false;
-        searchKeyboardShown = true;
+        searchKeyboardShown = false;
         linearLayoutSearchControls.removeAllViews();
         LinearLayout.LayoutParams param0 = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -602,6 +603,30 @@ public class BesedaActivity extends AppCompatActivity {
     private void hideSearchkeyboard() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editSearchTextBesedatInput.getWindowToken(), 0);
+
+        // neither of the below works!
+
+        /*
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = this.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+         */
+
+        /*
+        editSearchTextBesedatInput .postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(editSearchTextBesedatInput.getWindowToken(), 0);
+            }
+        },50);
+         */
+
     }
 
     private void showSearchKeyboard () {
