@@ -499,17 +499,22 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
             while ((ze = zis.getNextEntry()) != null) {
                 File file = new File(targetDirectory, ze.getName());
                 File dir = ze.isDirectory() ? file : file.getParentFile();
-                if (!dir.isDirectory() && !dir.mkdirs())
-                    throw new FileNotFoundException("Failed to ensure directory: " +
-                            dir.getAbsolutePath());
-                if (ze.isDirectory())
-                    continue;
-                FileOutputStream fout = new FileOutputStream(file);
-                try {
-                    while ((count = zis.read(buffer)) != -1)
-                        fout.write(buffer, 0, count);
-                } finally {
-                    fout.close();
+                String canonicalPath = file.getCanonicalPath();
+                if (!canonicalPath.startsWith(String.valueOf(targetDirectory))) {
+                    // SecurityException
+                } else {
+                    if (!dir.isDirectory() && !dir.mkdirs())
+                        throw new FileNotFoundException("Failed to ensure directory: " +
+                                dir.getAbsolutePath());
+                    if (ze.isDirectory())
+                        continue;
+                    FileOutputStream fout = new FileOutputStream(file);
+                    try {
+                        while ((count = zis.read(buffer)) != -1)
+                            fout.write(buffer, 0, count);
+                    } finally {
+                        fout.close();
+                    }
                 }
             /* if time should be restored as well
             long time = ze.getTime();
