@@ -7,34 +7,26 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.StyleSpan;
-import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,8 +35,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -71,8 +61,8 @@ public class BesedaActivity extends AppCompatActivity {
     private ScrollView scrollViewBeseda;
     private besedaTextView scrollTextView;
 
-    private ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
-    private ArrayList<String> listBesedaTexts= new ArrayList<String>();
+    private final ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
+    private final ArrayList<String> listBesedaTexts= new ArrayList<String>();
 
     private LinearLayout linearLayoutSearchControls;
     private LinearLayout linearLayoutEmpty1;
@@ -106,7 +96,7 @@ public class BesedaActivity extends AppCompatActivity {
         variant1Selected = besedaInitialVariant.compareTo("1") == 0;
         listBesedaMarkers.clear();
         String besedaMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.BesedaMarkersVar");
-        if (besedaMarkers.equals("")==false) {
+        if (!besedaMarkers.equals("")) {
             String[] inputBesedaMarkers = besedaMarkers.split(" "); // Split to " " to read integers
             // prepare input list of markers
             if ( inputBesedaMarkers.length > 1) {
@@ -196,7 +186,7 @@ public class BesedaActivity extends AppCompatActivity {
 
         rs = mydb.getbeseda(besedaLink, besedaDateYear, besedaDateMonth, besedaDateDay);
         rs.moveToFirst();
-        if (variant1Selected==false) {
+        if (!variant1Selected) {
             rs.moveToNext();
         }
         if (rs.getCount()<=1) {
@@ -224,7 +214,7 @@ public class BesedaActivity extends AppCompatActivity {
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorBesedaNameText, null)),
                         0, spannableString.length(), flag);
             } else {
@@ -242,17 +232,17 @@ public class BesedaActivity extends AppCompatActivity {
         String besedaDetails = "\n" + rs.getString(rs.getColumnIndex("Type_1"))+", ";
         for (int i=2; i<=4; i++) {
             String typeX = rs.getString(rs.getColumnIndex("Type_"+i));
-            if (typeX.equals("")==false) {
+            if (!typeX.equals("")) {
                 besedaDetails = besedaDetails + typeX + ", ";
             }
         }
         String besedaLocation = rs.getString(rs.getColumnIndex("Location"));
-        if (besedaLocation.equals("")==false) {
+        if (!besedaLocation.equals("")) {
             besedaDetails = besedaDetails + besedaLocation +", ";
         }
         besedaDetails = besedaDetails + " " + besedaDateDay+"."+besedaDateMonth+"."+besedaDateYear;
         String besedaHour = rs.getString(rs.getColumnIndex("Hour_"));
-        if (besedaHour.equals("")==false) {
+        if (!besedaHour.equals("")) {
             besedaDetails = besedaDetails + ", " + besedaHour;
         }
         //besedaDetails = besedaDetails + "\n";
@@ -345,12 +335,12 @@ public class BesedaActivity extends AppCompatActivity {
             rs.close();
         }
 
-        if (searchControlsShown==false) {
+        if (!searchControlsShown) {
             hideSearchControls(linearLayoutSearchControls);
         } else {
             //showSearchControls(linearLayoutSearchControls);
         }
-        if (searchKeyboardShown==true) {
+        if (searchKeyboardShown) {
             showSearchKeyboard();
         } else {
             hideSearchkeyboard();
@@ -384,7 +374,7 @@ public class BesedaActivity extends AppCompatActivity {
     }
 
     public void setVariant1 (View view) {
-        if (variant1Selected==true) {
+        if (variant1Selected) {
             String errorMessage = getString(R.string.variant1_already_selected);
             showMessage(errorMessage);
         } else {
@@ -397,7 +387,7 @@ public class BesedaActivity extends AppCompatActivity {
     }
 
     public void setVariant2 (View view) {
-        if (variant1Selected==false) {
+        if (!variant1Selected) {
             String errorMessage = getString(R.string.variant2_already_selected);
             showMessage(errorMessage);
         } else {
@@ -475,8 +465,8 @@ public class BesedaActivity extends AppCompatActivity {
     }
 
     private class besedaMarker {
-        private int textIndex;
-        private int startIndex;
+        private final int textIndex;
+        private final int startIndex;
         private int endIndex;
 
         public besedaMarker (int inputTextIndex, int inputStartIndex, int inputEndIndex) {
@@ -642,7 +632,7 @@ public class BesedaActivity extends AppCompatActivity {
         numberSearchResults = 0;
 
         String searchBesedaVariant;
-        if (variant1Selected==true) {
+        if (variant1Selected) {
             searchBesedaVariant="1";
         } else {
             searchBesedaVariant="2";

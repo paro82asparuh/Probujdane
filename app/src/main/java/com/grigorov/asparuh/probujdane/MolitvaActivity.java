@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -29,7 +29,7 @@ public class MolitvaActivity extends AppCompatActivity {
     private int srollColumn;
     private int srollTextIndex;
 
-    private ArrayList<MolitvaMarker> listMolitvaMarkers= new ArrayList<MolitvaMarker>();
+    private final ArrayList<MolitvaMarker> listMolitvaMarkers= new ArrayList<MolitvaMarker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class MolitvaActivity extends AppCompatActivity {
 
         listMolitvaMarkers.clear();
         String molitvaMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.MolitvaMarkersVar");
-        if (molitvaMarkers.equals("")==false) {
+        if (!molitvaMarkers.equals("")) {
             String[] inputMolitvaMarkers = molitvaMarkers.split(" "); // Split to " " to read integers
             for (int marker_loop=0; marker_loop<inputMolitvaMarkers.length;marker_loop=marker_loop+3) {
                 listMolitvaMarkers.add(
@@ -79,7 +79,7 @@ public class MolitvaActivity extends AppCompatActivity {
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorMolitvaTitleText, null)),
                         0, spannableString.length(), flag);
             } else {
@@ -107,7 +107,7 @@ public class MolitvaActivity extends AppCompatActivity {
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorMolitvaText, null)),
                         0, spannableString.length(), flag);
             } else {

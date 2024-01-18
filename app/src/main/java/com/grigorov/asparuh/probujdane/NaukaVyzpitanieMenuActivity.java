@@ -3,7 +3,7 @@ package com.grigorov.asparuh.probujdane;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +20,7 @@ public class NaukaVyzpitanieMenuActivity extends AppCompatActivity {
     private NaukaVyzDBHelper mydb;
     private Cursor rs;
 
-    private ArrayList<ChapterNaukaVyz> listChapters = new ArrayList<ChapterNaukaVyz>();
+    private final ArrayList<ChapterNaukaVyz> listChapters = new ArrayList<ChapterNaukaVyz>();
 
     private String screenWidthInPixels;
 

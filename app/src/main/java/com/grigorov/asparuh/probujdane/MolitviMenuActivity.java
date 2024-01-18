@@ -3,7 +3,7 @@ package com.grigorov.asparuh.probujdane;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +23,7 @@ public class MolitviMenuActivity extends AppCompatActivity {
 
     private MolitviDBHelper mydb;
 
-    private ArrayList<Molitva> listMolitvi= new ArrayList<Molitva>();
+    private final ArrayList<Molitva> listMolitvi= new ArrayList<Molitva>();
 
     public class MolitvaAdapter extends ArrayAdapter<Molitva> {
 

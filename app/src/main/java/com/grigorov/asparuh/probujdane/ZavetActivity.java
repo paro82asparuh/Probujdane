@@ -7,9 +7,9 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -31,7 +31,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import static android.text.Layout.JUSTIFICATION_MODE_INTER_WORD;
-import static android.view.Gravity.CENTER;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class ZavetActivity extends AppCompatActivity {
@@ -44,11 +43,11 @@ public class ZavetActivity extends AppCompatActivity {
 
     private Cursor rs;
 
-    private ArrayList<ChapterZavet> listChapters = new ArrayList<ChapterZavet>();
+    private final ArrayList<ChapterZavet> listChapters = new ArrayList<ChapterZavet>();
 
     private String searchQuery;
 
-    private ArrayList<ZavetBookMarker> listZavetBookMarkers= new ArrayList<ZavetBookMarker>();
+    private final ArrayList<ZavetBookMarker> listZavetBookMarkers= new ArrayList<ZavetBookMarker>();
 
     private LinearLayout mLinearLayout;
 
@@ -73,7 +72,7 @@ public class ZavetActivity extends AppCompatActivity {
 
         listZavetBookMarkers.clear();
         String bookMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.ZavetBookMarkersVar");
-        if (bookMarkers.equals("")==false) {
+        if (!bookMarkers.equals("")) {
             String[] inputZavetBookMarkers = bookMarkers.split(" "); // Split to " " to read integers
             // prepare input list of markers
             if ( inputZavetBookMarkers.length > 1) {
@@ -185,12 +184,12 @@ public class ZavetActivity extends AppCompatActivity {
         linearLayoutSearchControls = findViewById(R.id.linear_layout_search_controls);
         linearLayoutEmpty1 = findViewById(R.id.linear_layout_empty_1);
         linearLayoutEmpty2 = findViewById(R.id.linear_layout_empty_2);
-        if (searchControlsShown==false) {
+        if (!searchControlsShown) {
             hideSearchControls(linearLayoutSearchControls);
         } else {
             //showSearchControls(linearLayoutSearchControls);
         }
-        if (searchKeyboardShown==true) {
+        if (searchKeyboardShown) {
             showSearchKeyboard();
         } else {
             hideSearchkeyboard();
@@ -207,10 +206,10 @@ public class ZavetActivity extends AppCompatActivity {
             TextView centerTextView = layoutChapter.findViewById(R.id.textChapterCenter);
             TextView rightTextView = layoutChapter.findViewById(R.id.textChapterRight);
 
-            layoutChapter.setTag("linear_layout_chapter_"+(new Integer(i_loop)).toString());
-            leftTextView.setTag("left_textview_chapter_"+(new Integer(i_loop)).toString());
-            centerTextView.setTag("center_textview_chapter_"+(new Integer(i_loop)).toString());
-            rightTextView.setTag("right_textview_chapter_"+(new Integer(i_loop)).toString());
+            layoutChapter.setTag("linear_layout_chapter_"+ (Integer.valueOf(i_loop)));
+            leftTextView.setTag("left_textview_chapter_"+ (Integer.valueOf(i_loop)));
+            centerTextView.setTag("center_textview_chapter_"+ (Integer.valueOf(i_loop)));
+            rightTextView.setTag("right_textview_chapter_"+ (Integer.valueOf(i_loop)));
 
             leftTextView.setText(listChapters.get(i_loop).getTextLeft());
             centerTextView.setText(listChapters.get(i_loop).getTextCenter());
@@ -297,15 +296,15 @@ public class ZavetActivity extends AppCompatActivity {
         int flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
         for (int markerIndex=0; markerIndex<listZavetBookMarkers.size();markerIndex++) {
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            Integer chapterIndex = new Integer(listZavetBookMarkers.get(markerIndex).getChapterIndex());
+            Integer chapterIndex = Integer.valueOf(listZavetBookMarkers.get(markerIndex).getChapterIndex());
             chapterIndex = chapterIndex -1;
             TextView markedTextView;
             if (listZavetBookMarkers.get(markerIndex).getTextSide() == 0) {
-                markedTextView = mLinearLayout.findViewWithTag("left_textview_chapter_"+chapterIndex.toString());
+                markedTextView = mLinearLayout.findViewWithTag("left_textview_chapter_"+ chapterIndex);
             } else if (listZavetBookMarkers.get(markerIndex).getTextSide() == 1) {
-                markedTextView = mLinearLayout.findViewWithTag("center_textview_chapter_"+chapterIndex.toString());
+                markedTextView = mLinearLayout.findViewWithTag("center_textview_chapter_"+ chapterIndex);
             } else {
-                markedTextView = mLinearLayout.findViewWithTag("right_textview_chapter_"+chapterIndex.toString());
+                markedTextView = mLinearLayout.findViewWithTag("right_textview_chapter_"+ chapterIndex);
             }
             SpannableString markedString = new SpannableString( markedTextView.getText() );
             markedString.setSpan(new StyleSpan(Typeface.ITALIC),
@@ -539,9 +538,9 @@ public class ZavetActivity extends AppCompatActivity {
 
     private void updateScrollFromSearch() {
         scrollChapterX = listZavetBookMarkers.get(scrollSearchResultIndex).getChapterIndex();
-        Integer temp = new Integer(scrollChapterX);
+        Integer temp = Integer.valueOf(scrollChapterX);
         temp = temp -1;
-        scrollLinearLayout = mLinearLayout.findViewWithTag("linear_layout_chapter_"+temp.toString());
+        scrollLinearLayout = mLinearLayout.findViewWithTag("linear_layout_chapter_"+ temp);
         scrollViewBook.scrollTo(0,0);
     }
 

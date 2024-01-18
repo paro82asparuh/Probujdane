@@ -10,10 +10,9 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 
-public class JustifiedTextView extends android.support.v7.widget.AppCompatTextView {
+public class JustifiedTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private int mLineY;
     private int mViewWidth;

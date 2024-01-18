@@ -9,27 +9,22 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.content.res.ResourcesCompat;
+import androidx.core.content.res.ResourcesCompat;
 import android.text.Layout;
-import android.text.Spannable;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
 
 import java.util.ArrayList;
 
-import static com.grigorov.asparuh.probujdane.R.styleable.View;
 
-
-public class besedaTextView extends android.support.v7.widget.AppCompatTextView {
+public class besedaTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private int mLineY;
     private int mViewWidth;
     private boolean firstLineOfParagraph;
     private int charCounter;
-    private ArrayList<besedaTextViewMarker> listMarkers= new ArrayList<besedaTextViewMarker>();
+    private final ArrayList<besedaTextViewMarker> listMarkers= new ArrayList<besedaTextViewMarker>();
     private int scrollToY;
     private int scrollToChar;
     private BesedaActivity bActivity;
@@ -171,7 +166,7 @@ public class besedaTextView extends android.support.v7.widget.AppCompatTextView 
 
     public void setMarkersString (String inputString) {
         listMarkers.clear();
-        if (inputString.equals("")==false) {
+        if (!inputString.equals("")) {
             String[] inputMarkers = inputString.split(" "); // Split to " " to read integers
             for (int marker_loop = 0; marker_loop < inputMarkers.length; marker_loop = marker_loop + 2) {
                 listMarkers.add(
@@ -191,8 +186,8 @@ public class besedaTextView extends android.support.v7.widget.AppCompatTextView 
     public int getScrollToY () { return scrollToY; }
 
     private class besedaTextViewMarker {
-        private int startIndex;
-        private int endIndex;
+        private final int startIndex;
+        private final int endIndex;
 
         public besedaTextViewMarker (int inputStartIndex, int inputEndIndex) {
             startIndex = inputStartIndex;

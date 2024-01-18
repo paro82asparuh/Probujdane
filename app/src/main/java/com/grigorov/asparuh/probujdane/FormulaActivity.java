@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -29,7 +29,7 @@ public class FormulaActivity extends AppCompatActivity {
     private int srollColumn;
     private int srollTextIndex;
 
-    private ArrayList<FormulaMarker> listFormulaMarkers= new ArrayList<FormulaMarker>();
+    private final ArrayList<FormulaMarker> listFormulaMarkers= new ArrayList<FormulaMarker>();
 
 
     @Override
@@ -56,7 +56,7 @@ public class FormulaActivity extends AppCompatActivity {
 
         listFormulaMarkers.clear();
         String formulaMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.FormulaMarkersVar");
-        if (formulaMarkers.equals("")==false) {
+        if (!formulaMarkers.equals("")) {
             String[] inputFormulaMarkers = formulaMarkers.split(" "); // Split to " " to read integers
             for (int marker_loop=0; marker_loop<inputFormulaMarkers.length;marker_loop=marker_loop+3) {
                 listFormulaMarkers.add(
@@ -83,7 +83,7 @@ public class FormulaActivity extends AppCompatActivity {
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorFormulaTitleText, null)),
                         0, spannableString.length(), flag);
             } else {
@@ -111,7 +111,7 @@ public class FormulaActivity extends AppCompatActivity {
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorFormulaText, null)),
                         0, spannableString.length(), flag);
             } else {

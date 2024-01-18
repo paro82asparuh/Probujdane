@@ -4,22 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import static android.widget.Toast.LENGTH_LONG;
 
@@ -40,7 +36,7 @@ public class BesediListActivity extends AppCompatActivity {
     public final static int KlasNaDobrodetelite_Besedi =12;
     String BesediTypeCyrillic;
 
-    private ArrayList<besedaInfo> listBesediInfo= new ArrayList<besedaInfo>();
+    private final ArrayList<besedaInfo> listBesediInfo= new ArrayList<besedaInfo>();
 
     private besediDBHelper mydb;
 
@@ -230,7 +226,7 @@ public class BesediListActivity extends AppCompatActivity {
             String besedaLink = rs.getString(rs.getColumnIndex("Link"));
             listBesediInfo.add(new besedaInfo(besedaID, besedaName, besedaDateYear, besedaDateMonth, besedaDateDay, besedaLink));
 
-            if (    (checkIntegerArrayContains(besediUniqueYears, rs.getInt(rs.getColumnIndex("Year_")) ) == false ) &&
+            if (    (!checkIntegerArrayContains(besediUniqueYears, rs.getInt(rs.getColumnIndex("Year_")))) &&
                     (besedaDateYear!="")
                     ) {
                 besediUniqueYears = addIntegerToArray (besediUniqueYears, rs.getInt(rs.getColumnIndex("Year_")));
@@ -287,10 +283,7 @@ public class BesediListActivity extends AppCompatActivity {
     private static Integer[] addIntegerToArray(Integer[] integerArray, Integer newValue)
     {
         Integer[] tempArray = new Integer[ integerArray.length + 1 ];
-        for (int i=0; i<integerArray.length; i++)
-        {
-            tempArray[i] = integerArray[i];
-        }
+        System.arraycopy(integerArray, 0, tempArray, 0, integerArray.length);
         tempArray[integerArray.length] = newValue;
         return tempArray;
     }
@@ -366,8 +359,8 @@ public class BesediListActivity extends AppCompatActivity {
     /***** Adapter class extends with ArrayAdapter ******/
     public class SpinnerBesediListAdapter extends ArrayAdapter<String>{
 
-        private Activity activity;
-        private String[] data;
+        private final Activity activity;
+        private final String[] data;
         LayoutInflater inflater;
 
         /*************  CustomAdapter Constructor *****************/

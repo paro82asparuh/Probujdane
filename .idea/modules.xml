@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Probujdane.iml" filepath="$PROJECT_DIR$/Probujdane.iml" group="Probujdane" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Probujdane/app" />
+      <module fileurl="file://$PROJECT_DIR$/Probujdane.iml" filepath="$PROJECT_DIR$/Probujdane.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Probujdane.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Probujdane.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Probujdane.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Probujdane.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Probujdane.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Probujdane.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Probujdane.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Probujdane.app.unitTest.iml" />
     </modules>
   </component>
 </project>

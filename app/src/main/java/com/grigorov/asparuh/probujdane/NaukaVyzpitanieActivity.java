@@ -7,9 +7,9 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -48,11 +47,11 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
 
     private Cursor rs;
 
-    private ArrayList<ChapterNaukaVyz> listChapters = new ArrayList<ChapterNaukaVyz>();
+    private final ArrayList<ChapterNaukaVyz> listChapters = new ArrayList<ChapterNaukaVyz>();
 
     private String searchQuery;
 
-    private ArrayList<NaukaVyzBookMarker> listNaukaVyzBookMarkers= new ArrayList<NaukaVyzBookMarker>();
+    private final ArrayList<NaukaVyzBookMarker> listNaukaVyzBookMarkers= new ArrayList<NaukaVyzBookMarker>();
 
     private LinearLayout mLinearLayout;
 
@@ -82,7 +81,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
 
         listNaukaVyzBookMarkers.clear();
         String bookMarkers = intent.getStringExtra("com.grigorov.asparuh.probujdane.NaukaVyzBookMarkersVar");
-        if (bookMarkers.equals("")==false) {
+        if (!bookMarkers.equals("")) {
             String[] inputNaukaVyzBookMarkers = bookMarkers.split(" "); // Split to " " to read integers
             // prepare input list of markers
             if ( inputNaukaVyzBookMarkers.length > 1) {
@@ -198,12 +197,12 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         linearLayoutSearchControls = findViewById(R.id.linear_layout_search_controls);
         linearLayoutEmpty1 = findViewById(R.id.linear_layout_empty_1);
         linearLayoutEmpty2 = findViewById(R.id.linear_layout_empty_2);
-        if (searchControlsShown==false) {
+        if (!searchControlsShown) {
             hideSearchControls(linearLayoutSearchControls);
         } else {
             //showSearchControls(linearLayoutSearchControls);
         }
-        if (searchKeyboardShown==true) {
+        if (searchKeyboardShown) {
             showSearchKeyboard();
         } else {
             hideSearchkeyboard();
@@ -218,8 +217,8 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             TextView titleTextView = layout2.findViewById(R.id.textChapterTitle);
             TextView contentTextView = layout2.findViewById(R.id.textChapterContent);
 
-            titleTextView.setTag("title_textview_chapter_"+(new Integer(i_loop)).toString());
-            contentTextView.setTag("content_textview_chapter_"+(new Integer(i_loop)).toString());
+            titleTextView.setTag("title_textview_chapter_"+ (Integer.valueOf(i_loop)));
+            contentTextView.setTag("content_textview_chapter_"+ (Integer.valueOf(i_loop)));
 
             titleTextView.setText(listChapters.get(i_loop).getTitle()+"\n");
             contentTextView.setText(listChapters.get(i_loop).getContent()+"\n\n");
@@ -242,7 +241,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             mLinearLayout.addView(layout2);
 
             if (scrollChapterX==i_loop+1) {
-                if (scrollChapterInTitle==true) {
+                if (scrollChapterInTitle) {
                     scrollTextView = titleTextView;
                 } else {
                     scrollTextView = contentTextView;
@@ -256,13 +255,13 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         int flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
         for (int markerIndex=0; markerIndex<listNaukaVyzBookMarkers.size();markerIndex++) {
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-            Integer temp = new Integer(listNaukaVyzBookMarkers.get(markerIndex).getChapterIndex());
+            Integer temp = Integer.valueOf(listNaukaVyzBookMarkers.get(markerIndex).getChapterIndex());
             temp = temp -1;
             TextView markedTextView;
-            if (listNaukaVyzBookMarkers.get(markerIndex).getInTitle() == true) {
-                markedTextView = mLinearLayout.findViewWithTag("title_textview_chapter_"+temp.toString());
+            if (listNaukaVyzBookMarkers.get(markerIndex).getInTitle()) {
+                markedTextView = mLinearLayout.findViewWithTag("title_textview_chapter_"+ temp);
             } else {
-                markedTextView = mLinearLayout.findViewWithTag("content_textview_chapter_"+temp.toString());
+                markedTextView = mLinearLayout.findViewWithTag("content_textview_chapter_"+ temp);
             }
             SpannableString markedString = new SpannableString( markedTextView.getText() );
             markedString.setSpan(new StyleSpan(Typeface.ITALIC),
@@ -287,7 +286,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         int flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
         String inputString;
-        if (inputInTitle==true) {
+        if (inputInTitle) {
             inputString= listChapters.get(i_loop).getTitle() + "\n";
         } else {
             inputString= listChapters.get(i_loop).getContent() + "\n\n";
@@ -305,7 +304,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
                     marked = true;
                 }
             }
-            if (marked == false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorNaukaVyzText, null)),
                         0, spannableString.length(), flag);
             } else {
@@ -520,12 +519,12 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
         scrollChapterX = listNaukaVyzBookMarkers.get(scrollSearchResultIndex).getChapterIndex();
         scrollChapterInTitle = listNaukaVyzBookMarkers.get(scrollSearchResultIndex).getInTitle();
         scrollChapterIndex = listNaukaVyzBookMarkers.get(scrollSearchResultIndex).getStartIndex();
-        Integer temp = new Integer(scrollChapterX);
+        Integer temp = Integer.valueOf(scrollChapterX);
         temp = temp -1;
-        if (scrollChapterInTitle == true) {
-            scrollTextView = mLinearLayout.findViewWithTag("title_textview_chapter_"+temp.toString());
+        if (scrollChapterInTitle) {
+            scrollTextView = mLinearLayout.findViewWithTag("title_textview_chapter_"+ temp);
         } else {
-            scrollTextView = mLinearLayout.findViewWithTag("content_textview_chapter_"+temp.toString());
+            scrollTextView = mLinearLayout.findViewWithTag("content_textview_chapter_"+ temp);
         }
         scrollViewBook.scrollTo(0,0);
     }
@@ -541,9 +540,9 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
 
     private class NaukaVyzBookMarker {
 
-        private int chapterIndex;
-        private boolean inTitle;
-        private int startIndex;
+        private final int chapterIndex;
+        private final boolean inTitle;
+        private final int startIndex;
         private int endIndex;
 
         public NaukaVyzBookMarker (int inputChapterIndex, boolean inputInTitle, int inputStartIndex, int inputEndIndex) {

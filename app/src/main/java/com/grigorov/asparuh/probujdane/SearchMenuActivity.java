@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import android.support.annotation.IntegerRes;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.IntegerRes;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -20,27 +19,19 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.grigorov.asparuh.probujdane.besedaInfo;
-import com.grigorov.asparuh.probujdane.searchResult;
-
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static android.widget.Toast.LENGTH_LONG;
@@ -70,7 +61,7 @@ public class SearchMenuActivity extends AppCompatActivity {
     private String[] optionsSearchWhere;
     private LinearLayout linearLayoutScrollViewSearchResults;
 
-    private ArrayList<searchResult> listSearchResult= new ArrayList<searchResult>();
+    private final ArrayList<searchResult> listSearchResult= new ArrayList<searchResult>();
     SearchResultAdapter searchResultAdapter;
 
     private String screenWidthInPixels;
@@ -79,8 +70,8 @@ public class SearchMenuActivity extends AppCompatActivity {
     private int searchOptionsTextSize;
     private int searchButtonTextSize;
 
-    static private int textMainMaxLenght=500;
-    static private String stringSentenceEnds = ".?!\n";
+    static private final int textMainMaxLenght=500;
+    static private final String stringSentenceEnds = ".?!\n";
 
     private String searchQuery;
 
@@ -95,10 +86,10 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private Integer numberSearchResults;
 
-    private ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
-    private ArrayList<ZavetBookMarker> listZavetMarkers= new ArrayList<ZavetBookMarker>();
-    private ArrayList<NaukaVyzBookMarker> listNaukaVyzMarkers= new ArrayList<NaukaVyzBookMarker>();
-    private ArrayList<MolitvaMarker> listMolitvaMarkers= new ArrayList<MolitvaMarker>();
+    private final ArrayList<BesedaMarker> listBesedaMarkers= new ArrayList<BesedaMarker>();
+    private final ArrayList<ZavetBookMarker> listZavetMarkers= new ArrayList<ZavetBookMarker>();
+    private final ArrayList<NaukaVyzBookMarker> listNaukaVyzMarkers= new ArrayList<NaukaVyzBookMarker>();
+    private final ArrayList<MolitvaMarker> listMolitvaMarkers= new ArrayList<MolitvaMarker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +170,6 @@ public class SearchMenuActivity extends AppCompatActivity {
                 updateBesedaInputVisibility();
             }
             public void onNothingSelected(AdapterView<?> adapterView) {
-                return;
             }
         });
 
@@ -252,8 +242,8 @@ public class SearchMenuActivity extends AppCompatActivity {
     /***** Adapter class extends with ArrayAdapter ******/
     public class SpinnerSearchAdapter extends ArrayAdapter<String> {
 
-        private Activity activity;
-        private String[] data;
+        private final Activity activity;
+        private final String[] data;
         LayoutInflater inflater;
 
         /*************  CustomAdapter Constructor *****************/
@@ -496,7 +486,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         listSearchResult.clear();
         searchResultAdapter.clear();
 
-        numberSearchResults= new Integer(0);
+        numberSearchResults= Integer.valueOf(0);
         if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_books))) {
             searchInBooks();
         } else if (spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_all_besedi))) {
@@ -548,7 +538,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                     if ( (currentDBcolumn>=14) && ((currentDBcolumn%2)!=0) ) {
                         offsetToBeSkipepd = true;
                     }
-                    if (offsetToBeSkipepd==true) {
+                    if (offsetToBeSkipepd) {
                         offsets.remove(offset_loop);
                     }
                 }
@@ -678,7 +668,7 @@ public class SearchMenuActivity extends AppCompatActivity {
             for (int i=0; i<listNaukaVyzMarkers.size(); i++){
                 newItemMarkers = newItemMarkers +
                         listNaukaVyzMarkers.get(i).getChapterIndex() + " ";
-                if (listNaukaVyzMarkers.get(i).getInTitle()==true) {
+                if (listNaukaVyzMarkers.get(i).getInTitle()) {
                     newItemMarkers = newItemMarkers + "1 ";
                 } else {
                     newItemMarkers = newItemMarkers + "0 ";
@@ -781,7 +771,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         numberSearchResults = numberSearchResults + rs.getCount();
 
         if (rs.getCount()<1) {
-            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+            if (!(spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))) {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         getResources().getString(R.string.search_no_results), LENGTH_LONG);
                 toast.show();
@@ -836,7 +826,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         numberSearchResults = numberSearchResults + rs.getCount();
 
         if (rs.getCount()<1) {
-            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+            if (!(spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))) {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         getResources().getString(R.string.search_no_results), LENGTH_LONG);
                 toast.show();
@@ -892,7 +882,7 @@ public class SearchMenuActivity extends AppCompatActivity {
         numberSearchResults = numberSearchResults + rs.getCount();
 
         if (rs.getCount()<1) {
-            if ((spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))==false) {
+            if (!(spinnerSearchWhere.getSelectedItem().toString().equals(getResources().getString(R.string.search_option_whole_slovo)))) {
                 Toast toast = Toast.makeText(getApplicationContext(),
                         getResources().getString(R.string.search_no_results), LENGTH_LONG);
                 toast.show();
@@ -1079,8 +1069,8 @@ public class SearchMenuActivity extends AppCompatActivity {
         }
         startCharTextMain = 0;
         endCharTextMain = newTextMainPre.length();
-        addDotsInFront = new Boolean(false);
-        addDotsInEnd = new Boolean(false);
+        addDotsInFront = Boolean.FALSE;
+        addDotsInEnd = Boolean.FALSE;
         if ( (endNextSentence-startPrevSentence) < textMainMaxLenght ) {
             startCharTextMain = startPrevSentence;
             endCharTextMain = endNextSentence;
@@ -1096,11 +1086,11 @@ public class SearchMenuActivity extends AppCompatActivity {
 
         String newTextMain = newTextMainPre.substring(startCharTextMain,endCharTextMain);
         scrollCharIndex = startCharTextMain;
-        if (addDotsInFront==true) {
+        if (addDotsInFront) {
             newTextMain = "..."+newTextMain;
             scrollCharIndex = scrollCharIndex + 3;
         }
-        if (addDotsInEnd==true) {
+        if (addDotsInEnd) {
             newTextMain = newTextMain+"...";
         }
         return newTextMain;
@@ -1129,15 +1119,15 @@ public class SearchMenuActivity extends AppCompatActivity {
                     endMarkerIndex = endCharTextMain-startCharTextMain;
                     addToMarkers = true;
                 } else if ( (currentEndCharIndex>=startCharTextMain) &&  (currentEndCharIndex<=endCharTextMain) ) {
-                    startMarkerIndex = startCharTextMain-startCharTextMain;
+                    startMarkerIndex = 0;
                     endMarkerIndex = currentEndCharIndex-startCharTextMain;
                     addToMarkers = true;
                 }
-                if (addDotsInFront==true) {
+                if (addDotsInFront) {
                     startMarkerIndex = startMarkerIndex+3;
                     endMarkerIndex = endMarkerIndex+3;
                 }
-                if (addToMarkers == true) {
+                if (addToMarkers) {
                     newSearchMarkers = newSearchMarkers + startMarkerIndex + " " + endMarkerIndex + " ";
                 }
             }
@@ -1195,7 +1185,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                             swapNeeded=true;
                         }
                     }
-                    if (swapNeeded==true) {
+                    if (swapNeeded) {
                         Collections.swap(listBesedaMarkers, sizeList - i, sizeList - i+1);
                     }
                 }
@@ -1244,7 +1234,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                             swapNeeded=true;
                         }
                     }
-                    if (swapNeeded==true) {
+                    if (swapNeeded) {
                         Collections.swap(listMolitvaMarkers, sizeList - i, sizeList - i+1);
                     }
                 }
@@ -1262,7 +1252,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private void addNaukaVyzMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
-            Integer chapterInt = new Integer(Integer.parseInt(rs.getString(1)));
+            Integer chapterInt = Integer.valueOf(Integer.parseInt(rs.getString(1)));
             Boolean inputInTitle;
             inputInTitle = offsets.get(m_offs).getColumnNumber() == 2;
             Integer startIndex = characterOffsetForByteOffsetInUTF8String(
@@ -1294,7 +1284,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                     if (markerB.getChapterIndex() < markerA.getChapterIndex()) {
                         swapNeeded=true;
                     } else if (markerB.getChapterIndex() == markerA.getChapterIndex()) {
-                        if ( (markerB.getInTitle()==true) && (markerA.getInTitle()==false) ) {
+                        if ( (markerB.getInTitle()) && (!markerA.getInTitle()) ) {
                             swapNeeded=true;
                         } else if (markerB.getInTitle()==markerA.getInTitle()) {
                             if (markerB.getStartIndex()<markerA.getStartIndex()) {
@@ -1302,7 +1292,7 @@ public class SearchMenuActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    if (swapNeeded==true) {
+                    if (swapNeeded) {
                         Collections.swap(listNaukaVyzMarkers, sizeList - i, sizeList - i+1);
                     }
                 }
@@ -1313,7 +1303,7 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     private void addZavetMarkers(ArrayList<OffsetRes> offsets, Cursor rs) {
         for (int m_offs=0; m_offs<offsets.size();m_offs++) {
-            Integer chapterInt = new Integer(Integer.parseInt(rs.getString(rs.getColumnIndex("ID"))));
+            Integer chapterInt = Integer.valueOf(Integer.parseInt(rs.getString(rs.getColumnIndex("ID"))));
             Integer columnNumber = offsets.get(m_offs).getColumnNumber();
             columnNumber = columnNumber - 4;
             Integer startIndex = characterOffsetForByteOffsetInUTF8String(
@@ -1346,10 +1336,10 @@ public class SearchMenuActivity extends AppCompatActivity {
 
     
     public class OffsetRes {
-        private int columnNumber;
-        private int termNumber;
-        private int offsetInColumn;
-        private int termLenght;
+        private final int columnNumber;
+        private final int termNumber;
+        private final int offsetInColumn;
+        private final int termLenght;
 
         public OffsetRes (int newColumnNumber, int newTermNumber,
                           int newOffsetInColumn, int newTermLenght) {

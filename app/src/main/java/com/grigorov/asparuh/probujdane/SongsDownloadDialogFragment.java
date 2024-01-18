@@ -5,8 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
 
 public class SongsDownloadDialogFragment extends DialogFragment {
 
@@ -30,7 +30,7 @@ public class SongsDownloadDialogFragment extends DialogFragment {
             mListener = (SongsDownloadDialogFragment.SongsDownloadDialogListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(activity
                     + " must implement SongsDownloadDialogListener");
         }
     }

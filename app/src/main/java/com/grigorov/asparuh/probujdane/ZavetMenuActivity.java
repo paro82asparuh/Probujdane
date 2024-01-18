@@ -3,8 +3,8 @@ package com.grigorov.asparuh.probujdane;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +21,7 @@ public class ZavetMenuActivity extends AppCompatActivity {
     private ZavetDBHelper mydb;
     private Cursor rs;
 
-    private ArrayList<ChapterZavet> listChapters = new ArrayList<ChapterZavet>();
+    private final ArrayList<ChapterZavet> listChapters = new ArrayList<ChapterZavet>();
 
     private String screenWidthInPixels;
 

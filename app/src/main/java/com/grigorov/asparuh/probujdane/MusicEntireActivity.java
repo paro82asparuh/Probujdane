@@ -1,6 +1,5 @@
 package com.grigorov.asparuh.probujdane;
 
-import android.app.ActivityManager;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -13,23 +12,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +35,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MusicEntireActivity extends AppCompatActivity implements PlaylistDeleteDialogFragment.PlaylistDeleteDialogListener,
@@ -78,14 +73,14 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private TextView buttonMusicPlayPause;
     private TextView musicInfoText;
     private SeekBar seekbarMusic;
-    private int seekBarMaxUnits = 1000;
+    private final int seekBarMaxUnits = 1000;
 
     private LinearLayout topMusicLinearLayout;
 
-    private ArrayList<Playlist> listPlaylists= new ArrayList<Playlist>();
-    private ArrayList<Playlist> listEditablePlaylists= new ArrayList<Playlist>();
+    private final ArrayList<Playlist> listPlaylists= new ArrayList<Playlist>();
+    private final ArrayList<Playlist> listEditablePlaylists= new ArrayList<Playlist>();
 
-    private ArrayList<songInfo> listSongsInfo= new ArrayList<songInfo>();
+    private final ArrayList<songInfo> listSongsInfo= new ArrayList<songInfo>();
     private ArrayList<PlaylistSongInfo> listPlaylistEditSongsInfo= new ArrayList<PlaylistSongInfo>();
 
     private ArrayList<Song> listPlaylistsSongs= new ArrayList<Song>();
@@ -112,7 +107,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private ArrayList<Song> songList= new ArrayList<Song>();
     private int startSongNumber;
 
-    private ArrayList<SongMarker> listSongMarkers= new ArrayList<SongMarker>();
+    private final ArrayList<SongMarker> listSongMarkers= new ArrayList<SongMarker>();
 
     private MusicService musicSrv;
     private Intent playIntent;
@@ -127,7 +122,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     private Integer song2PlaylistType;
 
-    private ArrayList<Song> listDownloadSongs = new ArrayList<Song>();
+    private final ArrayList<Song> listDownloadSongs = new ArrayList<Song>();
     private boolean downloadingVocalFile;
     private long downloadReference;
     private DownloadManager downloadManager;
@@ -135,12 +130,12 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private BroadcastReceiver broadcastReceiverEndMusicPlay;
     private BroadcastReceiver broadcastReceiverPlayAnotherSong;
 
-    private Handler handlerUpdateSeekbar = new Handler();
-    private Runnable runnableUpdateSeekbar = new Runnable() {
+    private final Handler handlerUpdateSeekbar = new Handler();
+    private final Runnable runnableUpdateSeekbar = new Runnable() {
         @Override
         public void run() {
-            if (musicBound==true) {
-                if (musicSrv.isPlaying() == true) {
+            if (musicBound) {
+                if (musicSrv.isPlaying()) {
                     seekbarMusic.setProgress(seekBarMaxUnits * musicSrv.getCurrentPosition() / musicSrv.getDuration());
                 }
             }
@@ -173,11 +168,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             // Check if an existing view is being reused, otherwise inflate the view
             MusicEntireActivity.SongsInfoAdapter.ViewHolder viewHolder; // view lookup cache stored in tag
 
-            boolean sreenIsLarge = new Boolean(false);
+            boolean sreenIsLarge = Boolean.FALSE;
             sreenIsLarge = getResources().getString(R.string.selected_screen_configuration).equals("xlarge");
 
-            boolean songIsDownloadable = new Boolean (false);
-            if ( (currentSongInfo.isSongVocalPlayble()==false) && (currentSongInfo.isSongInstrumentalPlayble()==false) ) {
+            boolean songIsDownloadable = Boolean.FALSE;
+            if ( (!currentSongInfo.isSongVocalPlayble()) && (!currentSongInfo.isSongInstrumentalPlayble()) ) {
                 String currentSongID = currentSongInfo.getSongID();
                 musicDBHelper songsDB = new musicDBHelper(getApplicationContext());
                 Cursor rs = null;
@@ -186,7 +181,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     rs.moveToFirst();
                     String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
                     String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
-                    if ((currentVocalFileName.equals("") == false) || (currentInstrumentalFileName.equals("") == false)) {
+                    if ((!currentVocalFileName.equals("")) || (!currentInstrumentalFileName.equals(""))) {
                         songIsDownloadable = true;
                     }
                 } finally {
@@ -201,7 +196,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 // If there's no view to re-use, inflate a brand new view for row
                 viewHolder = new MusicEntireActivity.SongsInfoAdapter.ViewHolder();
                 LayoutInflater inflater = LayoutInflater.from(getContext());
-                if (songIsDownloadable == true) {
+                if (songIsDownloadable) {
                     convertView = inflater.inflate(R.layout.music_songs_list_item_download, parent, false);
                 } else {
                     convertView = inflater.inflate(R.layout.music_songs_list_item, parent, false);
@@ -222,14 +217,14 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             // Lookup view for data population
             // Populate the data into the template view using the data object
             viewHolder.songName.setText(currentSongInfo.getSongName());
-            if (songIsDownloadable==false) {
-                if (currentSongInfo.isSongVocalPlayble() == false) {
-                    if (sreenIsLarge == true) {
+            if (!songIsDownloadable) {
+                if (!currentSongInfo.isSongVocalPlayble()) {
+                    if (sreenIsLarge) {
                         viewHolder.textVocalPlay.setText("");
                     }
                     viewHolder.viewVocalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
                 } else {
-                    if (sreenIsLarge == true) {
+                    if (sreenIsLarge) {
                         viewHolder.textVocalPlay.setText(getResources().getString(R.string.vocal));
                         viewHolder.textVocalPlay.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -246,13 +241,13 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                         }
                     });
                 }
-                if (currentSongInfo.isSongInstrumentalPlayble() == false) {
-                    if (sreenIsLarge == true) {
+                if (!currentSongInfo.isSongInstrumentalPlayble()) {
+                    if (sreenIsLarge) {
                         viewHolder.textInstrumentalPlay.setText("");
                     }
                     viewHolder.viewInstrumentalPlay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
                 } else {
-                    if (sreenIsLarge == true) {
+                    if (sreenIsLarge) {
                         viewHolder.textInstrumentalPlay.setText(getResources().getString(R.string.instrumental));
                         viewHolder.viewInstrumentalPlay.setBackgroundResource(R.drawable.music_speaker);
                         viewHolder.textInstrumentalPlay.setOnClickListener(new View.OnClickListener() {
@@ -459,7 +454,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 songTitle = songTitle + " - " + getResources().getString(R.string.instrumental);
             }
             viewHolder.songName.setText(songTitle);
-            if (playlistOnScreen.isEditable()==false) {
+            if (!playlistOnScreen.isEditable()) {
                 viewHolder.songArrowDown.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
                 viewHolder.songArrowUp.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorMain));
             } else {
@@ -547,7 +542,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 songTitle = songTitle + " - " + getResources().getString(R.string.instrumental);
             }
             viewHolder.songName.setText(songTitle);
-            if (listPlaylistEditSongsInfo.get(position).getSongTicked()==true) {
+            if (listPlaylistEditSongsInfo.get(position).getSongTicked()) {
                 viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_checked);
             } else {
                 viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_not_checked);
@@ -558,13 +553,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     PlaylistEditSongsInfoAdapter.ViewHolder vh = (PlaylistEditSongsInfoAdapter.ViewHolder) v.getTag();
                     //int position = vh.getPosition();
                     //int position = viewHolder.getPosition();
-                    if (listPlaylistEditSongsInfo.get(fPosition).getSongTicked()==false) {
-                        listPlaylistEditSongsInfo.get(fPosition).setSongTicked(true);
-                        //viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_checked);
-                    } else {
-                        listPlaylistEditSongsInfo.get(fPosition).setSongTicked(false);
-                        //viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_not_checked);
-                    }
+                    //viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_checked);
+                    //viewHolder.viewSongTick.setBackgroundResource(R.drawable.box_not_checked);
+                    listPlaylistEditSongsInfo.get(fPosition).setSongTicked(!listPlaylistEditSongsInfo.get(fPosition).getSongTicked());
                     playlistEditSongsInfoAdapter.notifyDataSetChanged();
                 }
             });
@@ -595,7 +586,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         downloadingVocalFile = false;
         downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        registerReceiver(downloadReceiver, filter);
+        if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(downloadReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(downloadReceiver, filter);
+        }
 
         updateSongsDownloadedStatus();
 
@@ -621,8 +616,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         buttonMusicPlayPause = findViewById(R.id.buttonMusicPlayPause);
         musicInfoText  = findViewById(R.id.musicInfoText);
         musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
-        if (musicBound==true) {
-            if (musicSrv.isPlaying()==true) {
+        if (musicBound) {
+            if (musicSrv.isPlaying()) {
                 String musicInfoTextString = musicSrv.getPlayedSong().getSongName();
                 if (musicSrv.getPlayedSong().getSongPlayType()==Song.PLAY_INSTRUMENTAL) {
                     musicInfoTextString = musicInfoTextString + " - "  + getResources().getString(R.string.instrumental);
@@ -644,7 +639,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             }
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if( (musicBound==true) && (musicSrv.isPlaying()==true) && (fromUser==true) ){
+                if( (musicBound) && (musicSrv.isPlaying()) && (fromUser) ){
                     musicSrv.seekTo(musicSrv.getDuration() * progress / seekBarMaxUnits);
                 }
             }
@@ -658,7 +653,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         listSongMarkers.clear();
         if (activitySource.equals("SearchMenuActivity")) {
             String songMarkers =  getIntent().getExtras().getString("com.grigorov.asparuh.probujdane.FormulaMarkersVar");
-            if (songMarkers.equals("")==false) {
+            if (!songMarkers.equals("")) {
                 String[] inputSongMarkers = songMarkers.split(" "); // Split to " " to read integers
                 for (int marker_loop=0; marker_loop<inputSongMarkers.length;marker_loop=marker_loop+3) {
                     listSongMarkers.add(
@@ -777,7 +772,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         broadcastReceiverEndMusicPlay = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (musicBound==true) {
+                if (musicBound) {
                     musicBound = false;
                     unbindService(musicConnection);
                     musicInfoText.setText(getResources().getString(R.string.no_music_selected_string));
@@ -787,7 +782,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 }
             }
         };
-        registerReceiver(broadcastReceiverEndMusicPlay, new IntentFilter("com.grigorov.asparuh.probujdane.IntentToUnbindMusicService"));
+        if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(broadcastReceiverEndMusicPlay, new IntentFilter("com.grigorov.asparuh.probujdane.IntentToUnbindMusicService"),Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(broadcastReceiverEndMusicPlay, new IntentFilter("com.grigorov.asparuh.probujdane.IntentToUnbindMusicService"));
+        }
         broadcastReceiverPlayAnotherSong = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -809,19 +808,23 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 }
             }
         };
-        registerReceiver(broadcastReceiverPlayAnotherSong, new IntentFilter("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong"));
+        if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(broadcastReceiverPlayAnotherSong, new IntentFilter("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong"),Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(broadcastReceiverPlayAnotherSong, new IntentFilter("com.grigorov.asparuh.probujdane.intentToPlayAnotherSong"));
+        }
     }
 
     //connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection(){
+    private final ServiceConnection musicConnection = new ServiceConnection(){
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
             //get service
             musicSrv = binder.getService();
             musicBound = true;
-            if (serviceInitOnlyBinding==true) {
-                if (musicSrv.isPlaying() == true) {
+            if (serviceInitOnlyBinding) {
+                if (musicSrv.isPlaying()) {
                     if (musicSrv.getSongsSize()>1) {
                         playlistPlayed = musicSrv.getPlayedPlaylist();
                         songList = new ArrayList<Song>(playlistPlayed.getSongsArrayList());
@@ -854,6 +857,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 musicSrv.setSong(startSongNumber);
                 musicSrv.playSong();
             }
+
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -968,12 +972,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             for (int i = 1; i <= rs.getCount(); i++) {
                 String songID = rs.getString(rs.getColumnIndex("ID"));
                 String songTitle = rs.getString(rs.getColumnIndex("Title"));
-                boolean songVocalPlayable = true;
-                if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals(""))
-                    songVocalPlayable = false;
-                boolean songInstrumentalPlayable = true;
-                if (rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals(""))
-                    songInstrumentalPlayable = false;
+                boolean songVocalPlayable = !rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals("");
+                boolean songInstrumentalPlayable = !rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals("");
                 if (Integer.parseInt(rs.getString(rs.getColumnIndex("Files_Downloaded"))) == Song.FILES_NOT_DOWNLOADED) {
                     songVocalPlayable = false;
                     songInstrumentalPlayable = false;
@@ -1101,7 +1101,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         musicStateOld = inputMusicStateOld;
         if (activitySource.equals("SearchMenuActivity")) {
             musicState = STATE_SONG_FROM_SEARCH;
-        } else if (fromPlaylist==false) {
+        } else if (!fromPlaylist) {
             musicState = STATE_SONG_SINGLE;
         } else {
             musicState = STATE_SONG_FROM_PLAYLIST;
@@ -1138,7 +1138,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorFormulaTitleText, null)),
                         0, spannableString.length(), flag);
             } else {
@@ -1167,7 +1167,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                     marked = true;
                 }
             }
-            if (marked==false) {
+            if (!marked) {
                 spannableString.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.colorFormulaText, null)),
                         0, spannableString.length(), flag);
             } else {
@@ -1189,19 +1189,19 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             removeSongDownloadLayoutOptions();
         } else {
             removeSongFromPlaylistPlayLayoutOptions();
-            if (songOnScreen.isSongVocalPlayable() == false) {
+            if (!songOnScreen.isSongVocalPlayable()) {
                 removeSongVocalPlayLayoutOptions();
-                if (songOnScreen.isSongVocalDownloadable()==true) {
+                if (songOnScreen.isSongVocalDownloadable()) {
                     songDownloadable = true;
                 }
             }
-            if (songOnScreen.isSongInstrumentalPlayable() == false) {
+            if (!songOnScreen.isSongInstrumentalPlayable()) {
                 removeSongInstrumentalPlayLayoutOptions();
-                if (songOnScreen.isSongInstrumentalDownloadable()==true) {
+                if (songOnScreen.isSongInstrumentalDownloadable()) {
                     songDownloadable = true;
                 }
             }
-             if ( songDownloadable==false) {
+             if (!songDownloadable) {
                  removeSongDownloadLayoutOptions();
              }
         }
@@ -1354,7 +1354,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             }
         });
 
-        if (playlistOnScreen.isEditable()==false) {
+        if (!playlistOnScreen.isEditable()) {
             LinearLayout linearPlaylistOptions = topMusicLinearLayout.findViewById(R.id.linearPlaylistOptions);
             if (linearPlaylistOptions.getChildCount() > 0) {
                 linearPlaylistOptions.removeAllViews();
@@ -1387,21 +1387,17 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 String songID = rs.getString(rs.getColumnIndex("ID"));
                 String songTitle = rs.getString(rs.getColumnIndex("Title"));
                 String songType = rs.getString(rs.getColumnIndex("Type_"));
-                boolean songVocalPlayable = true;
-                if (rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals(""))
-                    songVocalPlayable = false;
-                boolean songInstrumentalPlayable = true;
-                if (rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals(""))
-                    songInstrumentalPlayable = false;
+                boolean songVocalPlayable = !rs.getString(rs.getColumnIndex("Vocal_File_Name")).equals("");
+                boolean songInstrumentalPlayable = !rs.getString(rs.getColumnIndex("Instrumental_File_Name")).equals("");
                 if (Integer.parseInt(rs.getString(rs.getColumnIndex("Files_Downloaded"))) == Song.FILES_NOT_DOWNLOADED) {
                     songVocalPlayable = false;
                     songInstrumentalPlayable = false;
                 }
-                if ((songVocalPlayable == true) && (playlistOnScreen.isSongInPlaylist(songID, Song.PLAY_VOCAL) == false)) {
+                if ((songVocalPlayable) && (!playlistOnScreen.isSongInPlaylist(songID, Song.PLAY_VOCAL))) {
                     listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
                             true, false, Song.PLAY_VOCAL, false));
                 }
-                if ((songInstrumentalPlayable == true) && (playlistOnScreen.isSongInPlaylist(songID, Song.PLAY_INSTRUMENTAL) == false)) {
+                if ((songInstrumentalPlayable) && (!playlistOnScreen.isSongInPlaylist(songID, Song.PLAY_INSTRUMENTAL))) {
                     listPlaylistEditSongsInfo.add(new PlaylistSongInfo(songID, songTitle,
                             false, true, Song.PLAY_INSTRUMENTAL, false));
                 }
@@ -1432,7 +1428,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private void onPlaylistAddSongCompletetion () {
         for (int i=0; i <listPlaylistEditSongsInfo.size(); i++) {
             PlaylistSongInfo currentSongInfo = listPlaylistEditSongsInfo.get(i);
-            if (currentSongInfo.getSongTicked()==true) {
+            if (currentSongInfo.getSongTicked()) {
                 playlistOnScreen.addSong(Integer.parseInt(currentSongInfo.getSongID()),currentSongInfo.getSongPlayType(), getApplicationContext());
                 listPlaylistsSongs = playlistOnScreen.getSongsArrayList();
                 if (playlistAdapter!=null) {
@@ -1472,7 +1468,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     private void onPlaylistRemoveSongCompletition () {
         for (int i=listPlaylistEditSongsInfo.size()-1; i>=0; i--) {
             PlaylistSongInfo currentSongInfo = listPlaylistEditSongsInfo.get(i);
-            if (currentSongInfo.getSongTicked()==true) {
+            if (currentSongInfo.getSongTicked()) {
                 playlistOnScreen.removeSong(currentSongInfo.getSongPositionInPlaylist(),getApplicationContext());
                 listPlaylistsSongs = playlistOnScreen.getSongsArrayList();
                 playlistAdapter.notifyDataSetChanged();
@@ -1758,7 +1754,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             playlistPlayed = new Playlist("0",
                     "dummy",
                     songID,
-                    (new Integer(songPlayType)).toString(),
+                    (Integer.valueOf(songPlayType)).toString(),
                     getApplicationContext()
             );
         } finally {
@@ -1783,10 +1779,10 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         serviceInitOnlyBinding = false;
 
-        if (musicBound == false) {
+        if (!musicBound) {
             initService();
         } else {
-            if (musicSrv.isPlaying() == true) {
+            if (musicSrv.isPlaying()) {
                 musicSrv.stopPlayer();
             }
             musicSrv.setList(songList);
@@ -1830,10 +1826,10 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
         serviceInitOnlyBinding = false;
 
-        if (musicBound == false) {
+        if (!musicBound) {
             initService();
         } else {
-            if (musicSrv.isPlaying() == true) {
+            if (musicSrv.isPlaying()) {
                 musicSrv.stopPlayer();
             }
             musicSrv.setList(songList);
@@ -1844,7 +1840,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonMusicStopPressed (View view) {
-        if (musicBound==true) {
+        if (musicBound) {
             musicBound=false;
             unbindService(musicConnection);
             stopService(playIntent);
@@ -1858,7 +1854,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
 
     @Override
     protected void onDestroy() {
-        if (musicBound==true) {
+        if (musicBound) {
             musicBound=false;
             unbindService(musicConnection);
         }
@@ -1929,7 +1925,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         }
         editor.commit();
 
-        if (musicBound==true) {
+        if (musicBound) {
             musicBound=false;
             unbindService(musicConnection);
         }
@@ -1938,8 +1934,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonMusicPrevPressed (View view) {
-        if (musicBound==true) {
-            if ( (musicSrv.isPlaying() == true) || (musicSrv.isPlayingDeletedFile()==true) || (songIsPaused==true)) {
+        if (musicBound) {
+            if ( (musicSrv.isPlaying()) || (musicSrv.isPlayingDeletedFile()) || (songIsPaused)) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 musicSrv.playPrev();
             }
@@ -1947,8 +1943,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonMusicNextPressed (View view) {
-        if (musicBound==true) {
-            if ( (musicSrv.isPlaying() == true) || (musicSrv.isPlayingDeletedFile()==true) || (songIsPaused==true)) {
+        if (musicBound) {
+            if ( (musicSrv.isPlaying()) || (musicSrv.isPlayingDeletedFile()) || (songIsPaused)) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 musicSrv.playNext();
             }
@@ -1956,13 +1952,13 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     public void onButtonMusicPlayPausePressed (View view) {
-        if (musicBound==true) {
-            if (musicSrv.isPlaying()==true) {
+        if (musicBound) {
+            if (musicSrv.isPlaying()) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_play);
                 musicSrv.pausePlayer();
                 positionPlayedSong = musicSrv.getCurrentPosition();
                 songIsPaused = true;
-            } else if (songIsPaused==true) {
+            } else if (songIsPaused) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                 musicSrv.seekTo(positionPlayedSong);
                 musicSrv.go();
@@ -1973,11 +1969,11 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 stopService(playIntent);
                 startPlayingPlaylist(playlistOnScreen.getPlaylistID(), songOnScreen.getSongPositionInPlaylist() );
             } else if ( ( musicState == STATE_SONG_SINGLE) || (musicState == STATE_SONG_FROM_SEARCH) ) {
-                if ( (songOnScreen.isSongVocalPlayable()==true) || (songOnScreen.isSongInstrumentalPlayable()==true) ) {
+                if ( (songOnScreen.isSongVocalPlayable()) || (songOnScreen.isSongInstrumentalPlayable()) ) {
                     buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
                     unbindService(musicConnection);
                     stopService(playIntent);
-                    if (songOnScreen.isSongVocalPlayable()==true) {
+                    if (songOnScreen.isSongVocalPlayable()) {
                         startPlayingSingleSong(songOnScreen.getSongID(),Song.PLAY_VOCAL);
                     } else {
                         startPlayingSingleSong(songOnScreen.getSongID(),Song.PLAY_INSTRUMENTAL);
@@ -1993,9 +1989,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
             buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
             startPlayingPlaylist(playlistOnScreen.getPlaylistID(), songOnScreen.getSongPositionInPlaylist() );
         } else if ( ( musicState == STATE_SONG_SINGLE) || (musicState == STATE_SONG_FROM_SEARCH) ) {
-            if ( (songOnScreen.isSongVocalPlayable()==true) || (songOnScreen.isSongInstrumentalPlayable()==true) ) {
+            if ( (songOnScreen.isSongVocalPlayable()) || (songOnScreen.isSongInstrumentalPlayable()) ) {
                 buttonMusicPlayPause.setBackgroundResource(R.drawable.music_pause);
-                if (songOnScreen.isSongVocalPlayable()==true) {
+                if (songOnScreen.isSongVocalPlayable()) {
                     startPlayingSingleSong(songOnScreen.getSongID(),Song.PLAY_VOCAL);
                 } else {
                     startPlayingSingleSong(songOnScreen.getSongID(),Song.PLAY_INSTRUMENTAL);
@@ -2014,9 +2010,9 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private class SongMarker {
-        private int columnIndex;
-        private int startIndex;
-        private int endIndex;
+        private final int columnIndex;
+        private final int startIndex;
+        private final int endIndex;
 
         public SongMarker (int inputColumnIndex, int inputStartIndex, int inputEndIndex) {
             columnIndex = inputColumnIndex;
@@ -2080,7 +2076,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void tryNewDownloadStrart() {
-        if (checkDownloadOngoing() == false) {
+        if (!checkDownloadOngoing()) {
             startNextSongDownload();
         }
     }
@@ -2110,23 +2106,23 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void startNextSongDownload() {
-        if (listDownloadSongs.get(0).getSongVocalFileLink().equals("")==false){
+        if (!listDownloadSongs.get(0).getSongVocalFileLink().equals("")){
             downloadingVocalFile = true;
             startSongFileDownload(listDownloadSongs.get(0).getSongVocalFileLink(), listDownloadSongs.get(0).getSongVocalFileName());
-        } else if (listDownloadSongs.get(0).getSongInstrumentalFileLink().equals("")==false){
+        } else if (!listDownloadSongs.get(0).getSongInstrumentalFileLink().equals("")){
             downloadingVocalFile = false;
             startSongFileDownload(listDownloadSongs.get(0).getSongInstrumentalFileLink(), listDownloadSongs.get(0).getSongInstrumentalFileName());
         }
     }
 
-    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if (downloadReference == referenceId) {
-                if ( (downloadingVocalFile==true) &&
-                        (listDownloadSongs.get(0).getSongInstrumentalFileLink().equals("")==false) ) {
+                if ( (downloadingVocalFile) &&
+                        (!listDownloadSongs.get(0).getSongInstrumentalFileLink().equals("")) ) {
                     downloadingVocalFile = false;
                     startSongFileDownload(listDownloadSongs.get(0).getSongInstrumentalFileLink(), listDownloadSongs.get(0).getSongInstrumentalFileName());
                 } else {
@@ -2210,8 +2206,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                             rs.getString(rs.getColumnIndex("Vocal_File_Link")),
                             rs.getString(rs.getColumnIndex("Instrumental_File_Link"))
                     );
-                    if ((currentSongToBeDownloaded.getSongVocalFileName().equals("") == false) ||
-                            (currentSongToBeDownloaded.getSongInstrumentalFileName().equals("") == false)) {
+                    if ((!currentSongToBeDownloaded.getSongVocalFileName().equals("")) ||
+                            (!currentSongToBeDownloaded.getSongInstrumentalFileName().equals(""))) {
                         listDownloadSongs.add(currentSongToBeDownloaded);
                     }
                     rs.moveToNext();
@@ -2268,10 +2264,10 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
                 if (currentVocalFileName.equals("") && currentInstrumentalFileName.equals("")) {
                     filesDownloaded = "0";
                 } else {
-                    if ((currentVocalFileName.equals("") == false) && (currentVocalFile.exists() == false)) {
+                    if ((!currentVocalFileName.equals("")) && (!currentVocalFile.exists())) {
                         filesDownloaded = "0";
                     }
-                    if ((currentInstrumentalFileName.equals("") == false) && (currentInstrumentalFile.exists() == false)) {
+                    if ((!currentInstrumentalFileName.equals("")) && (!currentInstrumentalFile.exists())) {
                         filesDownloaded = "0";
                     }
                 }
@@ -2352,7 +2348,7 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         Integer numberSongsToDelete = 0;
         for (int i=listPlaylistEditSongsInfo.size()-1; i>=0; i--) {
             PlaylistSongInfo currentSongInfo = listPlaylistEditSongsInfo.get(i);
-            if (currentSongInfo.getSongTicked()==true) {
+            if (currentSongInfo.getSongTicked()) {
                 numberSongsToDelete++;
             }
         }
@@ -2375,18 +2371,18 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
         try {
             for (int i = listPlaylistEditSongsInfo.size() - 1; i >= 0; i--) {
                 PlaylistSongInfo currentSongInfo = listPlaylistEditSongsInfo.get(i);
-                if (currentSongInfo.getSongTicked() == true) {
+                if (currentSongInfo.getSongTicked()) {
                     Cursor rs = null;
                     try {
                         rs = songsDB.getSongSingle(currentSongInfo.getSongID());
                         rs.moveToFirst();
                         String currentVocalFileName = rs.getString(rs.getColumnIndex("Vocal_File_Name"));
                         String currentInstrumentalFileName = rs.getString(rs.getColumnIndex("Instrumental_File_Name"));
-                        if (currentVocalFileName.equals("") == false) {
+                        if (!currentVocalFileName.equals("")) {
                             File currentVocalFile = new File(getApplicationContext().getExternalFilesDir(null) + "/Pesni/" + currentVocalFileName);
                             currentVocalFile.delete();
                         }
-                        if (currentInstrumentalFileName.equals("") == false) {
+                        if (!currentInstrumentalFileName.equals("")) {
                             File currentInstrumentalFile = new File(getApplicationContext().getExternalFilesDir(null) + "/Pesni/" + currentInstrumentalFileName);
                             currentInstrumentalFile.delete();
                         }
@@ -2406,8 +2402,8 @@ public class MusicEntireActivity extends AppCompatActivity implements PlaylistDe
     }
 
     private void updateMusicServicePlaylistAfterPositionChange () {
-        if (musicBound == true) {
-            if ( (musicSrv.isPlaying() == true)
+        if (musicBound) {
+            if ( (musicSrv.isPlaying())
                     && (musicSrv.getPlayedPlaylist().getPlaylistID()==playlistOnScreen.getPlaylistID() ) ) {
                 playlistPlayed = new Playlist(playlistOnScreen);
                 songList = new ArrayList<Song>(playlistPlayed.getSongsArrayList());

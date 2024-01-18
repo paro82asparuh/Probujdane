@@ -8,9 +8,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class MusicMenuActivity extends AppCompatActivity {
 
     private musicDBHelper mydb;
 
-    private ArrayList<String> pathsPanevritmiaTracks = new ArrayList<String>() ;
+    private final ArrayList<String> pathsPanevritmiaTracks = new ArrayList<String>() ;
     private static final String namePlaylistPanevritmia = "Playlist_Panevritmia";
 
     @Override
@@ -101,7 +100,7 @@ public class MusicMenuActivity extends AppCompatActivity {
                 return null;
             }
             if (limit > 0) {
-                uri = uri.buildUpon().appendQueryParameter("limit", "" + limit).build();
+                uri = uri.buildUpon().appendQueryParameter("limit", String.valueOf(limit)).build();
             }
             return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
         } catch (UnsupportedOperationException ex) {

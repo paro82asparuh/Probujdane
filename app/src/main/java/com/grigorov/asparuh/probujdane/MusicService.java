@@ -14,7 +14,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.util.Log;
 
 import java.io.File;
@@ -95,7 +95,7 @@ public class MusicService extends Service implements
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         notIntent.putExtra("com.grigorov.asparuh.probujdane.musicActivitySourceVar", "Notification");
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
-                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                notIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.music_notification_channel_name);
@@ -186,7 +186,7 @@ public class MusicService extends Service implements
         // get the file
         File songFile = new File(getApplicationContext().getExternalFilesDir(null)+playedSong.getSongSubPath(),
                 songFileName);
-        if (songFile.exists()==true) {
+        if (songFile.exists()) {
             playingDeletedFile = false;
             //set uri
             Uri trackUri = Uri.fromFile(songFile);
@@ -231,7 +231,7 @@ public class MusicService extends Service implements
     }
 
     public boolean isPlaying(){
-        if (playerIsReleased == true) {
+        if (playerIsReleased) {
             return false;
         } else {
             return player.isPlaying();
@@ -278,7 +278,7 @@ public class MusicService extends Service implements
     @Override
     public void onDestroy() {
         stopForeground(true);
-        if (playerIsReleased==false) {
+        if (!playerIsReleased) {
             player.stop();
         }
         player.reset();

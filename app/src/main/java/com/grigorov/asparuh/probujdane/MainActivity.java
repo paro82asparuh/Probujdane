@@ -1,13 +1,10 @@
 package com.grigorov.asparuh.probujdane;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentSender;
@@ -16,15 +13,16 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.os.StatFs;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,12 +31,10 @@ import android.widget.Toast;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
 import com.google.android.play.core.appupdate.AppUpdateManager;
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -100,15 +96,15 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
     //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&amp;confirm=rL69&amp;id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
     //private static String BesediDatbaseURL = "https://drive.google.com/uc?export=download&confirm=rL69&id=0B7wdOuW-OvnhY2VVQktRM1hZcEE";
-    private static String BesediDatbaseURL = "https://dl.dropboxusercontent.com/s/qfaxecicfvf1y34/besedi_sqlite.zip?dl=0";
+    private static final String BesediDatbaseURL = "https://dl.dropboxusercontent.com/s/qfaxecicfvf1y34/besedi_sqlite.zip?dl=0";
     ProgressDialog mProgressDialog;
     private DownloadManager downloadManager;
     private long downloadReference;
 
-    private static double SPACE_KB = 1024;
-    private static double SPACE_MB = 1024 * SPACE_KB;
-    private static double SPACE_GB = 1024 * SPACE_MB;
-    private static double SPACE_TB = 1024 * SPACE_GB;
+    private static final double SPACE_KB = 1024;
+    private static final double SPACE_MB = 1024 * SPACE_KB;
+    private static final double SPACE_GB = 1024 * SPACE_MB;
+    private static final double SPACE_TB = 1024 * SPACE_GB;
 
     private AppUpdateManager appUpdateManager;
 
@@ -129,7 +125,12 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
         //set filter to only when download is complete and register broadcast receiver
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        registerReceiver(downloadReceiver, filter);
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(downloadReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(downloadReceiver, filter);
+        }
     }
 
     // Checks that the update is not stalled during 'onResume()'.
@@ -159,50 +160,50 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startBesediMenuTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, BesediMenuActivity.class);
             startActivity(intent);
         }
     }
 
     public void startDrugiBesediMenuTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, DrugiBesediMenuActivity.class);
             startActivity(intent);
         }
     }
 
     public void startMolitviTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, MolitviMenuActivity.class);
             startActivity(intent);
         }
     }
 
     public void startFormuliTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, FormuliMenuActivity.class);
             startActivity(intent);
         }
     }
 
     public void startMusicTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("com.grigorov.asparuh.probujdane.musicState", "1");
@@ -219,10 +220,10 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startSearchMenuTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, SearchMenuActivity.class);
             intent.putExtra("com.grigorov.asparuh.probujdane.searchSource", "SEARCH_SOURCE_GLOBAL");
             startActivity(intent);
@@ -235,60 +236,60 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startNedelniBesediTask(View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             SelectedBesediType = Nedelni_Besedi;
             startBesediListTask(view);
         }
     }
 
     public void startOOKBesediTask(View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             SelectedBesediType = OOK_Besedi;
             startBesediListTask(view);
         }
     }
 
     public void startMOKBesediTask(View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             SelectedBesediType = MOK_Besedi;
             startBesediListTask(view);
         }
     }
 
     public void startUtrinniSlovaBesediTask(View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             SelectedBesediType = Utrinni_Slova_Besedi;
             startBesediListTask(view);
         }
     }
 
     public void startSyborniBesediTask(View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             SelectedBesediType = Syborni_Besedi;
             startBesediListTask(view);
         }
     }
 
     private void startBesediListTask(View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, BesediListActivity.class);
             intent.putExtra("com.grigorov.asparuh.probujdane.SelectedBesediTypeVar", SelectedBesediType);
             startActivity(intent);
@@ -296,10 +297,10 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
     }
 
     public void startKnigiMenuTask (View view) {
-        if (BesediDatabaseOk==false) {
+        if (!BesediDatabaseOk) {
             BesediDatabaseOk = checkUpdateBesediDatabase();
         }
-        if (BesediDatabaseOk==true) {
+        if (BesediDatabaseOk) {
             Intent intent = new Intent(this, KnigiMenuActivity.class);
             startActivity(intent);
         }
@@ -319,41 +320,41 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
     private boolean checkDatabasesPresent () {
         File file1 = new File(context.getExternalFilesDir(null), besediDatabaseName);
-        if (file1.exists()==false) {
+        if (!file1.exists()) {
             return false;
         }
         File file2 = new File(context.getExternalFilesDir(null), formuliDatabaseName);
-        if (file2.exists()==false) {
+        if (!file2.exists()) {
             return false;
         }
         File file3 = new File(context.getExternalFilesDir(null), molitviDatabaseName);
-        if (file3.exists()==false) {
+        if (!file3.exists()) {
             return false;
         }
         File file4 = new File(context.getExternalFilesDir(null), musicDatabaseName);
-        if (file4.exists()==false) {
+        if (!file4.exists()) {
             return false;
         }
         File file5 = new File(context.getExternalFilesDir(null), naukaVyzDatabaseName);
-        if (file5.exists()==false) {
+        if (!file5.exists()) {
             return false;
         }
         File file6 = new File(context.getExternalFilesDir(null), zavetDatabaseName);
-        return file6.exists() != false;
+        return file6.exists();
     }
 
     private boolean checkUpdateBesediDatabase () {
 
-        if (isExternalStorageWritable()==true) {
+        if (isExternalStorageWritable()) {
             File file = new File(context.getExternalFilesDir(null), besediDatabaseName);
-            if (checkDatabasesPresent()==true) {
+            if (checkDatabasesPresent()) {
                 return true;
             }
             else {
-                if ( checkDownloadOngoing() == true ) {
+                if (checkDownloadOngoing()) {
                     showErrorMessage(getString(R.string.download_ongoing));
                     return false;
-                } else if (unzipOngoing==true) {
+                } else if (unzipOngoing) {
                     showErrorMessage(getString(R.string.unzip_ongoing));
                     return false;
                 } else {
@@ -362,9 +363,9 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
                     return false;
                 }
             }
-        } else if (isExternalStorageReadOnly()==true) {
+        } else if (isExternalStorageReadOnly()) {
             File file = new File(context.getExternalFilesDir(null), besediDatabaseName);
-            if (checkDatabasesPresent()==true) {
+            if (checkDatabasesPresent()) {
                 return true;
             }
             else {
@@ -447,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
     }
 
-    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -469,7 +470,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
                 }
 
                 unzipOngoing = false;
-                if (checkDatabasesPresent()==true) {
+                if (checkDatabasesPresent()) {
                     showErrorMessage(getString(R.string.database_ready));
                     BesediDatabaseOk = true;
                 }
@@ -527,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements BesediUpdateDialo
 
 private class DownloadTask extends AsyncTask<String, Integer, String> {
 
-        private Context context;
+        private final Context context;
         private PowerManager.WakeLock mWakeLock;
         long total;
         Integer fileLength;
@@ -553,7 +554,7 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
                 }
                 // this will be useful to display download percentage
                 // might be -1: server did not report the length
-                fileLength = new Integer(connection.getContentLength());
+                fileLength = Integer.valueOf(connection.getContentLength());
 
                 File file = new File(context.getExternalFilesDir(null), besediDatabaseArchiveName);
                 String filePath = file.getAbsolutePath();
@@ -572,7 +573,7 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
                 input = connection.getInputStream();
                 output = new FileOutputStream(filePath);
                 byte[] data = new byte[4096];
-                total = new Long(0);
+                total = Long.valueOf(0);
                 int count;
                 while ((count = input.read(data)) != -1) {
                     // allow canceling with back button
@@ -729,18 +730,14 @@ private class DownloadTask extends AsyncTask<String, Integer, String> {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_INTERNET: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
+        if (requestCode == MY_PERMISSIONS_REQUEST_INTERNET) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted, yay! Do the
+                // contacts-related task you need to do.
+            } else {
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
             }
 
             // other 'case' lines to check for other
