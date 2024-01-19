@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import androidx.core.content.ContextCompat;
@@ -216,9 +217,9 @@ public class ZavetActivity extends AppCompatActivity {
             rightTextView.setText(listChapters.get(i_loop).getTextRight());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                leftTextView.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
-                centerTextView.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
-                rightTextView.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+                leftTextView.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
+                centerTextView.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
+                rightTextView.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
             }
 
             if (listChapters.get(i_loop).getBoldCenter().equals("1")) {

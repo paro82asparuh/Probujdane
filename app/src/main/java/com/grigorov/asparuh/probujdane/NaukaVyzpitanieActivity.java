@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import androidx.core.content.ContextCompat;
@@ -224,7 +225,7 @@ public class NaukaVyzpitanieActivity extends AppCompatActivity {
             contentTextView.setText(listChapters.get(i_loop).getContent()+"\n\n");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                contentTextView.setJustificationMode(JUSTIFICATION_MODE_INTER_WORD);
+                contentTextView.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
             }
 
             if (listChapters.get(i_loop).getIndentation().equals("Center")) {

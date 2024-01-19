@@ -115,11 +115,11 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
 
-        <activity-alias
-            android:name="leakcanary.internal.activity.LeakLauncherActivity"
-            android:exported="true"
-            android:targetActivity="leakcanary.internal.activity.LeakActivity"
-            tools:node="merge" />
+<!--        <activity-alias-->
+<!--            android:name="leakcanary.internal.activity.LeakLauncherActivity"-->
+<!--            android:exported="true"-->
+<!--            android:targetActivity="leakcanary.internal.activity.LeakActivity"-->
+<!--            tools:node="merge" />-->
 
         <service android:name=".MusicService"
             android:foregroundServiceType="mediaPlayback"
