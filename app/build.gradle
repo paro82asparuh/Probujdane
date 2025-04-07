@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdk 34
     defaultConfig {
-        applicationId "com.grigorov.asparuh.probujdane"
+        applicationId "com.grigorov.iv.asparuh.probujdane"
         minSdk 21
         targetSdk 34
         versionCode 9
